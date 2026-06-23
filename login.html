@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ - SUCHAR CARGO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Kanit', sans-serif; background-color: #f3f4f6; }
+        .bg-brand { background-color: #c51c24; }
+        .text-brand { color: #c51c24; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+        <div class="bg-brand py-8 px-6 text-center text-white">
+            <div class="text-3xl font-bold leading-none mb-1">SUCHAR</div>
+            <div class="text-sm tracking-widest opacity-80">CARGO</div>
+        </div>
+
+        <div class="p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">เข้าสู่ระบบ</h2>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">เบอร์โทรศัพท์ (Username)</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-phone text-gray-400"></i>
+                            </div>
+                            <input type="text" id="phone" required class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white transition-colors text-s text-gray-700" placeholder="08X-XXX-XXXX">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">รหัสผ่าน</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                            <input type="password" id="password" required class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white transition-colors text-s text-gray-700" placeholder="••••••••">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="errorMsg" class="text-red-500 text-sm mt-3 hidden text-center">เบอร์โทรศัพท์ หรือ รหัสผ่านไม่ถูกต้อง</div>
+
+                <button type="submit" id="loginBtn" class="w-full bg-brand text-white font-bold py-3 px-4 rounded-lg mt-6 hover:bg-red-700 transition flex items-center justify-center gap-2">
+                    <span>เข้าสู่ระบบ</span>
+                </button>
+            </form>
+
+            <div class="mt-6 text-center text-sm text-gray-600 border-t pt-6">
+                ยังไม่มีบัญชีใช่หรือไม่? 
+                <? var url = getScriptUrl(); ?>
+                <a href="<?= url ?>?page=register" class="text-brand font-bold hover:underline">สมัครสมาชิกที่นี่</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleLogin(e) {
+            e.preventDefault();
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('loginBtn');
+            const errorMsg = document.getElementById('errorMsg');
+
+            // เปลี่ยนสถานะปุ่มตอนกำลังโหลด
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> กำลังตรวจสอบ...';
+            btn.disabled = true;
+            errorMsg.classList.add('hidden');
+
+            // เรียกใช้ฟังก์ชัน App Script ฝั่ง Server
+            google.script.run
+                .withSuccessHandler(function(response) {
+                    if(response.success) {
+                        btn.innerHTML = '<i class="fas fa-check"></i> เข้าสู่ระบบสำเร็จ!';
+                        btn.classList.replace('bg-brand', 'bg-green-600');
+                        // เปลี่ยนไปหน้า main.html
+                        window.top.location.href = "<?= url ?>?page=main"; 
+                    } else {
+                        btn.innerHTML = 'เข้าสู่ระบบ';
+                        btn.disabled = false;
+                        errorMsg.classList.remove('hidden');
+                        errorMsg.innerText = response.message;
+                    }
+                })
+                .verifyLogin(phone, password);
+        }
+    </script>
+</body>
+</html>

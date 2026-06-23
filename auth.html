@@ -1,0 +1,42 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sessionData = sessionStorage.getItem("userSession");
+        const navActionContainer = document.getElementById('navActionContainer');
+        const loginNavBtn = document.getElementById('loginNavBtn');
+
+        if (sessionData) {
+            if (loginNavBtn) {
+                loginNavBtn.classList.add('hidden');
+            }
+            
+            const user = JSON.parse(sessionData);
+
+            // ✅ ให้ขอ URL จาก Server ก่อน แล้วค่อยสร้างปุ่มและลิ้งค์
+            google.script.run.withSuccessHandler(function(url) {
+                const userProfileHTML = `
+                    <div class="flex items-center gap-4 text-sm font-medium">
+                        <a href="${url}?page=userprofile" class="text-gray-800 hover:text-brand transition cursor-pointer">
+                            <i class="fas fa-user-circle text-brand mr-1 text-lg"></i> คุณ ${user.fullname}
+                        </a>
+                        <button onclick="logout()" class="bg-brand text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition">
+                            ออกจากระบบ
+                        </button>
+                    </div>
+                `;
+                
+                if (navActionContainer) {
+                    navActionContainer.insertAdjacentHTML('beforeend', userProfileHTML);
+                }
+            }).getScriptUrl();
+        }
+    });
+
+    function logout() {
+        sessionStorage.removeItem("userSession");
+        sessionStorage.clear();
+        
+        google.script.run.withSuccessHandler(function(url) {
+            window.top.location.href = url + "?page=index";
+        }).getScriptUrl();
+    }
+</script>

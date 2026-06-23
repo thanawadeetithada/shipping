@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>โปรไฟล์ของฉัน - SUCHAR CARGO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Kanit', sans-serif; background-color: #f3f4f6; }
+        .bg-brand { background-color: #c51c24; }
+        .text-brand { color: #c51c24; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 py-10 relative">
+
+    <?!= include('spinner'); ?>
+
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden">
+        <div class="bg-brand py-6 px-6 text-center text-white relative">
+            <? var url = getScriptUrl(); ?>
+            <button onclick="window.top.location.href='<?= url ?>?page=main'" class="absolute left-4 top-6 text-white hover:text-gray-200 transition">
+                <i class="fas fa-arrow-left text-xl"></i>
+            </button>
+            
+            <div class="text-2xl font-bold leading-none mb-1">SUCHAR</div>
+            <div class="text-xs tracking-widest opacity-80">CARGO</div>
+            <h1 class="mt-4 text-xl font-medium">ข้อมูลส่วนตัว</h1>
+        </div>
+
+        <div class="p-8">
+            <form id="profileForm" onsubmit="handleUpdateProfile(event)">
+                <div id="statusMsg" class="hidden text-sm font-medium text-center p-3 mb-4 border rounded-xl"></div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">รหัสสมาชิก</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-id-card text-gray-400"></i>
+                            </div>
+                            <input type="text" id="profile_memberId" disabled class="w-full pl-12 pr-4 py-2.5 bg-gray-100 border border-gray-200 rounded-xl text-s text-gray-500 font-bold cursor-not-allowed">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อ-นามสกุล <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-user text-gray-400"></i>
+                            </div>
+                            <input type="text" id="profile_fullname" required class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors text-s text-gray-700" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">เบอร์โทรศัพท์ <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-phone text-gray-400"></i>
+                            </div>
+                            <input type="tel" id="profile_phone" required class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors text-s text-gray-700" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">ที่อยู่สำหรับจัดส่งสินค้า</label>
+                        <textarea id="profile_address" rows="3" class="w-full pl-4 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors text-s text-gray-700"></textarea>
+                    </div>
+
+                    <div class="border-t pt-4 mt-4">
+                        <label class="block text-sm font-bold text-gray-700 mb-2"><i class="fas fa-key text-brand mr-1"></i> เปลี่ยนรหัสผ่าน (เว้นว่างไว้หากไม่ต้องการเปลี่ยน)</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <i class="fas fa-lock text-gray-400"></i>
+                                </div>
+                                <input type="password" id="profile_password" class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors text-s text-gray-700" placeholder="รหัสผ่านใหม่">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onclick="togglePassword('profile_password', 'eye-profile-pass')">
+                                    <i id="eye-profile-pass" class="fas fa-eye text-gray-400 hover:text-gray-600"></i>
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <i class="fas fa-lock text-gray-400"></i>
+                                </div>
+                                <input type="password" id="profile_confirm_password" class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors text-s text-gray-700" placeholder="ยืนยันรหัสผ่านใหม่">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onclick="togglePassword('profile_confirm_password', 'eye-profile-confirm')">
+                                    <i id="eye-profile-confirm" class="fas fa-eye text-gray-400 hover:text-gray-600"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" id="updateBtn" class="w-full bg-brand text-white font-bold py-3 px-4 rounded-lg mt-6 hover:bg-red-700 transition flex items-center justify-center gap-2 shadow-md">
+                    <span>บันทึกการแก้ไข</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sessionData = sessionStorage.getItem("userSession");
+            if (!sessionData) {
+                google.script.run.withSuccessHandler(function(url){
+                    window.top.location.href = url + "?page=index";
+                }).getScriptUrl();
+                return;
+            }
+
+            const user = JSON.parse(sessionData);
+            document.getElementById('profile_memberId').value = user.memberId;
+            document.getElementById('profile_fullname').value = user.fullname;
+            document.getElementById('profile_phone').value = user.phone;
+            document.getElementById('profile_address').value = user.address;
+        });
+
+        // ฟังก์ชันเปิด-ปิดตารหัสผ่าน
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+
+        function handleUpdateProfile(e) {
+            e.preventDefault();
+
+            const password = document.getElementById('profile_password').value;
+            const confirmPassword = document.getElementById('profile_confirm_password').value;
+            const statusMsg = document.getElementById('statusMsg');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const loadingText = document.getElementById('loadingText');
+            const loadingIcon = document.getElementById('loadingIcon');
+
+            // 1. ตรวจสอบรหัสผ่านว่าตรงกันหรือไม่
+            if (password !== "" || confirmPassword !== "") {
+                if (password !== confirmPassword) {
+                    statusMsg.classList.remove('hidden', 'border-green-200', 'bg-green-50', 'text-green-600');
+                    statusMsg.classList.add('border-red-200', 'bg-red-50', 'text-red-500');
+                    statusMsg.innerText = "รหัสผ่านใหม่และยืนยันรหัสผ่านไม่ตรงกัน";
+                    return;
+                }
+            }
+
+            const userSession = JSON.parse(sessionStorage.getItem("userSession"));
+
+            const data = {
+                memberId: userSession.memberId,
+                role: userSession.role,
+                fullname: document.getElementById('profile_fullname').value,
+                phone: document.getElementById('profile_phone').value,
+                address: document.getElementById('profile_address').value,
+                password: password 
+            };
+
+            statusMsg.classList.add('hidden');
+            loadingOverlay.classList.remove('hidden');
+            loadingIcon.className = "fas fa-circle-notch fa-spin text-6xl mb-4"; 
+            loadingText.innerText = "กำลังตรวจสอบและบันทึกข้อมูล...";
+
+            google.script.run
+                .withSuccessHandler(function (response) {
+                    if (response.success) {
+                        loadingIcon.className = "fas fa-check-circle text-green-400 text-6xl mb-4";
+                        loadingText.innerText = "อัปเดตข้อมูลสำเร็จ!";
+                        
+                        sessionStorage.setItem("userSession", JSON.stringify(response.user));
+
+                        setTimeout(() => {
+                            loadingOverlay.classList.add('hidden');
+                            statusMsg.classList.remove('hidden', 'border-red-200', 'bg-red-50', 'text-red-500');
+                            statusMsg.classList.add('border-green-200', 'bg-green-50', 'text-green-600');
+                            statusMsg.innerText = "บันทึกการเปลี่ยนแปลงเรียบร้อยแล้ว";
+                            
+                            document.getElementById('profile_password').value = "";
+                            document.getElementById('profile_confirm_password').value = "";
+
+                            // แก้ไขให้กลับไปหน้า main อย่างถูกต้อง ไม่ค้างหน้าเดิม
+                            setTimeout(() => {
+                                google.script.run.withSuccessHandler(function(scriptUrl){
+                                    window.top.location.href = scriptUrl + "?page=main"; 
+                                }).getScriptUrl();
+                            }, 1500);
+
+                        }, 1000);
+
+                    } else {
+                        loadingOverlay.classList.add('hidden');
+                        statusMsg.classList.remove('hidden', 'border-green-200', 'bg-green-50', 'text-green-600');
+                        statusMsg.classList.add('border-red-200', 'bg-red-50', 'text-red-500');
+                        statusMsg.innerText = response.message;
+                    }
+                })
+                .updateUserProfile(data);
+        }
+    </script>
+</body>
+</html>
