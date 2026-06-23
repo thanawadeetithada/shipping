@@ -22,8 +22,8 @@
             <span class="text-sm text-black">CARGO</span>
         </div>
         <div class="hidden md:flex space-x-6 text-sm font-medium">
-            <a href="#" class="text-brand">หน้าแรก</a>
-            <a href="#" class="text-gray-600 hover:text-brand">เช็คสถานะ</a>
+            <a href="<?= getScriptUrl() ?>?page=main" class="text-brand">หน้าแรก</a>
+            <a href="<?= getScriptUrl() ?>?page=tracking" class="text-gray-600 hover:text-brand">เช็คสถานะ</a>
         </div>
         
         <div id="navActionContainer">
@@ -42,9 +42,9 @@
             
             <div class="bg-white p-2 rounded-lg flex flex-col md:flex-row shadow-lg max-w-2xl mx-auto">
                 <input type="text" placeholder="กรอกรหัสลูกค้า หรือ Tracking Number" class="flex-grow px-4 py-3 text-gray-700 outline-none rounded-t-lg md:rounded-l-lg md:rounded-t-none">
-                <button class="bg-brand text-white px-8 py-3 rounded-md font-medium hover:bg-red-700 transition flex items-center justify-center gap-2 mt-2 md:mt-0">
-                    <i class="fas fa-search"></i> เช็คสถานะ
-                </button>
+                <button onclick="window.top.location.href='<?= getScriptUrl() ?>?page=tracking'" class="bg-brand text-white px-8 py-3 rounded-md font-medium hover:bg-red-700 transition flex items-center justify-center gap-2 mt-2 md:mt-0">
+            <i class="fas fa-search"></i> เช็คสถานะ
+        </button>
             </div>
             <p class="mt-4 text-sm text-gray-200">ตัวอย่างรหัส: SC250621001</p>
         </div>
@@ -133,6 +133,12 @@
             </div>
         </div>
     </footer>
+    
+    <script>
+        <? var scriptUrl = getScriptUrl(); ?>
+        const GLOBAL_SCRIPT_URL = "<?= scriptUrl ?>";
+    </script>
+
     <?!= include('auth'); ?>
     
     <script>

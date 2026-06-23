@@ -15,12 +15,17 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-4 py-10 relative">
 
-    <?!= include('spinner'); ?>
+    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl flex flex-col items-center text-center max-w-sm w-full mx-4">
+            <i id="loadingIcon" class="fas fa-circle-notch fa-spin text-brand text-6xl mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">กรุณารอสักครู่</h3>
+            <p id="loadingText" class="text-gray-500">กำลังดำเนินการ...</p>
+        </div>
+    </div>
 
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden">
         <div class="bg-brand py-6 px-6 text-center text-white relative">
-            <? var url = getScriptUrl(); ?>
-            <button onclick="window.top.location.href='<?= url ?>?page=main'" class="absolute left-4 top-6 text-white hover:text-gray-200 transition">
+            <button type="button" onclick="window.top.location.href=GLOBAL_SCRIPT_URL + '?page=main'" class="absolute left-4 top-6 text-white hover:text-gray-200 transition">
                 <i class="fas fa-arrow-left text-xl"></i>
             </button>
             
@@ -102,20 +107,22 @@
     </div>
 
     <script>
+       const GLOBAL_SCRIPT_URL = "<?= getScriptUrl() ?>";
+    </script>
+
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const sessionData = sessionStorage.getItem("userSession");
             if (!sessionData) {
-                google.script.run.withSuccessHandler(function(url){
-                    window.top.location.href = url + "?page=index";
-                }).getScriptUrl();
+                window.top.location.href = GLOBAL_SCRIPT_URL + "?page=index";
                 return;
             }
 
             const user = JSON.parse(sessionData);
-            document.getElementById('profile_memberId').value = user.memberId;
-            document.getElementById('profile_fullname').value = user.fullname;
-            document.getElementById('profile_phone').value = user.phone;
-            document.getElementById('profile_address').value = user.address;
+            document.getElementById('profile_memberId').value = user.memberId || "";
+            document.getElementById('profile_fullname').value = user.fullname || "";
+            document.getElementById('profile_phone').value = user.phone || "";
+            document.getElementById('profile_address').value = user.address || "";
         });
 
         // ฟังก์ชันเปิด-ปิดตารหัสผ่าน
@@ -166,42 +173,40 @@
             };
 
             statusMsg.classList.add('hidden');
+            
+            // ✅ แสดง Loading ตรงนี้
             loadingOverlay.classList.remove('hidden');
-            loadingIcon.className = "fas fa-circle-notch fa-spin text-6xl mb-4"; 
+            loadingIcon.className = "fas fa-circle-notch fa-spin text-brand text-6xl mb-4"; 
             loadingText.innerText = "กำลังตรวจสอบและบันทึกข้อมูล...";
 
             google.script.run
                 .withSuccessHandler(function (response) {
                     if (response.success) {
+                        // เปลี่ยนหน้าตา Loading เป็นสำเร็จ
                         loadingIcon.className = "fas fa-check-circle text-green-400 text-6xl mb-4";
-                        loadingText.innerText = "อัปเดตข้อมูลสำเร็จ!";
+                        loadingText.innerText = "บันทึกสำเร็จ! กำลังพากลับไปหน้าหลัก...";
                         
+                        // อัปเดตข้อมูล Session
                         sessionStorage.setItem("userSession", JSON.stringify(response.user));
 
+                        // ✅ สั่งเปลี่ยนหน้าทันที (หน่วงเวลา 800ms ให้คนเห็นเครื่องหมายถูกก่อนเด้งไป)
                         setTimeout(() => {
-                            loadingOverlay.classList.add('hidden');
-                            statusMsg.classList.remove('hidden', 'border-red-200', 'bg-red-50', 'text-red-500');
-                            statusMsg.classList.add('border-green-200', 'bg-green-50', 'text-green-600');
-                            statusMsg.innerText = "บันทึกการเปลี่ยนแปลงเรียบร้อยแล้ว";
-                            
-                            document.getElementById('profile_password').value = "";
-                            document.getElementById('profile_confirm_password').value = "";
-
-                            // แก้ไขให้กลับไปหน้า main อย่างถูกต้อง ไม่ค้างหน้าเดิม
-                            setTimeout(() => {
-                                google.script.run.withSuccessHandler(function(scriptUrl){
-                                    window.top.location.href = scriptUrl + "?page=main"; 
-                                }).getScriptUrl();
-                            }, 1500);
-
-                        }, 1000);
+                            window.top.location.href = GLOBAL_SCRIPT_URL + "?page=main";
+                        }, 800);
 
                     } else {
+                        // ปิด Loading ถ้าไม่สำเร็จ และโชว์ Error
                         loadingOverlay.classList.add('hidden');
                         statusMsg.classList.remove('hidden', 'border-green-200', 'bg-green-50', 'text-green-600');
                         statusMsg.classList.add('border-red-200', 'bg-red-50', 'text-red-500');
                         statusMsg.innerText = response.message;
                     }
+                })
+                .withFailureHandler(function(error) {
+                    loadingOverlay.classList.add('hidden');
+                    statusMsg.classList.remove('hidden', 'border-green-200', 'bg-green-50', 'text-green-600');
+                    statusMsg.classList.add('border-red-200', 'bg-red-50', 'text-red-500');
+                    statusMsg.innerText = "เกิดข้อผิดพลาดจากเซิร์ฟเวอร์: " + error.message;
                 })
                 .updateUserProfile(data);
         }

@@ -15,15 +15,22 @@
 </head>
 <body class="text-gray-800">
 
-    <nav class="bg-white shadow-sm py-4 px-6 flex justify-between items-center z-20 relative">
+    <nav class="bg-white shadow-sm py-4 px-6 flex justify-between items-center">
         <div class="text-2xl font-bold text-brand flex flex-col leading-none">
-            <span>SUCHAR</span><span class="text-sm text-black">CARGO</span>
+            <span>SUCHAR</span>
+            <span class="text-sm text-black">CARGO</span>
         </div>
         <div class="hidden md:flex space-x-6 text-sm font-medium">
-            <a href="#" class="text-gray-600 hover:text-brand">หน้าแรก</a>
-            <a href="#" class="text-brand">เช็คสถานะ</a>
+            <a href="<?= getScriptUrl() ?>?page=main" target="_top" class="text-gray-600 hover:text-brand">หน้าแรก</a>
+            <a href="<?= getScriptUrl() ?>?page=tracking" target="_top" class="text-brand">เช็คสถานะ</a>
         </div>
-        <button class="bg-brand text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700">เข้าสู่ระบบลูกค้า</button>
+        
+        <div id="navActionContainer">
+            <? var url = getScriptUrl(); ?>
+            <button id="loginNavBtn" onclick="window.top.location.href='<?= url ?>?page=index'" class="bg-brand text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition">
+                เข้าสู่ระบบ
+            </button>
+        </div>
     </nav>
 
     <div class="bg-brand text-white py-8 px-6">
@@ -37,7 +44,7 @@
 
     <div class="max-w-6xl mx-auto px-4 py-6 -mt-6">
         
-        <div class="bg-white p-2 rounded-lg shadow-md flex mb-6 mx-auto">
+        <div class="bg-white p-2 rounded-lg shadow-md flex mb-6 mx-auto mt-6">
             <input type="text" value="SC250621001" class="flex-grow px-4 py-2 outline-none text-gray-700 bg-transparent" placeholder="Tracking Number">
             <button class="bg-brand text-white px-6 py-2 rounded-md hover:bg-red-700 flex items-center gap-2">
                 <i class="fas fa-search"></i> ค้นหา
@@ -187,6 +194,12 @@
 
         </div>
     </div>
+    
+    <script>
+        <? var scriptUrl = getScriptUrl(); ?>
+        const GLOBAL_SCRIPT_URL = "<?= scriptUrl ?>";
+    </script>
 
+    <?!= include('auth'); ?>
 </body>
 </html>
