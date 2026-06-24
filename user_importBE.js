@@ -24,12 +24,16 @@ function loadImportItems(memberId) {
       var rowMemberId = data[i][1] ? data[i][1].toString().trim().toLowerCase() : "";
       var rowTracking = data[i][2] ? data[i][2].toString().trim() : "";
       var rowDetail   = data[i][3] ? data[i][3].toString().trim() : "";
+      var rowWeight   = data[i][5] ? data[i][5].toString().trim() : "";
+      var rowCbm      = data[i][6] ? data[i][6].toString().trim() : "";
       
       if (rowMemberId === targetMemberId) {
         result.push({
           orderNum: rowOrderNum, 
           tracking: rowTracking, 
-          detail: rowDetail    
+          detail: rowDetail,
+          weight: rowWeight,
+          cbm: rowCbm
         });
       }
     }
@@ -43,7 +47,7 @@ function loadImportItems(memberId) {
 /**
  * เพิ่มรายการแจ้งนำเข้าใหม่ (คืนค่า data กลับไปด้วย)
  */
-function addItemToSheet(memberId, tracking, detail) {
+function addItemToSheet(memberId, tracking, detail, weight, cbm) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(IMPORT_SHEET_NAME);
     if (!sheet) return { success: false, message: "ไม่พบชีตข้อมูล" };
@@ -56,6 +60,8 @@ function addItemToSheet(memberId, tracking, detail) {
     newRow[1] = memberId;          
     newRow[2] = tracking;          
     newRow[3] = detail;            
+    newRow[5] = weight;
+    newRow[6] = cbm;
     newRow[11] = "รอเข้าโกดังจีน";   
     newRow[12] = timestamp;        
 
@@ -68,7 +74,9 @@ function addItemToSheet(memberId, tracking, detail) {
       data: {
         orderNum: newOrderNum,
         tracking: tracking,
-        detail: detail
+        detail: detail,
+        weight: weight,
+        cbm: cbm
       }
     };
   } catch (error) {
@@ -79,7 +87,7 @@ function addItemToSheet(memberId, tracking, detail) {
 /**
  * อัปเดตรายการสินค้า
  */
-function updateItemInSheet(orderNum, tracking, detail) {
+function updateItemInSheet(orderNum, tracking, detail, weight, cbm) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(IMPORT_SHEET_NAME);
     if (!sheet) return { success: false, message: "ไม่พบชีตข้อมูล" };
@@ -98,6 +106,8 @@ function updateItemInSheet(orderNum, tracking, detail) {
     if (foundRow !== -1) {
       sheet.getRange(foundRow, 3).setValue(tracking); 
       sheet.getRange(foundRow, 4).setValue(detail);   
+      sheet.getRange(foundRow, 6).setValue(weight);
+      sheet.getRange(foundRow, 7).setValue(cbm);
       return { success: true, message: "แก้ไขข้อมูลเรียบร้อยแล้ว" };
     } else {
       return { success: false, message: "ไม่พบรหัสรายการนี้ในระบบ" };

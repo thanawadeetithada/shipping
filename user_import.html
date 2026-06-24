@@ -138,6 +138,18 @@
                                     class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand"
                                     placeholder="เช่น เสื้อกันหนาว 3 ตัว">
                             </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">น้ำหนัก (KG)</label>
+                                <input type="number" step="any" id="weightInput"
+                                    class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+                                    placeholder="เช่น 1.5">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">ปริมาตร (CBM)</label>
+                                <input type="number" step="any" id="cbmInput"
+                                    class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+                                    placeholder="เช่น 0.045">
+                            </div>
                         </div>
                         <div class="mt-4 flex justify-end gap-2">
                             <button id="cancelEditBtn" onclick="cancelEdit()"
@@ -165,12 +177,14 @@
                                         <th class="px-4 py-3 font-semibold text-gray-700 w-16 text-center">ลำดับ</th>
                                         <th class="px-4 py-3 font-semibold text-gray-700">เลข Tracking</th>
                                         <th class="px-4 py-3 font-semibold text-gray-700">รายละเอียดสินค้า</th>
+                                        <th class="px-4 py-3 font-semibold text-gray-700 text-center">น้ำหนัก (KG)</th>
+                                        <th class="px-4 py-3 font-semibold text-gray-700 text-center">ปริมาตร (CBM)</th>
                                         <th class="px-4 py-3 font-semibold text-gray-700 w-28 text-center">จัดการ</th>
                                     </tr>
                                 </thead>
                                 <tbody id="itemTableBody" class="divide-y divide-gray-200 bg-white">
                                     <tr>
-                                       <td colspan="4" class="px-4 py-12 text-center">
+                                       <td colspan="6" class="px-4 py-12 text-center">
                                             <i class="fas fa-circle-notch fa-spin text-4xl text-brand mb-3"></i>
                                             <p class="text-gray-500 font-medium">กำลังโหลดข้อมูลรายการพัสดุ...</p>
                                         </td>
@@ -238,10 +252,22 @@
                     <input type="text" id="editTrackingInput"
                         class="w-full border border-gray-300 rounded-md p-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
                 </div>
-                <div class="mb-6">
+                <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">รายละเอียดสินค้า</label>
                     <input type="text" id="editDetailInput"
                         class="w-full border border-gray-300 rounded-md p-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">น้ำหนัก (KG)</label>
+                        <input type="number" step="any" id="editWeightInput"
+                            class="w-full border border-gray-300 rounded-md p-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">ปริมาตร (CBM)</label>
+                        <input type="number" step="any" id="editCbmInput"
+                            class="w-full border border-gray-300 rounded-md p-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    </div>
                 </div>
                 <div class="flex gap-3">
                     <button onclick="closeModal('editModalOverlay')"
@@ -288,7 +314,7 @@
             // แสดง Spinner ในตารางระหว่างรอข้อมูล
             document.getElementById('itemTableBody').innerHTML = `
                 <tr>
-                    <td colspan="4" class="px-4 py-12 text-center">
+                    <td colspan="6" class="px-4 py-12 text-center">
                         <i class="fas fa-circle-notch fa-spin text-4xl text-brand mb-3"></i>
                         <p class="text-gray-500 font-medium">กำลังโหลดข้อมูลรายการพัสดุ...</p>
                     </td>
@@ -302,7 +328,7 @@
                 })
                 .withFailureHandler(function (error) {
                     showAlert('ข้อผิดพลาด', 'โหลดข้อมูลล้มเหลว: ' + error.message, 'red');
-                    document.getElementById('itemTableBody').innerHTML = `<tr><td colspan="4" class="px-4 py-8 text-center text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>`;
+                    document.getElementById('itemTableBody').innerHTML = `<tr><td colspan="6" class="px-4 py-8 text-center text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>`;
                 })
                 .loadImportItems(currentMemberId);
         }
@@ -314,7 +340,7 @@
             tbody.innerHTML = '';
 
             if (currentItems.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="px-4 py-8 text-center text-gray-400"><i class="fas fa-box-open text-4xl mb-3 text-gray-300"></i><br>ยังไม่มีรายการสินค้า กรุณาเพิ่มข้อมูลด้านบน</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400"><i class="fas fa-box-open text-4xl mb-3 text-gray-300"></i><br>ยังไม่มีรายการสินค้า กรุณาเพิ่มข้อมูลด้านบน</td></tr>`;
                 return;
             }
 
@@ -325,9 +351,11 @@
                     <td class="px-4 py-3 text-center text-gray-500">${index + 1}</td>
                     <td class="px-4 py-3 font-medium text-gray-800"><span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs border border-gray-200 tracking-wider">${item.tracking}</span></td>
                     <td class="px-4 py-3 text-gray-600 text-sm">${item.detail || '-'}</td>
+                    <td class="px-4 py-3 text-center text-gray-700">${item.weight ? item.weight : '-'}</td>
+                    <td class="px-4 py-3 text-center text-gray-700">${item.cbm ? item.cbm : '-'}</td>
                     <td class="px-4 py-3 text-center">
                         <div class="flex justify-center gap-1.5">
-                            <button onclick="openEditModal('${item.orderNum}', '${item.tracking}', '${item.detail}')" class="text-blue-500 hover:text-blue-700 hover:bg-blue-50 p-1.5 rounded transition" title="แก้ไข">
+                            <button onclick="openEditModal('${item.orderNum}', '${item.tracking}', '${item.detail || ''}', '${item.weight || ''}', '${item.cbm || ''}')" class="text-blue-500 hover:text-blue-700 hover:bg-blue-50 p-1.5 rounded transition" title="แก้ไข">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <button onclick="openDeleteModal('${item.orderNum}', '${item.tracking}')" class="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded transition" title="ลบ">
@@ -344,8 +372,13 @@
         function addOrUpdateItem() {
             const trackingInput = document.getElementById('trackingInput');
             const detailInput = document.getElementById('detailInput');
+            const weightInput = document.getElementById('weightInput');
+            const cbmInput = document.getElementById('cbmInput');
+
             const tracking = trackingInput.value.trim();
             const detail = detailInput.value.trim();
+            const weight = weightInput.value.trim();
+            const cbm = cbmInput.value.trim();
 
             if (!tracking) {
                 showAlert('แจ้งเตือน', 'กรุณากรอกเลข Tracking ของจีน', 'red');
@@ -359,6 +392,8 @@
                     if (response.success) {
                         trackingInput.value = '';
                         detailInput.value = '';
+                        weightInput.value = '';
+                        cbmInput.value = '';
 
                         // เอาข้อมูลใหม่ใส่ด้านบนสุดของตาราง (Optimistic Update)
                         currentItems.unshift(response.data);
@@ -373,7 +408,7 @@
                     hideLoading();
                     showAlert('ผิดพลาด', err.message, 'red');
                 })
-                .addItemToSheet(currentMemberId, tracking, detail);
+                .addItemToSheet(currentMemberId, tracking, detail, weight, cbm);
         }
 
         // ================= ลบรายการ =================
@@ -407,10 +442,12 @@
         });
 
         // ================= แก้ไขรายการ =================
-        function openEditModal(orderNum, tracking, detail) {
+        function openEditModal(orderNum, tracking, detail, weight, cbm) {
             document.getElementById('editOrderNum').value = orderNum;
             document.getElementById('editTrackingInput').value = tracking;
             document.getElementById('editDetailInput').value = detail;
+            document.getElementById('editWeightInput').value = weight;
+            document.getElementById('editCbmInput').value = cbm;
             document.getElementById('editModalOverlay').classList.remove('hidden');
         }
 
@@ -418,8 +455,10 @@
             const orderNum = document.getElementById('editOrderNum').value;
             const tracking = document.getElementById('editTrackingInput').value.trim();
             const detail = document.getElementById('editDetailInput').value.trim();
+            const weight = document.getElementById('editWeightInput').value.trim();
+            const cbm = document.getElementById('editCbmInput').value.trim();
 
-            if (!tracking) {
+             if (!tracking) {
                 alert('กรุณากรอกเลข Tracking'); return;
             }
 
@@ -435,6 +474,8 @@
                         if (itemIndex > -1) {
                             currentItems[itemIndex].tracking = tracking;
                             currentItems[itemIndex].detail = detail;
+                            currentItems[itemIndex].weight = weight;
+                            currentItems[itemIndex].cbm = cbm;
                             renderTable();
                         }
                         showAlert('อัปเดตสำเร็จ!', response.message, 'blue');
@@ -446,7 +487,7 @@
                     hideLoading();
                     showAlert('ผิดพลาด', err.message, 'red');
                 })
-                .updateItemInSheet(orderNum, tracking, detail);
+                .updateItemInSheet(orderNum, tracking, detail, weight, cbm);
         }
 
         // ================= UI Helpers =================
