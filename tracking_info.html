@@ -15,19 +15,19 @@
 </head>
 <body class="text-gray-800">
 
-    <nav class="bg-white shadow-sm py-4 px-6 flex justify-between items-center">
+     <nav class="bg-white shadow-sm py-4 px-6 flex justify-between items-center">
         <div class="text-2xl font-bold text-brand flex flex-col leading-none">
             <span>SUCHAR</span>
             <span class="text-sm text-black">CARGO</span>
         </div>
         <div class="hidden md:flex space-x-6 text-sm font-medium">
-            <a href="<?= getScriptUrl() ?>?page=main" target="_top" class="text-gray-600 hover:text-brand">หน้าแรก</a>
-            <a href="<?= getScriptUrl() ?>?page=tracking" target="_top" class="text-brand">เช็คสถานะ</a>
+            <a href="<?= getScriptUrl() ?>?page=index" target="_top" class="text-gray-600 hover:text-brand">หน้าหลัก</a>
+            <a href="<?= getScriptUrl() ?>?page=pricing" target="_top" class="text-gray-600 hover:text-brand">อัตราค่าขนส่ง</a>
         </div>
         
         <div id="navActionContainer">
             <? var url = getScriptUrl(); ?>
-            <button id="loginNavBtn" onclick="window.top.location.href='<?= url ?>?page=index'" class="bg-brand text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition">
+            <button id="loginNavBtn" onclick="window.top.location.href='<?= url ?>?page=login'" class="bg-brand text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition">
                 เข้าสู่ระบบ
             </button>
         </div>
@@ -38,7 +38,7 @@
             <h1 class="text-2xl font-bold mb-2 flex items-center gap-3">
                 <i class="fas fa-box-open text-3xl opacity-80"></i> ตรวจสอบสถานะสินค้า
             </h1>
-            <div class="text-sm opacity-80">หน้าแรก > เช็คสถานะ</div>
+            <div class="text-sm opacity-80">หน้าหลัก > เช็คสถานะ</div>
         </div>
     </div>
 
@@ -59,7 +59,7 @@
                     <div>
                         <p class="text-sm text-gray-500">Tracking Number</p>
                         <h2 class="text-2xl font-bold text-brand mb-2 flex items-center gap-2">SC250621001 <i class="far fa-copy text-sm text-gray-400 cursor-pointer"></i></h2>
-                        <p class="text-sm"><span class="text-gray-500">ลูกค้า:</span> คุณสมชาย ใจดี</p>
+                        <p class="text-sm"><span class="text-gray-500">ลูกค้า:</span> ทดสอบ เว็บไซต์</p>
                         <p class="text-sm"><span class="text-gray-500">เบอร์โทร:</span> 081-234-5678</p>
                     </div>
                     <div class="md:text-right">
@@ -114,7 +114,7 @@
                     <div class="bg-white rounded-lg shadow p-6">
                         <h3 class="font-bold mb-4">ที่อยู่จัดส่ง</h3>
                         <div class="space-y-3 text-sm">
-                            <div class="flex"><span class="text-gray-500 w-24">ชื่อผู้รับ:</span><span class="font-medium">คุณสมชาย ใจดี</span></div>
+                            <div class="flex"><span class="text-gray-500 w-24">ชื่อผู้รับ:</span><span class="font-medium">ทดสอบ เว็บไซต์</span></div>
                             <div class="flex"><span class="text-gray-500 w-24">เบอร์โทร:</span><span>081-234-5678</span></div>
                             <div class="flex"><span class="text-gray-500 w-24">ที่อยู่:</span><span class="flex-1">123/456 หมู่บ้านตัวอย่าง ถ.รามอินทรา แขวงบางเขน เขตบางเขน กรุงเทพฯ 10220</span></div>
                         </div>
@@ -198,6 +198,12 @@
     <script>
         <? var scriptUrl = getScriptUrl(); ?>
         const GLOBAL_SCRIPT_URL = "<?= scriptUrl ?>";
+
+        // 🛠 เพิ่มฟังก์ชันนี้เพื่อจัดการการเปลี่ยนหน้า
+        function changePage(pageName) {
+            const currentUrl = window.top.location.href.split('?')[0];
+            window.top.location.href = currentUrl + "?page=" + pageName;
+        }
     </script>
 
     <?!= include('auth'); ?>

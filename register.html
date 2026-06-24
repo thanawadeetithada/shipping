@@ -178,9 +178,8 @@
                         loadingIcon.className = "fas fa-check-circle text-green-400 text-6xl mb-4";
                         loadingText.innerText = "สมัครสมาชิกสำเร็จ!";
 
-                        // หน่วงเวลา 1 วินาทีให้เห็นเครื่องหมายถูก แล้วรีไดเร็คไปหน้า index
                         setTimeout(() => {
-                            window.top.location.href = "<?= url ?>?page=index";
+                            window.top.location.href = "<?= url ?>?page=login";
                         }, 1000);
 
                     } else {

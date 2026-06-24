@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบหลังบ้าน - SUCHAR CARGO ADMIN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .bg-brand {
+            background-color: #c51c24;
+        }
+
+        .bg-brand-dark {
+            background-color: #8b1319;
+        }
+
+        .text-brand {
+            color: #c51c24;
+        }
+
+        /* Custom Scrollbar for better UI feel */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="flex h-screen overflow-hidden text-gray-800">
+
+    <!-- Mobile Sidebar Backdrop -->
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 md:hidden"
+        onclick="toggleMobileSidebar()"></div>
+
+    <!-- Sidebar Admin -->
+    <aside id="sidebar"
+        class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex flex-col z-50 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:flex">
+        <div class="py-6 px-6 bg-brand-dark text-center relative">
+            <div class="text-2xl font-bold leading-none mb-1">SUCHAR</div>
+            <div class="text-xs tracking-widest text-red-200">ADMIN PANEL</div>
+            <button class="absolute top-6 right-4 text-white md:hidden hover:text-red-200"
+                onclick="toggleMobileSidebar()">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <nav class="flex-grow p-4 space-y-2 overflow-y-auto">
+            <button onclick="switchView('overview')" id="btn-overview"
+                class="w-full flex items-center gap-3 bg-red-600/20 text-red-400 px-4 py-3 rounded-lg font-medium text-left transition duration-200">
+                <i class="fas fa-chart-pie w-5"></i> ภาพรวมแผงควบคุม
+            </button>
+            <button onclick="switchView('slips')" id="btn-slips"
+                class="w-full flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-lg font-medium text-left transition duration-200">
+                <i class="fas fa-receipt w-5"></i> ตรวจสอบสลิป
+                <span id="badge-slips-count"
+                    class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full ml-auto">3</span>
+            </button>
+            <button onclick="switchView('status')" id="btn-status"
+                class="w-full flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-lg font-medium text-left transition duration-200">
+                <i class="fas fa-box w-5"></i> อัปเดตสถานะพัสดุ
+            </button>
+            <button onclick="switchView('delivery')" id="btn-delivery"
+                class="w-full flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-lg font-medium text-left transition duration-200">
+                <i class="fas fa-motorcycle w-5"></i> จัดการส่งในไทย
+                <span id="badge-delivery-count"
+                    class="bg-yellow-500 text-gray-900 text-[10px] font-bold px-2 py-0.5 rounded-full ml-auto">2</span>
+            </button>
+            <button onclick="switchView('customers')" id="btn-customers"
+                class="w-full flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-lg font-medium text-left transition duration-200">
+                <i class="fas fa-users w-5"></i> ข้อมูลลูกค้า
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-gray-800 bg-gray-950">
+            <button onclick="simulateLogout()"
+                class="flex items-center gap-3 text-gray-400 hover:text-red-400 w-full px-4 py-2 rounded-lg hover:bg-gray-800 transition text-left text-sm">
+                <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+
+        <!-- Top Header -->
+        <header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center z-30">
+
+            <!-- Left Section: Navigation Links -->
+            <div class="flex items-center gap-4">
+                <a href="<?= getScriptUrl() ?>?page=index" target="_top" class="text-brand font-medium">
+                    หน้าหลัก
+                </a>
+                <a href="<?= getScriptUrl() ?>?page=tracking" target="_top"
+                    class="text-gray-600 hover:text-brand transition-colors">
+                    เช็คสถานะ
+                </a>
+                <a href="<?= getScriptUrl() ?>?page=pricing" target="_top"
+                    class="text-gray-600 hover:text-brand transition-colors">
+                    อัตราค่าขนส่ง
+                </a>
+            </div>
+
+            <!-- Right Section: Mobile Menu & User Profile -->
+            <div class="flex items-center gap-4">
+
+                <!-- Mobile Menu Button -->
+                <button class="text-gray-600 hover:text-gray-900 md:hidden p-1 transition-colors"
+                    onclick="toggleMobileSidebar()" aria-label="Toggle Menu">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+
+                <!-- User Profile -->
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-medium hidden sm:inline text-gray-700">Admin Ploy</span>
+                    <img src="https://ui-avatars.com/api/?name=Admin+Ploy&background=c51c24&color=fff"
+                        alt="Admin Profile" class="w-8 h-8 rounded-full shadow-sm ring-2 ring-gray-100">
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- Dynamic Content Body -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-8">
+
+            <!-- ================= VIEW 1: OVERVIEW ================= -->
+            <div id="view-overview" class="view-content space-y-6">
+                <!-- Title Header -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                            <i class="fas fa-chart-line text-brand"></i> แผงควบคุมผู้ดูแลระบบ (Admin Overview)
+                        </h1>
+                        <p class="text-sm text-gray-500 mt-1">ประมวลผลสถิติพัสดุ งานที่ต้องทำ</p>
+                    </div>
+                </div>
+
+                <!-- Dashboard Quick Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div onclick="switchView('slips')"
+                        class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-orange-500 flex items-center justify-between hover:shadow-md cursor-pointer transition">
+                        <div>
+                            <div class="text-gray-500 text-sm font-medium mb-1">สลิปที่รอการตรวจสอบ</div>
+                            <div class="text-3xl font-bold text-gray-800" id="stat-pending-slips">3</div>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-orange-50 text-orange-500 rounded-full flex items-center justify-center text-xl">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                    </div>
+
+                    <div onclick="switchView('status')"
+                        class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500 flex items-center justify-between hover:shadow-md cursor-pointer transition">
+                        <div>
+                            <div class="text-gray-500 text-sm font-medium mb-1">พัสดุกำลังเดินทางมาไทย</div>
+                            <div class="text-3xl font-bold text-gray-800" id="stat-transit-cargo">12</div>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center text-xl">
+                            <i class="fas fa-truck-moving"></i>
+                        </div>
+                    </div>
+
+                    <div onclick="switchView('delivery')"
+                        class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500 flex items-center justify-between hover:shadow-md cursor-pointer transition">
+                        <div>
+                            <div class="text-gray-500 text-sm font-medium mb-1">ถึงโกดังไทยแล้ว (รอจัดส่งในไทย)</div>
+                            <div class="text-3xl font-bold text-gray-800" id="stat-arrived-th">8</div>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-green-50 text-green-500 rounded-full flex items-center justify-center text-xl">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work-in-Progress & Urgent Actions Board -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left Side Table Column -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden lg:col-span-2">
+                        <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                            <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                                <i class="fas fa-history text-brand"></i> รายการพัสดุและรายการชำระเงินล่าสุด
+                            </h3>
+                            <button onclick="switchView('status')"
+                                class="text-xs text-brand font-medium hover:underline">ดูทั้งหมด <i
+                                    class="fas fa-angle-right"></i></button>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-white border-b-2 border-gray-100 text-gray-600 font-semibold">
+                                    <tr>
+                                        <th class="p-4 whitespace-nowrap">หมายเลขอ้างอิง</th>
+                                        <th class="p-4 whitespace-nowrap">ลูกค้า</th>
+                                        <th class="p-4 whitespace-nowrap">ค่าส่ง</th>
+                                        <th class="p-4 whitespace-nowrap">สถานะ</th>
+                                        <th class="p-4 whitespace-nowrap text-center">จัดการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100 text-gray-700" id="overview-recent-table-body">
+                                    <!-- Populated dynamically via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right Side Fast Summary Widgets -->
+                    <div class="space-y-6">
+                        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                            <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><i
+                                    class="fas fa-bullhorn text-brand"></i> ประกาศด่วนสำหรับแอดมิน</h3>
+                            <div class="space-y-3">
+                                <div
+                                    class="bg-red-50 p-3 rounded-lg border border-red-100 text-xs text-brand-dark leading-relaxed">
+                                    <span class="font-bold block mb-1">⚠️ วันหยุดคลังสินค้าจีน</span>
+                                    คลังกวางโจวจะปิดรับพัสดุวันที่ 1-3 ของเดือนหน้า
+                                    กรุณาแจ้งลูกค้าให้รับทราบล่วงหน้าด้วยค่ะ
+                                </div>
+                                <div
+                                    class="bg-blue-50 p-3 rounded-lg border border-blue-100 text-xs text-blue-900 leading-relaxed">
+                                    <span class="font-bold block mb-1">⚡ ขนส่งในไทยล่าช้าช่วงฝนตก</span>
+                                    ช่วงนี้บริษัทแมสเซนเจอร์ (Lalamove/Grab) คิวเต็มไวกว่าปกติ
+                                    กรุณาเรียกรถล่วงหน้าอย่างน้อย 1 ชม.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl shadow-md p-6 text-white relative overflow-hidden">
+                            <h4 class="font-bold text-lg mb-2">อัตราค่าขนส่งพัสดุปัจจุบัน</h4>
+                            <p class="text-xs text-gray-300 leading-relaxed mb-4">
+                                อัตราคำนวณเงินจากระบบจำแนกตามประเภทสินค้า:</p>
+                            <div class="space-y-2 text-xs">
+                                <div class="flex justify-between border-b border-gray-700 pb-1">
+                                    <span>ทางรถ (สินค้าทั่วไป):</span>
+                                    <span class="font-bold text-yellow-400">35 บาท / KG</span>
+                                </div>
+                                <div class="flex justify-between border-b border-gray-700 pb-1">
+                                    <span>ทางรถ (สินค้าพิเศษ):</span>
+                                    <span class="font-bold text-yellow-400">55 บาท / KG</span>
+                                </div>
+                                <div class="flex justify-between border-b border-gray-700 pb-1">
+                                    <span>ทางเรือ (สินค้าทั่วไป):</span>
+                                    <span class="font-bold text-blue-400">25 บาท / KG</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 2: VERIFY SLIPS ================= -->
+            <div id="view-slips" class="view-content space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                            <i class="fas fa-file-signature text-orange-500"></i> ตรวจสอบการชำระเงินของลูกค้า
+                        </h1>
+                        <p class="text-sm text-gray-500 mt-1">ตรวจสอบสลิปโอนเงิน อนุมัติออกเลข Tracking จีน-ไทย
+                            และเปลี่ยนสถานะพัสดุ</p>
+                    </div>
+                </div>
+
+                <!-- Slip Verifying Box Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="slips-grid">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- ================= VIEW 3: UPDATE STATUS ================= -->
+            <div id="view-status" class="view-content space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                            <i class="fas fa-boxes text-blue-600"></i> อัปเดตสถานะและอัปโหลดรูปพัสดุ
+                        </h1>
+                        <p class="text-sm text-gray-500 mt-1">อัปเดตขั้นตอนขนส่ง (จีนมาไทย)
+                            และอัปโหลดภาพถ่ายกล่องพัสดุให้ลูกค้าเห็นได้แบบเรียลไทม์</p>
+                    </div>
+                </div>
+
+                <!-- Search and Filters bar -->
+                <div
+                    class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div class="relative w-full md:w-80">
+                        <input type="text" id="status-search-input" onkeyup="filterStatusTable()"
+                            placeholder="ค้นหาชื่อลูกค้า / Tracking..."
+                            class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400 text-sm"></i>
+                    </div>
+                    <div class="flex gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
+                        <button onclick="filterStatusByTab('all')"
+                            class="status-tab-btn px-4 py-1.5 rounded-lg text-xs font-semibold bg-gray-900 text-white transition">ทั้งหมด</button>
+                        <button onclick="filterStatusByTab('ร้านค้าจัดส่งแล้ว')"
+                            class="status-tab-btn px-4 py-1.5 rounded-lg text-xs font-semibold bg-white border text-gray-600 hover:bg-gray-50 transition whitespace-nowrap">ร้านจัดส่ง</button>
+                        <button onclick="filterStatusByTab('ถึงโกดังจีนแล้ว')"
+                            class="status-tab-btn px-4 py-1.5 rounded-lg text-xs font-semibold bg-white border text-gray-600 hover:bg-gray-50 transition whitespace-nowrap">ถึงโกดังจีน</button>
+                        <button onclick="filterStatusByTab('กำลังเดินทางมาไทย')"
+                            class="status-tab-btn px-4 py-1.5 rounded-lg text-xs font-semibold bg-white border text-gray-600 hover:bg-gray-50 transition whitespace-nowrap">กำลังมาไทย</button>
+                        <button onclick="filterStatusByTab('ถึงโกดังไทย')"
+                            class="status-tab-btn px-4 py-1.5 rounded-lg text-xs font-semibold bg-white border text-gray-600 hover:bg-gray-50 transition whitespace-nowrap">ถึงโกดังไทย</button>
+                    </div>
+                </div>
+
+                <!-- Main Status Updating Table -->
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-gray-50 border-b border-gray-200 text-gray-600 font-semibold">
+                                <tr>
+                                    <th class="p-4">Tracking Number</th>
+                                    <th class="p-4">ข้อมูลลูกค้า</th>
+                                    <th class="p-4">ประเภท/น้ำหนัก</th>
+                                    <th class="p-4">สถานะนำเข้า</th>
+                                    <th class="p-4">ภาพถ่ายกล่อง</th>
+                                    <th class="p-4 text-right">ดำเนินการอัปเดต</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100" id="status-table-body">
+                                <!-- Populated dynamically via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 4: LOCAL DELIVERY ================= -->
+            <div id="view-delivery" class="view-content space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                            <i class="fas fa-truck-loading text-purple-600"></i> จัดการระบบส่งในไทย
+                        </h1>
+                        <p class="text-sm text-gray-500 mt-1">
+                            คัดแยกและดำเนินขั้นตอนตามประเภทขนส่งที่ลูกค้าเลือกเมื่อของมาถึงโกดังไทยแล้ว</p>
+                    </div>
+                </div>
+
+                <!-- Delivery Filter Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div onclick="filterDeliveryMethod(1)" id="card-dm-1"
+                        class="delivery-method-card bg-white p-5 rounded-xl border-2 border-brand shadow-sm cursor-pointer hover:shadow-md transition">
+                        <div class="flex justify-between items-center mb-3">
+                            <div
+                                class="w-10 h-10 bg-red-100 text-brand rounded-lg flex items-center justify-center text-lg">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                            <span class="bg-red-50 text-brand font-bold text-xs px-2 py-0.5 rounded-full"
+                                id="count-dm-1">0</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">เรียกแมสมารับเอง</h4>
+                        <p class="text-xs text-gray-500 mt-1">ลูกค้าแจ้งคิวพนักงานขับรถเข้ามารับด้วยตัวเองที่หน้าโกดัง
+                        </p>
+                    </div>
+
+                    <div onclick="filterDeliveryMethod(2)" id="card-dm-2"
+                        class="delivery-method-card bg-white p-5 rounded-xl border border-gray-200 shadow-sm cursor-pointer hover:shadow-md transition">
+                        <div class="flex justify-between items-center mb-3">
+                            <div
+                                class="w-10 h-10 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-lg">
+                                <i class="fas fa-motorcycle"></i>
+                            </div>
+                            <span class="bg-orange-50 text-orange-600 font-bold text-xs px-2 py-0.5 rounded-full"
+                                id="count-dm-2">1</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">โกดังเรียกแมสให้</h4>
+                        <p class="text-xs text-gray-500 mt-1">แอดมินเรียกรถ (Lalamove/Grab) ให้ และกรอกยอดค่าส่งปลายทาง
+                        </p>
+                    </div>
+
+                    <div onclick="filterDeliveryMethod(3)" id="card-dm-3"
+                        class="delivery-method-card bg-white p-5 rounded-xl border border-gray-200 shadow-sm cursor-pointer hover:shadow-md transition">
+                        <div class="flex justify-between items-center mb-3">
+                            <div
+                                class="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-lg">
+                                <i class="fas fa-shipping-fast"></i>
+                            </div>
+                            <span class="bg-blue-50 text-blue-600 font-bold text-xs px-2 py-0.5 rounded-full"
+                                id="count-dm-3">1</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">ส่งไปรษณีย์ EMS</h4>
+                        <p class="text-xs text-gray-500 mt-1">พิมพ์ใบปะหน้า ป้อนหมายเลขพัสดุไทยสำหรับขนส่งปลายทาง</p>
+                    </div>
+                </div>
+
+                <!-- Delivery Processing Area -->
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                    <div
+                        class="p-6 border-b border-gray-200 bg-gray-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                                <i class="fas fa-shipping-fast text-brand"></i> รายการสินค้าที่รอการจัดส่งในไทย
+                            </h3>
+                            <p class="text-xs text-gray-500 mt-0.5" id="delivery-method-subtitle">
+                                แสดงพัสดุที่มีรูปแบบจัดส่ง: โกดังเรียกแมสให้</p>
+                        </div>
+                        <div class="relative w-full sm:w-64">
+                            <input type="text" id="delivery-search" onkeyup="filterDeliveryTable()"
+                                placeholder="ค้นหา Tracking / ลูกค้า..."
+                                class="w-full pl-9 pr-4 py-1.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand bg-white">
+                            <i class="fas fa-search absolute left-3 top-2.5 text-gray-400 text-sm"></i>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-white border-b-2 border-gray-100 text-gray-600 font-semibold">
+                                <tr>
+                                    <th class="p-4">เลขพัสดุจีน-ไทย</th>
+                                    <th class="p-4">รายละเอียดลูกค้า / ที่อยู่</th>
+                                    <th class="p-4">น้ำหนัก (KG)</th>
+                                    <th class="p-4" id="th-delivery-meta">ค่ารถ / รายละเอียดส่ง</th>
+                                    <th class="p-4 text-center">สถานะจัดส่ง</th>
+                                    <th class="p-4 text-right">ดำเนินการ</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-gray-700" id="delivery-table-body">
+                                <!-- Populated dynamically via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 5: CUSTOMERS ================= -->
+            <div id="view-customers" class="view-content space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                            <i class="fas fa-users-cog text-teal-600"></i> ข้อมูลผู้ใช้งาน
+                        </h1>
+                        <p class="text-sm text-gray-500 mt-1">เรียกดูข้อมูลติดต่อ ที่อยู่จัดส่งพัสดุ ประวัติสมาชิก
+                            และยอดทำรายการสะสมของลูกค้า</p>
+                    </div>
+                </div>
+
+                <!-- Customer List Card Container -->
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                    <div
+                        class="p-6 border-b border-gray-200 bg-gray-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                            <i class="fas fa-id-card-alt text-brand"></i> ลูกค้าในระบบทั้งหมด
+                        </h3>
+                        <div class="relative w-full sm:w-72">
+                            <input type="text" id="customer-search-input" onkeyup="filterCustomerTable()"
+                                placeholder="ค้นหารหัส / ชื่อ / เบอร์โทร..."
+                                class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand bg-white">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400 text-sm"></i>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-white border-b-2 border-gray-100 text-gray-600 font-semibold">
+                                <tr>
+                                    <th class="p-4">รหัสลูกค้า</th>
+                                    <th class="p-4">ชื่อ-นามสกุล</th>
+                                    <th class="p-4">เบอร์โทรติดต่อ</th>
+                                    <th class="p-4">ที่อยู่จัดส่งพัสดุในไทย</th>
+                                    <th class="p-4 text-center">สิทธิ์ใช้งาน</th>
+                                    <th class="p-4 text-right">จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-gray-700" id="customers-table-body">
+                                <!-- Populated dynamically via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ================= MODALS & POPUPS ================= -->
+
+    <!-- Modal 1: Review Slip Detail -->
+    <div id="modal-slip"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div
+            class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl transform transition-transform scale-95 duration-200">
+            <!-- Header -->
+            <div class="bg-gray-950 p-4 text-white flex justify-between items-center">
+                <h3 class="font-bold text-base flex items-center gap-2"><i
+                        class="fas fa-search-dollar text-yellow-400"></i> ตรวจสอบสลิปและอนุมัติสินค้า</h3>
+                <button onclick="closeModal('modal-slip')" class="text-gray-400 hover:text-white transition text-lg"><i
+                        class="fas fa-times"></i></button>
+            </div>
+
+            <!-- Slip Detail Body -->
+            <div class="p-6 space-y-4 max-h-[80vh] overflow-y-auto" id="modal-slip-content">
+                <!-- Injected dynamically via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Upload Box Photo -->
+    <div id="modal-upload"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div
+            class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl transform transition-transform scale-95 duration-200">
+            <!-- Header -->
+            <div class="bg-gray-950 p-4 text-white flex justify-between items-center">
+                <h3 class="font-bold text-base flex items-center gap-2"><i class="fas fa-camera text-blue-400"></i>
+                    อัปโหลดรูปภาพกล่องสินค้า</h3>
+                <button onclick="closeModal('modal-upload')"
+                    class="text-gray-400 hover:text-white transition text-lg"><i class="fas fa-times"></i></button>
+            </div>
+
+            <!-- Upload Photo Form -->
+            <div class="p-6 space-y-4">
+                <div class="bg-blue-50 border border-blue-100 p-3 rounded-lg text-xs text-blue-900 leading-normal">
+                    <span class="font-bold block mb-1">💡 ภาพถ่ายกล่องพัสดุ</span>
+                    กรุณาถ่ายภาพกล่องพัสดุของลูกค้าที่ถึงโกดังไทยอย่างชัดเจน เพื่อส่งต่อให้ลูกค้ายืนยันการรับสินค้า
+                </div>
+
+                <div class="text-sm">
+                    <p class="font-semibold text-gray-700">พัสดุเลขที่: <span id="upload-modal-tracking"
+                            class="text-brand">SC250621003</span></p>
+                    <p class="text-xs text-gray-500 mt-0.5">ลูกค้า: <span id="upload-modal-customer">คุณสมชาย
+                            ใจดี</span></p>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-semibold text-gray-500 uppercase">เลือกวิธีอัปโหลดภาพ</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="triggerFileSelect()"
+                            class="border border-gray-300 rounded-lg p-3 hover:bg-gray-50 hover:border-gray-400 flex flex-col items-center justify-center gap-1.5 transition">
+                            <i class="fas fa-folder-open text-gray-500 text-lg"></i>
+                            <span class="text-xs text-gray-700 font-medium">เลือกไฟล์รูปในคลัง</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Hidden Input file for file select trigger -->
+                <input type="file" id="modal-upload-file-input" onchange="handleFileChange(event)" class="hidden"
+                    accept="image/*">
+
+                <!-- Image Preview Area -->
+                <div id="image-preview-area"
+                    class="hidden border rounded-xl overflow-hidden bg-gray-50 relative aspect-video flex items-center justify-center group">
+                    <img id="image-preview" src="" class="w-full h-full object-cover">
+                    <div
+                        class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <button onclick="clearImagePreview()"
+                            class="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition text-sm">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                    <button onclick="closeModal('modal-upload')"
+                        class="flex-1 py-2.5 border border-gray-300 rounded-xl hover:bg-gray-100 text-sm font-semibold transition">ยกเลิก</button>
+                    <button onclick="confirmUploadPhoto()" id="btn-save-photo" disabled
+                        class="flex-1 py-2.5 bg-gray-400 text-white rounded-xl text-sm font-semibold cursor-not-allowed transition">ยืนยันบันทึกภาพ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Local Dispatch Editor (EMS & Courier pricing) -->
+    <div id="modal-dispatch"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div
+            class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl transform transition-transform scale-95 duration-200">
+            <!-- Header -->
+            <div class="bg-gray-950 p-4 text-white flex justify-between items-center">
+                <h3 class="font-bold text-base flex items-center gap-2" id="dispatch-modal-title"><i
+                        class="fas fa-motorcycle text-orange-400"></i> แจ้งยอดค่าแมสส่งสินค้า</h3>
+                <button onclick="closeModal('modal-dispatch')"
+                    class="text-gray-400 hover:text-white transition text-lg"><i class="fas fa-times"></i></button>
+            </div>
+
+            <!-- Form -->
+            <div class="p-6 space-y-4">
+                <div class="text-sm">
+                    <p class="font-semibold text-gray-700">พัสดุเลขที่: <span id="dispatch-modal-tracking"
+                            class="text-brand">SC250621004</span></p>
+                    <p class="text-xs text-gray-500 mt-0.5">ลูกค้า: <span id="dispatch-modal-customer">คุณรักดี
+                            เรียนเด่น</span></p>
+                    <p class="text-xs text-gray-500 mt-1" id="dispatch-modal-address"><span
+                            class="font-semibold text-gray-700">ที่อยู่:</span> 123/4 ถ.สุขุมวิท กทม.</p>
+                </div>
+
+                <div id="dispatch-form-messenger" class="space-y-3">
+                    <div>
+                        <label
+                            class="block text-xs font-semibold text-gray-500 uppercase mb-1">ยอดค่าใช้จ่ายสำหรับพนักงานจัดส่ง
+                            (บาท)</label>
+                        <div class="relative">
+                            <span class="absolute left-3.5 top-2.5 text-gray-400 text-sm">฿</span>
+                            <input type="number" id="input-delivery-fare" placeholder="เช่น 250"
+                                class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand">
+                        </div>
+                        <p class="text-[11px] text-gray-400 mt-1">
+                            ยอดเงินนี้จะส่งไปแจ้งเตือนบนแผงควบคุมของลูกค้าเพื่อให้ทำการกดยืนยันชำระเงิน</p>
+                    </div>
+                </div>
+
+                <div id="dispatch-form-ems" class="space-y-3 hidden">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">ป้อนหมายเลขพัสดุ EMS ไทย
+                            (Tracking No.)</label>
+                        <input type="text" id="input-ems-tracking" placeholder="เช่น ED123456789TH"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand">
+                    </div>
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                    <button onclick="closeModal('modal-dispatch')"
+                        class="flex-1 py-2.5 border border-gray-300 rounded-xl hover:bg-gray-100 text-sm font-semibold transition">ปิด</button>
+                    <button onclick="saveDispatchDetails()"
+                        class="flex-1 py-2.5 bg-brand text-white rounded-xl text-sm font-semibold hover:bg-red-700 transition">บันทึกข้อมูล</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Postal address print layout -->
+    <div id="modal-address-print"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div
+            class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl transform transition-transform scale-95 duration-200">
+            <!-- Header -->
+            <div class="bg-gray-950 p-4 text-white flex justify-between items-center">
+                <h3 class="font-bold text-base flex items-center gap-2"><i class="fas fa-print text-teal-400"></i>
+                    ตัวอย่างใบปะหน้าสำหรับจัดส่ง</h3>
+                <button onclick="closeModal('modal-address-print')"
+                    class="text-gray-400 hover:text-white transition text-lg"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="p-6 space-y-4">
+                <!-- Printable area box -->
+                <div class="border-2 border-dashed border-gray-400 p-6 bg-white text-gray-900 rounded-lg space-y-6 select-all font-mono"
+                    id="printable-area">
+                    <div class="flex justify-between items-start border-b pb-4">
+                        <div>
+                            <div class="font-bold text-lg">SUCHAR CARGO</div>
+                            <div class="text-xs mt-0.5">คลังสินค้ากรุงเทพฯ (ประเทศไทย)</div>
+                            <div class="text-xs">โทร. 02-114-8008</div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs bg-gray-200 px-2 py-1 rounded font-bold"
+                                id="print-tracking-label">SC250621004</span>
+                            <div class="text-[10px] mt-1 text-gray-500">วิธีจัดส่ง: ไปรษณีย์ EMS</div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 p-3 rounded">
+                            <div class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">ผู้ฝากส่ง (SENDER)
+                            </div>
+                            <div class="text-xs font-semibold">บจก. สุชาร์ คาร์โก้ (SUCHAR CARGO)</div>
+                            <div class="text-xs text-gray-600">เลขที่ 12/3 ถนนวิภาวดีรังสิต แขวงดินแดง เขตดินแดง
+                                กรุงเทพมหานคร 10400</div>
+                        </div>
+
+                        <div class="bg-white border p-4 rounded shadow-sm relative">
+                            <div class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">ผู้รับ (RECEIVER)
+                            </div>
+                            <div class="text-sm font-bold mt-1" id="print-customer-name">คุณรักดี เรียนเด่น</div>
+                            <div class="text-sm mt-1" id="print-customer-address">123/4 ถนนสุขุมวิท แขวงคลองเตย
+                                เขตคลองเตย กรุงเทพมหานคร 10110</div>
+                            <div class="text-xs font-semibold mt-2" id="print-customer-phone">โทรศัพท์: 085-555-6666
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center text-xs text-gray-500 pt-2 border-t">
+                        <div>พัสดุนำเข้าจากจีนผ่านระบบสแกนสลิปอัตโนมัติ</div>
+                        <div class="font-bold text-gray-800">ขอบคุณที่ใช้บริการ</div>
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button onclick="closeModal('modal-address-print')"
+                        class="flex-1 py-2 border rounded-xl hover:bg-gray-100 text-sm font-semibold transition">ปิดหน้าต่าง</button>
+                    <button onclick="triggerPrintSimulated()"
+                        class="flex-1 py-2 bg-teal-600 text-white rounded-xl text-sm font-semibold hover:bg-teal-700 transition flex items-center justify-center gap-2">
+                        <i class="fas fa-print"></i> พิมพ์ใบปะหน้า (จำลอง)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEAMING_CHUNK: Introducing Custom Toast Toast Notifier... -->
+    <!-- Custom Toast Notification Box -->
+    <div id="toast"
+        class="fixed bottom-5 right-5 z-50 bg-gray-900 text-white px-6 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 transition-all transform translate-y-20 opacity-0 pointer-events-none duration-300">
+        <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-xs text-white"
+            id="toast-icon-bg">
+            <i class="fas fa-check" id="toast-icon"></i>
+        </div>
+        <div>
+            <p class="text-sm font-semibold" id="toast-message">อัปเดตสลิปและออกแทร็กกิ้งเสร็จสิ้น</p>
+        </div>
+    </div>
+
+    <!-- Scripts Area -->
+    <script>
+        // Global Datastore mimicking backend values
+        let DB = {
+            shipments: [
+                {
+                    trackingId: "SC250621001",
+                    customerName: "user1",
+                    phone: "081-234-5678",
+                    amount: 175,
+                    status: "รอตรวจสลิป",
+                    date: "21 มิ.ย. 2026 10:35 น.",
+                    type: "สินค้าทั่วไป",
+                    weight: 5.0,
+                    image: "",
+                    localMethod: "ไปรษณีย์ EMS",
+                    localTracking: "",
+                    deliveryFare: 0,
+                    deliveryAddress: "12/4 ซอยลาซาล 12 ถนนสุขุมวิท แขวงบางนา เขตบางนา กรุงเทพมหานคร 10260"
+                },
+                {
+                    trackingId: "SC250621002",
+                    customerName: "user2",
+                    phone: "089-876-5432",
+                    amount: 350,
+                    status: "กำลังเดินทางมาไทย",
+                    date: "21 มิ.ย. 2026 14:15 น.",
+                    type: "สินค้าพิเศษ",
+                    weight: 10.0,
+                    image: "",
+                    localMethod: "โกดังเรียกแมสให้",
+                    localTracking: "",
+                    deliveryFare: 0,
+                    deliveryAddress: "99/99 หมู่บ้านเศรษฐี แขวงประเวศ เขตประเวศ กรุงเทพมหานคร 10250"
+                },
+                {
+                    trackingId: "SC250621003",
+                    customerName: "user3",
+                    phone: "082-333-4444",
+                    amount: 525,
+                    status: "ถึงโกดังไทย",
+                    date: "22 มิ.ย. 2026 09:10 น.",
+                    type: "สินค้าทั่วไป",
+                    weight: 15.0,
+                    image: "",
+                    localMethod: "เรียกแมสมารับเอง",
+                    localTracking: "",
+                    deliveryFare: 0,
+                    deliveryAddress: "55 ซอยลาดพร้าว 101 แขวงคลองเจ้าคุณสิงห์ เขตวังทองหลาง กรุงเทพมหานคร 10310"
+                },
+                {
+                    trackingId: "SC250621004",
+                    customerName: "user4",
+                    phone: "085-555-6666",
+                    amount: 1200,
+                    status: "ถึงโกดังไทย",
+                    date: "22 มิ.ย. 2026 11:20 น.",
+                    type: "สินค้าพิเศษ",
+                    weight: 24.0,
+                    image: "https://images.unsplash.com/photo-1512418490979-92798cec1380?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    localMethod: "โกดังเรียกแมสให้",
+                    localTracking: "",
+                    deliveryFare: 250,
+                    deliveryAddress: "123/4 ถนนสุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพมหานคร 10110"
+                },
+                {
+                    trackingId: "SC250621005",
+                    customerName: "user5",
+                    phone: "099-123-4567",
+                    amount: 850,
+                    status: "รอตรวจสลิป",
+                    date: "22 มิ.ย. 2026 13:40 น.",
+                    type: "สินค้าทั่วไป",
+                    weight: 24.2,
+                    image: "",
+                    localMethod: "ไปรษณีย์ EMS",
+                    localTracking: "",
+                    deliveryFare: 0,
+                    deliveryAddress: "777/7 คอนโดหรู แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330"
+                }
+            ],
+            customers: [
+                { id: "SC-00192", name: "user1", phone: "081-234-5678", address: "12/4 ซอยลาซาล 12 ถนนสุขุมวิท แขวงบางนา เขตบางนา กรุงเทพมหานคร 10260", totalShipments: 16, role: "ลูกค้าทั่วไป" },
+                { id: "SC-00210", name: "user2", phone: "089-876-5432", address: "99/99 หมู่บ้านเศรษฐี แขวงประเวศ เขตประเวศ กรุงเทพมหานคร 10250", totalShipments: 25, role: "ลูกค้า VIP" },
+                { id: "SC-00105", name: "user3", phone: "082-333-4444", address: "55 ซอยลาดพร้าว 101 แขวงคลองเจ้าคุณสิงห์ เขตวังทองหลาง กรุงเทพมหานคร 10310", totalShipments: 4, role: "ลูกค้าทั่วไป" },
+                { id: "SC-00305", name: "user4", phone: "085-555-6666", address: "123/4 ถนนสุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพมหานคร 10110", totalShipments: 8, role: "ลูกค้าทั่วไป" },
+                { id: "SC-00140", name: "user5", phone: "099-123-4567", address: "777/7 คอนโดหรู แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330", totalShipments: 12, role: "ลูกค้า VIP" }
+            ]
+        };
+
+        let selectedActiveDeliveryMethod = 2; // Default is 'โกดังเรียกแมสให้' (Method Code 2)
+        let activeView = 'overview';
+        let currentUploadTracking = ""; // Store tracking context for photo uploads
+
+        // Tab View Switching Controller
+        function switchView(viewName) {
+            activeView = viewName;
+
+            // Toggle view visibility
+            document.querySelectorAll('.view-content').forEach(el => el.classList.add('hidden'));
+            const activeViewEl = document.getElementById('view-' + viewName);
+            if (activeViewEl) activeViewEl.classList.remove('hidden');
+
+            // Style navigation buttons
+            document.querySelectorAll('aside nav button').forEach(btn => {
+                btn.classList.remove('bg-red-600/20', 'text-red-400');
+                btn.classList.add('text-gray-400', 'hover:text-white', 'hover:bg-gray-800');
+            });
+
+            const activeBtn = document.getElementById('btn-' + viewName);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-gray-400', 'hover:text-white', 'hover:bg-gray-800');
+                activeBtn.classList.add('bg-red-600/20', 'text-red-400');
+            }
+
+            // Close mobile sidebar on switch
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            document.getElementById('sidebarBackdrop').classList.add('hidden');
+
+            // Trigger data-reloading based on view
+            renderData();
+        }
+
+        // Sidebar drawer toggler on mobile layout
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                backdrop.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                backdrop.classList.add('hidden');
+            }
+        }
+
+        // Master Render Routing Orchestrator
+        function renderData() {
+            updateDashboardCounters();
+
+            if (activeView === 'overview') {
+                renderOverviewTable();
+            } else if (activeView === 'slips') {
+                renderSlipsGrid();
+            } else if (activeView === 'status') {
+                renderStatusTable();
+            } else if (activeView === 'delivery') {
+                renderDeliveryTable();
+            } else if (activeView === 'customers') {
+                renderCustomersTable();
+            }
+        }
+
+        // Calculating metric numbers for real-time state update on widgets
+        function updateDashboardCounters() {
+            const pendingSlips = DB.shipments.filter(s => s.status === "รอตรวจสลิป").length;
+            const inTransit = DB.shipments.filter(s => s.status === "กำลังเดินทางมาไทย").length;
+            const arrivedTH = DB.shipments.filter(s => s.status === "ถึงโกดังไทย").length;
+
+            document.getElementById('stat-pending-slips').innerText = pendingSlips;
+            document.getElementById('stat-transit-cargo').innerText = inTransit;
+            document.getElementById('stat-arrived-th').innerText = arrivedTH;
+            document.getElementById('badge-slips-count').innerText = pendingSlips;
+
+            // Delivery Tab Counts broken down by option
+            const dm1Count = DB.shipments.filter(s => s.status === "ถึงโกดังไทย" && s.localMethod === "เรียกแมสมารับเอง").length;
+            const dm2Count = DB.shipments.filter(s => s.status === "ถึงโกดังไทย" && s.localMethod === "โกดังเรียกแมสให้").length;
+            const dm3Count = DB.shipments.filter(s => s.status === "ถึงโกดังไทย" && s.localMethod === "ไปรษณีย์ EMS").length;
+
+            document.getElementById('count-dm-1').innerText = dm1Count;
+            document.getElementById('count-dm-2').innerText = dm2Count;
+            document.getElementById('count-dm-3').innerText = dm3Count;
+
+            const pendingDeliveries = dm1Count + dm2Count + dm3Count;
+            document.getElementById('badge-delivery-count').innerText = pendingDeliveries;
+        }
+
+        // Component 1: Admin Overview Table
+        function renderOverviewTable() {
+            const tableBody = document.getElementById('overview-recent-table-body');
+            tableBody.innerHTML = '';
+
+            DB.shipments.forEach(s => {
+                let statusBadge = '';
+                if (s.status === "รอตรวจสลิป") {
+                    statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-700 flex items-center inline-flex gap-1 border border-orange-200"><i class="fas fa-clock"></i> รอตรวจสลิป</span>`;
+                } else if (s.status === "กำลังเดินทางมาไทย") {
+                    statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 flex items-center inline-flex gap-1 border border-blue-200"><i class="fas fa-truck-moving"></i> กำลังมาไทย</span>`;
+                } else if (s.status === "ถึงโกดังไทย") {
+                    statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700 flex items-center inline-flex gap-1 border border-green-200"><i class="fas fa-warehouse"></i> ถึงโกดังไทย</span>`;
+                } else {
+                    statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 flex items-center inline-flex gap-1 border border-gray-200"><i class="fas fa-check-circle"></i> ส่งออกแล้ว</span>`;
+                }
+
+                let actionButton = '';
+                if (s.status === "รอตรวจสลิป") {
+                    actionButton = `<button onclick="openSlipModal('${s.trackingId}')" class="bg-brand text-white px-3 py-1.5 rounded-md text-xs font-semibold hover:bg-red-800 transition shadow-sm inline-flex items-center gap-1"><i class="fas fa-search-dollar"></i> ตรวจสอบ</button>`;
+                } else {
+                    actionButton = `<button onclick="switchView('status')" class="text-gray-500 hover:text-brand px-3 py-1.5 rounded-md text-xs font-semibold border border-gray-200 hover:border-brand transition bg-white inline-flex items-center gap-1">ดูประวัติ</button>`;
+                }
+
+                tableBody.innerHTML += `
+                    <tr class="hover:bg-gray-50/50 transition">
+                        <td class="p-4 font-bold text-gray-900">${s.trackingId}</td>
+                        <td class="p-4">
+                            <div class="font-medium text-gray-800">${s.customerName}</div>
+                            <div class="text-xs text-gray-400">${s.phone}</div>
+                        </td>
+                        <td class="p-4 font-bold text-brand">${s.amount} ฿</td>
+                        <td class="p-4">${statusBadge}</td>
+                        <td class="p-4 text-center">${actionButton}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Component 2: Verification Slips Grid Cards view
+        function renderSlipsGrid() {
+            const grid = document.getElementById('slips-grid');
+            grid.innerHTML = '';
+
+            const pendingShipments = DB.shipments.filter(s => s.status === "รอตรวจสลิป");
+
+            if (pendingShipments.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-12 flex flex-col items-center justify-center text-center text-gray-500 bg-white rounded-xl border border-dashed border-gray-300">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 text-2xl mb-3">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <h4 class="font-bold text-gray-800">ไม่มีรายการรอดำเนินการ</h4>
+                        <p class="text-xs text-gray-400 mt-1">สลิปทั้งหมดได้รับการตรวจสอบและอนุมัติอย่างครบถ้วนแล้ว</p>
+                    </div>
+                `;
+                return;
+            }
+
+            pendingShipments.forEach(s => {
+                grid.innerHTML += `
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm relative hover:shadow-md transition">
+                        <div class="absolute top-4 right-4 bg-orange-50 text-orange-700 text-[10px] font-bold px-2.5 py-1 rounded-full border border-orange-200">
+                            รออนุมัติ
+                        </div>
+                        <span class="text-xs text-gray-400 block mb-1">${s.date}</span>
+                        <h4 class="font-bold text-lg text-gray-900">${s.trackingId}</h4>
+                        <p class="text-sm font-medium text-gray-700 mt-1">ลูกค้า: ${s.customerName}</p>
+                        <p class="text-xs text-gray-500">โทร: ${s.phone}</p>
+                        
+                        <div class="mt-4 bg-gray-50 p-3 rounded-lg border border-gray-100 flex justify-between items-center">
+                            <div>
+                                <p class="text-[10px] text-gray-400 uppercase font-semibold">ยอดโอนตามระบบ</p>
+                                <p class="text-xl font-bold text-green-600">${s.amount}.00 ฿</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] text-gray-400 uppercase font-semibold">น้ำหนัก</p>
+                                <p class="text-sm font-bold text-gray-700">${s.weight} KG</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 mt-4">
+                            <button onclick="approveSlipFast('${s.trackingId}')" class="bg-green-600 text-white font-semibold py-2 rounded-lg text-xs hover:bg-green-700 transition flex items-center justify-center gap-1 shadow-sm"><i class="fas fa-check"></i> อนุมัติทันที</button>
+                            <button onclick="openSlipModal('${s.trackingId}')" class="bg-gray-100 text-gray-700 font-semibold py-2 rounded-lg text-xs hover:bg-gray-200 transition flex items-center justify-center gap-1 border border-gray-200"><i class="fas fa-eye"></i> ตรวจรูปสลิป</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Component 3: Shipment tracking table rendering
+        function renderStatusTable() {
+            const tableBody = document.getElementById('status-table-body');
+            tableBody.innerHTML = '';
+
+            DB.shipments.forEach(s => {
+                let statusBadge = '';
+                if (s.status === "รอตรวจสลิป") {
+                    statusBadge = `<span class="bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-orange-200 inline-flex items-center gap-1"><i class="fas fa-clock"></i> รอตรวจสลิป</span>`;
+                } else if (s.status === "กำลังเดินทางมาไทย") {
+                    statusBadge = `<span class="bg-blue-100 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-blue-200 inline-flex items-center gap-1"><i class="fas fa-truck-moving"></i> กำลังมาไทย</span>`;
+                } else if (s.status === "ถึงโกดังไทย") {
+                    statusBadge = `<span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-green-200 inline-flex items-center gap-1"><i class="fas fa-warehouse"></i> ถึงโกดังไทย</span>`;
+                } else {
+                    statusBadge = `<span class="bg-gray-100 text-gray-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-gray-200 inline-flex items-center gap-1"><i class="fas fa-check-circle"></i> ส่งออกแล้ว</span>`;
+                }
+
+                // Photo Upload Status Column Visual
+                let photoCol = '';
+                if (s.status === "ถึงโกดังไทย" || s.status === "ส่งออกแล้ว") {
+                    if (s.image) {
+                        photoCol = `
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-green-600 font-semibold flex items-center gap-1"><i class="fas fa-check-circle"></i> มีรูปภาพกล่อง</span>
+                                <button onclick="viewBoxPhotoSimulated('${s.image}', '${s.trackingId}')" class="text-xs text-blue-500 hover:underline"><i class="fas fa-eye"></i> ดู</button>
+                            </div>
+                        `;
+                    } else {
+                        photoCol = `
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-gray-400 italic">ยังไม่มีรูปภาพ</span>
+                                <button onclick="openUploadModal('${s.trackingId}')" class="text-xs text-brand font-bold hover:underline flex items-center gap-1"><i class="fas fa-cloud-upload-alt"></i> อัปโหลด</button>
+                            </div>
+                        `;
+                    }
+                } else {
+                    photoCol = `<span class="text-xs text-gray-400">อัปโหลดได้เฉพาะของถึงไทย</span>`;
+                }
+
+                // Generate actions block based on state
+                let actionDropdown = '';
+                if (s.status === "รอตรวจสลิป") {
+                    actionDropdown = `<button onclick="openSlipModal('${s.trackingId}')" class="text-xs bg-brand text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-red-800 transition">ตรวจสลิปเพื่อเริ่มจัดส่ง</button>`;
+                } else if (s.status === "กำลังเดินทางมาไทย") {
+                    actionDropdown = `
+                        <button onclick="updateShipmentStatus('${s.trackingId}', 'ถึงโกดังไทย')" class="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-green-700 transition flex items-center gap-1">
+                            <i class="fas fa-warehouse"></i> พัสดุถึงไทยแล้ว
+                        </button>
+                    `;
+                } else if (s.status === "ถึงโกดังไทย") {
+                    actionDropdown = `
+                        <div class="flex gap-2">
+                            <button onclick="openUploadModal('${s.trackingId}')" class="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center gap-1">
+                                <i class="fas fa-camera"></i> ถ่ายรูปกล่อง
+                            </button>
+                            <button onclick="updateShipmentStatus('${s.trackingId}', 'ส่งออกแล้ว')" class="text-xs border border-gray-300 text-gray-700 px-3 py-1.5 rounded-lg font-semibold hover:bg-gray-50 transition">
+                                ยืนยันส่งพัสดุสำเร็จ
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    actionDropdown = `<span class="text-xs text-green-600 font-bold"><i class="fas fa-check-double"></i> ดำเนินการจัดส่งเสร็จสิ้น</span>`;
+                }
+
+                tableBody.innerHTML += `
+                    <tr class="hover:bg-gray-50 transition border-b border-gray-100" data-status-row="${s.status}">
+                        <td class="p-4">
+                            <span class="font-bold text-gray-900">${s.trackingId}</span>
+                        </td>
+                        <td class="p-4">
+                            <div class="font-medium text-gray-800">${s.customerName}</div>
+                            <div class="text-xs text-gray-400">โทร: ${s.phone}</div>
+                        </td>
+                        <td class="p-4">
+                            <div class="text-xs text-gray-600">${s.type}</div>
+                            <div class="text-xs font-bold text-gray-800">${s.weight} KG</div>
+                        </td>
+                        <td class="p-4">${statusBadge}</td>
+                        <td class="p-4">${photoCol}</td>
+                        <td class="p-4 text-right">${actionDropdown}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Filtering Shipment table items based on Status selection tab or search
+        let statusFilterTab = "all";
+        function filterStatusByTab(tabName) {
+            statusFilterTab = tabName;
+
+            // Adjust buttons active styling
+            document.querySelectorAll('.status-tab-btn').forEach(btn => {
+                btn.classList.remove('bg-gray-900', 'text-white');
+                btn.classList.add('bg-white', 'border', 'text-gray-600', 'hover:bg-gray-50');
+            });
+
+            // Highlight chosen tab
+            const activeBtn = Array.from(document.querySelectorAll('.status-tab-btn')).find(btn => btn.innerText.includes(tabName === 'all' ? 'ทั้งหมด' : tabName.replace('แล้ว', '')));
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-white', 'border', 'text-gray-600', 'hover:bg-gray-50');
+                activeBtn.classList.add('bg-gray-900', 'text-white');
+            }
+
+            filterStatusTable();
+        }
+
+        // Apply general text lookup filter & status matching
+        function filterStatusTable() {
+            const searchQuery = document.getElementById('status-search-input').value.toLowerCase();
+            const rows = document.querySelectorAll('#status-table-body tr');
+
+            rows.forEach(row => {
+                const textContent = row.textContent.toLowerCase();
+                const rowStatus = row.getAttribute('data-status-row');
+
+                const matchesSearch = textContent.includes(searchQuery);
+                const matchesTab = (statusFilterTab === "all" || rowStatus.includes(statusFilterTab));
+
+                if (matchesSearch && matchesTab) {
+                    row.classList.remove('hidden');
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+        }
+
+        // Component 4: Local Delivery view manager based on Customer shipping method
+        function filterDeliveryMethod(methodCode) {
+            selectedActiveDeliveryMethod = methodCode;
+
+            // Highlight delivering menu cards
+            document.querySelectorAll('.delivery-method-card').forEach(card => {
+                card.classList.remove('border-2', 'border-brand');
+                card.classList.add('border', 'border-gray-200');
+            });
+
+            const activeCard = document.getElementById('card-dm-' + methodCode);
+            if (activeCard) {
+                activeCard.classList.remove('border', 'border-gray-200');
+                activeCard.classList.add('border-2', 'border-brand');
+            }
+
+            // Adjust header metadata text representation
+            const metaHeader = document.getElementById('th-delivery-meta');
+            const subtitle = document.getElementById('delivery-method-subtitle');
+
+            if (methodCode === 1) {
+                metaHeader.innerText = "รายละเอียดคนขับ / ทะเบียนรถ";
+                subtitle.innerText = "แสดงพัสดุที่มีรูปแบบจัดส่ง: เรียกรถมารับเองที่หน้าโกดัง (ลูกค้าเรียกเอง)";
+            } else if (methodCode === 2) {
+                metaHeader.innerText = "ค่าบริการเรียกรถ (แมสเซนเจอร์)";
+                subtitle.innerText = "แสดงพัสดุที่มีรูปแบบจัดส่ง: โกดังเรียกแมสเซนเจอร์ให้ (เก็บเงินปลายทางที่ลูกค้า)";
+            } else if (methodCode === 3) {
+                metaHeader.innerText = "หมายเลขไปรษณีย์ไทย (EMS)";
+                subtitle.innerText = "แสดงพัสดุที่มีรูปแบบจัดส่ง: ไปรษณีย์ EMS (เก็บเงินค่าส่งปลายทางที่ลูกค้า)";
+            }
+
+            renderDeliveryTable();
+        }
+
+        // Local Delivery table dynamic builder
+        function renderDeliveryTable() {
+            const tableBody = document.getElementById('delivery-table-body');
+            tableBody.innerHTML = '';
+
+            let targetMethodName = "";
+            if (selectedActiveDeliveryMethod === 1) targetMethodName = "เรียกแมสมารับเอง";
+            else if (selectedActiveDeliveryMethod === 2) targetMethodName = "โกดังเรียกแมสให้";
+            else if (selectedActiveDeliveryMethod === 3) targetMethodName = "ไปรษณีย์ EMS";
+
+            // Grab only items arrived at warehouse in Thailand and matching filter method
+            const matchedShipments = DB.shipments.filter(s => s.status === "ถึงโกดังไทย" && s.localMethod === targetMethodName);
+
+            if (matchedShipments.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="p-8 text-center text-gray-500">
+                            <i class="fas fa-shipping-fast text-gray-300 text-3xl mb-2 block"></i>
+                            ไม่มีรายการพัสดุสำหรับวิธีจัดส่งนี้ในขณะนี้
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            matchedShipments.forEach(s => {
+                let metaColumnContent = '';
+                let actionBtn = '';
+
+                if (selectedActiveDeliveryMethod === 1) {
+                    // Method: Customer's own messenger details
+                    metaColumnContent = `
+                        <div class="text-xs text-gray-700 font-semibold flex flex-col gap-0.5">
+                            <span class="text-brand"><i class="fas fa-motorcycle"></i> คนขับ: นายวิชัย มอเตอร์</span>
+                            <span class="text-gray-500 font-medium">ทะเบียน: กข-4567 กทม.</span>
+                        </div>
+                    `;
+                    actionBtn = `
+                        <button onclick="updateShipmentStatus('${s.trackingId}', 'ส่งออกแล้ว')" class="bg-green-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-green-700 transition flex items-center gap-1 ml-auto">
+                            <i class="fas fa-check"></i> คลี่คลาย & ส่งมอบพัสดุ
+                        </button>
+                    `;
+                } else if (selectedActiveDeliveryMethod === 2) {
+                    // Method: Warehouse calls delivery (Pricing step required)
+                    if (s.deliveryFare > 0) {
+                        metaColumnContent = `
+                            <div class="text-xs font-bold text-green-600">
+                                ฿${s.deliveryFare} บาท <span class="text-[10px] text-gray-400 font-medium block">แจ้งยอดลูกค้าแล้ว</span>
+                            </div>
+                        `;
+                    } else {
+                        metaColumnContent = `
+                            <div class="text-xs text-gray-400 italic">
+                                ยังไม่ได้กำหนดราคา
+                            </div>
+                        `;
+                    }
+                    actionBtn = `
+                        <div class="flex gap-2 justify-end">
+                            <button onclick="openDispatchModal('${s.trackingId}', 'messenger')" class="bg-brand text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-red-800 transition">
+                                <i class="fas fa-dollar-sign"></i> ระบุค่าแมส
+                            </button>
+                            <button onclick="updateShipmentStatus('${s.trackingId}', 'ส่งออกแล้ว')" class="bg-green-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-green-700 transition flex items-center gap-1">
+                                <i class="fas fa-paper-plane"></i> ยืนยันส่งแมส
+                            </button>
+                        </div>
+                    `;
+                } else if (selectedActiveDeliveryMethod === 3) {
+                    // Method: Postal service EMS
+                    if (s.localTracking) {
+                        metaColumnContent = `
+                            <div class="text-xs text-blue-600 font-bold flex flex-col">
+                                <span>${s.localTracking}</span>
+                                <span class="text-[10px] text-gray-400 font-medium">EMS ไปรษณีย์ไทย</span>
+                            </div>
+                        `;
+                    } else {
+                        metaColumnContent = `
+                            <div class="text-xs text-gray-400 italic">
+                                ยังไม่มีเลขแทร็กกิ้งไทย
+                            </div>
+                        `;
+                    }
+                    actionBtn = `
+                        <div class="flex gap-2 justify-end">
+                            <button onclick="openAddressPrintModal('${s.trackingId}')" class="border border-teal-600 text-teal-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-teal-50 transition flex items-center gap-1">
+                                <i class="fas fa-print"></i> พิมพ์ใบปะหน้า
+                            </button>
+                            <button onclick="openDispatchModal('${s.trackingId}', 'ems')" class="bg-brand text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-red-800 transition">
+                                <i class="fas fa-plus"></i> ระบุเลข EMS
+                            </button>
+                        </div>
+                    `;
+                }
+
+                tableBody.innerHTML += `
+                    <tr class="hover:bg-gray-50 transition border-b border-gray-100">
+                        <td class="p-4">
+                            <span class="font-bold text-gray-900">${s.trackingId}</span>
+                            <span class="text-[10px] text-gray-400 block font-mono mt-1">${s.date}</span>
+                        </td>
+                        <td class="p-4 max-w-xs">
+                            <div class="font-semibold text-gray-800">${s.customerName}</div>
+                            <div class="text-[11px] text-gray-400 font-medium truncate block mt-0.5" title="${s.deliveryAddress}">
+                                <i class="fas fa-map-marker-alt"></i> ${s.deliveryAddress}
+                            </div>
+                        </td>
+                        <td class="p-4 font-bold text-gray-800">${s.weight} KG</td>
+                        <td class="p-4">${metaColumnContent}</td>
+                        <td class="p-4 text-center">
+                            <span class="bg-yellow-100 text-yellow-800 text-[10px] font-bold px-2 py-0.5 rounded border border-yellow-200">
+                                <i class="fas fa-box-open"></i> ถึงไทยแล้ว
+                            </span>
+                        </td>
+                        <td class="p-4">${actionBtn}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Apply text lookup filter to local delivery manager
+        function filterDeliveryTable() {
+            const query = document.getElementById('delivery-search').value.toLowerCase();
+            const rows = document.querySelectorAll('#delivery-table-body tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    row.classList.remove('hidden');
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+        }
+
+        // Component 5: Customer database management table builder
+        function renderCustomersTable() {
+            const tableBody = document.getElementById('customers-table-body');
+            tableBody.innerHTML = '';
+
+            DB.customers.forEach(c => {
+                let badgeClass = "bg-gray-100 text-gray-800";
+                if (c.role === "ลูกค้า VIP") {
+                    badgeClass = "bg-purple-100 text-purple-700 border border-purple-200";
+                }
+
+                tableBody.innerHTML += `
+                    <tr class="hover:bg-gray-50 transition border-b border-gray-100">
+                        <td class="p-4 font-bold text-teal-600 font-mono">${c.id}</td>
+                        <td class="p-4 font-semibold text-gray-800">${c.name}</td>
+                        <td class="p-4 text-gray-600 font-medium">${c.phone}</td>
+                        <td class="p-4 text-gray-500 max-w-sm truncate" title="${c.address}">${c.address}</td>
+                        <td class="p-4 text-center">
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-full ${badgeClass}">${c.role}</span>
+                        </td>
+                        <td class="p-4 text-right">
+                            <button onclick="showCustomerShipmentsSimulated('${c.name}', '${c.id}')" class="text-xs bg-teal-50 border border-teal-200 text-teal-600 font-semibold px-3 py-1.5 rounded-lg hover:bg-teal-100 transition inline-flex items-center gap-1">
+                                <i class="fas fa-boxes"></i> ข้อมูลนำเข้า (${c.totalShipments})
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Search within customer directory table
+        function filterCustomerTable() {
+            const query = document.getElementById('customer-search-input').value.toLowerCase();
+            const rows = document.querySelectorAll('#customers-table-body tr');
+
+            rows.forEach(row => {
+                if (row.textContent.toLowerCase().includes(query)) {
+                    row.classList.remove('hidden');
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+        }
+
+        // ================= BUSINESS LOGIC INTERACTIONS =================
+
+        // Show slip detailed review popup
+        function openSlipModal(trackingId) {
+            const shipment = DB.shipments.find(s => s.trackingId === trackingId);
+            if (!shipment) return;
+
+            const modalContent = document.getElementById('modal-slip-content');
+
+            // Build mock transfer slip UI (using highly optimized Tailwind elements for extreme realism)
+            modalContent.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Slip Image Box -->
+                    <div class="bg-green-500 text-white rounded-2xl p-5 relative overflow-hidden font-mono text-xs flex flex-col justify-between aspect-[3/4] shadow-md border-4 border-green-400">
+                        <div class="absolute -right-8 -top-8 text-8xl opacity-10"><i class="fas fa-check-circle"></i></div>
+                        <div class="flex justify-between items-center border-b border-green-400 pb-3 mb-3">
+                            <div class="font-bold text-sm">สลิปโอนเงินสำเร็จ</div>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" class="w-8 h-8 opacity-80">
+                        </div>
+
+                        <div class="space-y-2">
+                            <div>
+                                <span class="text-green-200 block text-[9px] uppercase tracking-wider">วัน-เวลาที่โอน</span>
+                                <span class="font-bold">22 มิ.ย. 2026 - 11:20 น.</span>
+                            </div>
+                            <div>
+                                <span class="text-green-200 block text-[9px] uppercase tracking-wider">บัญชีผู้รับโอน</span>
+                                <span class="font-bold block">บจก. สุชาร์ คาร์โก้</span>
+                                <span class="text-[10px] text-green-100">ธ.กสิกรไทย (123-4-56789-0)</span>
+                            </div>
+                            <div class="h-px bg-green-400 my-1"></div>
+                            <div>
+                                <span class="text-green-200 block text-[9px] uppercase tracking-wider">ชื่อผู้โอนพัสดุ</span>
+                                <span class="font-bold">${shipment.customerName}</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Slip Data Columns -->
+                    <div class="space-y-4 text-sm">
+                        <h4 class="font-bold text-gray-800 text-base">สรุปรายการคำนวณเงิน</h4>
+                        <div class="space-y-2 border-b pb-3 text-xs text-gray-600">
+                            <div class="flex justify-between"><span>หมายเลขขนส่ง:</span><span class="font-bold text-gray-900">${shipment.trackingId}</span></div>
+                            <div class="flex justify-between"><span>น้ำหนักรวม:</span><span class="font-bold text-gray-900">${shipment.weight} KG</span></div>
+                            <div class="flex justify-between"><span>ประเภทบริการ:</span><span class="font-bold text-gray-900">${shipment.type}</span></div>
+                            <div class="flex justify-between"><span>จัดส่งปลายทาง:</span><span class="font-bold text-gray-900">${shipment.localMethod}</span></div>
+                        </div>
+
+                        <div class="p-3 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg text-xs leading-relaxed">
+                            <i class="fas fa-exclamation-triangle"></i> <strong>คำแนะนำ:</strong> กรุณาตรวจสอบรายละเอียดชื่อผู้รับโอนและยอดเงินในสลิปให้ตรงกับระบบก่อนกดยืนยันอนุมัติ
+                        </div>
+
+                        <div class="space-y-2 pt-2">
+                            <button onclick="approveSlip('${shipment.trackingId}')" class="w-full bg-green-600 text-white font-bold py-2.5 rounded-xl hover:bg-green-700 transition flex items-center justify-center gap-2 shadow-sm">
+                                <i class="fas fa-check-circle"></i> อนุมัติสลิป & เริ่มขนส่ง
+                            </button>
+                            <button onclick="rejectSlip('${shipment.trackingId}')" class="w-full bg-red-50 text-red-600 font-bold py-2.5 rounded-xl hover:bg-red-100 border border-red-200 transition">
+                                ปฏิเสธการโอนเงิน (สลิปผิดพลาด)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('modal-slip').classList.remove('hidden');
+        }
+
+        // Fast approve button on grid
+        function approveSlipFast(trackingId) {
+            approveSlip(trackingId);
+        }
+
+        // Approve and transit flow logic
+        function approveSlip(trackingId) {
+            const shipment = DB.shipments.find(s => s.trackingId === trackingId);
+            if (shipment) {
+                shipment.status = "กำลังเดินทางมาไทย";
+                closeModal('modal-slip');
+                showToast(`อนุมัติสลิปพัสดุ ${trackingId} สำเร็จ! สถานะอัปเดตเป็นกำลังเดินทางมาไทยแล้ว`, "success");
+                renderData();
+            }
+        }
+
+        // Reject payment transaction logic
+        function rejectSlip(trackingId) {
+            closeModal('modal-slip');
+            showToast(`ปฏิเสธรายการโอนเงินของพัสดุ ${trackingId} เรียบร้อยแล้ว ระบบจะส่งข้อความแจ้งเตือนหาลูกค้า`, "error");
+        }
+
+        // Upload photo popup controller
+        function openUploadModal(trackingId) {
+            const shipment = DB.shipments.find(s => s.trackingId === trackingId);
+            if (!shipment) return;
+
+            currentUploadTracking = trackingId;
+            document.getElementById('upload-modal-tracking').innerText = trackingId;
+            document.getElementById('upload-modal-customer').innerText = shipment.customerName;
+
+            clearImagePreview();
+            document.getElementById('modal-upload').classList.remove('hidden');
+        }
+
+        // Trigger simulator camera to capture box photo
+        function triggerSimulatedCamera() {
+            // Generate mock placeholder shipment box image
+            const randomBoxImageId = Math.floor(Math.random() * 3) + 1;
+            let mockBoxImage = "";
+            if (randomBoxImageId === 1) mockBoxImage = "https://images.unsplash.com/photo-1512418490979-92798cec1380?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+            else if (randomBoxImageId === 2) mockBoxImage = "https://images.unsplash.com/photo-1566576912321-d58edd7a2858?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+            else mockBoxImage = "https://images.unsplash.com/photo-1580870013141-3b13c5100f13?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+
+            displayImagePreview(mockBoxImage);
+            showToast("ถ่ายภาพจำลองพัสดุเสร็จสิ้น", "success");
+        }
+
+        // Trigger hidden browser file select dialog
+        function triggerFileSelect() {
+            document.getElementById('modal-upload-file-input').click();
+        }
+
+        // Catch file picker changes
+        function handleFileChange(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    displayImagePreview(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Preview rendering helper
+        function displayImagePreview(imageSrc) {
+            const previewArea = document.getElementById('image-preview-area');
+            const previewImg = document.getElementById('image-preview');
+            const saveBtn = document.getElementById('btn-save-photo');
+
+            previewImg.src = imageSrc;
+            previewArea.classList.remove('hidden');
+
+            saveBtn.removeAttribute('disabled');
+            saveBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+            saveBtn.classList.add('bg-brand', 'hover:bg-red-700');
+        }
+
+        // Clear preview area values
+        function clearImagePreview() {
+            const previewArea = document.getElementById('image-preview-area');
+            const previewImg = document.getElementById('image-preview');
+            const saveBtn = document.getElementById('btn-save-photo');
+            const fileInput = document.getElementById('modal-upload-file-input');
+
+            previewImg.src = "";
+            previewArea.classList.add('hidden');
+            fileInput.value = "";
+
+            saveBtn.setAttribute('disabled', 'true');
+            saveBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+            saveBtn.classList.remove('bg-brand', 'hover:bg-red-700');
+        }
+
+        // Confirm save photo upload simulated
+        function confirmUploadPhoto() {
+            const previewImg = document.getElementById('image-preview');
+            const shipment = DB.shipments.find(s => s.trackingId === currentUploadTracking);
+
+            if (shipment && previewImg.src) {
+                shipment.image = previewImg.src;
+                closeModal('modal-upload');
+                showToast(`บันทึกรูปภาพกล่องสินค้าลงแทร็กกิ้ง ${currentUploadTracking} สำเร็จ! ลูกค้าสามารถตรวจสอบรูปภาพได้ทันที`, "success");
+                renderData();
+            }
+        }
+
+        // Local Dispatch Editor Popup manager
+        function openDispatchModal(trackingId, mode) {
+            const shipment = DB.shipments.find(s => s.trackingId === trackingId);
+            if (!shipment) return;
+
+            currentUploadTracking = trackingId;
+            document.getElementById('dispatch-modal-tracking').innerText = trackingId;
+            document.getElementById('dispatch-modal-customer').innerText = shipment.customerName;
+            document.getElementById('dispatch-modal-address').innerHTML = `<span class="font-semibold text-gray-700">ที่อยู่:</span> ${shipment.deliveryAddress}`;
+
+            const title = document.getElementById('dispatch-modal-title');
+            const formMessenger = document.getElementById('dispatch-form-messenger');
+            const formEMS = document.getElementById('dispatch-form-ems');
+
+            if (mode === 'messenger') {
+                title.innerHTML = `<i class="fas fa-motorcycle text-orange-400"></i> แจ้งยอดค่าแมสส่งสินค้า`;
+                formMessenger.classList.remove('hidden');
+                formEMS.classList.add('hidden');
+                document.getElementById('input-delivery-fare').value = shipment.deliveryFare > 0 ? shipment.deliveryFare : "";
+            } else if (mode === 'ems') {
+                title.innerHTML = `<i class="fas fa-shipping-fast text-blue-400"></i> บันทึกหมายเลข EMS ไทย`;
+                formMessenger.classList.add('hidden');
+                formEMS.classList.remove('hidden');
+                document.getElementById('input-ems-tracking').value = shipment.localTracking || "";
+            }
+
+            document.getElementById('modal-dispatch').classList.remove('hidden');
+        }
+
+        // Save EMS Tracking or delivery messenger fares values
+        function saveDispatchDetails() {
+            const shipment = DB.shipments.find(s => s.trackingId === currentUploadTracking);
+            if (!shipment) return;
+
+            if (shipment.localMethod === "โกดังเรียกแมสให้") {
+                const fareValue = parseFloat(document.getElementById('input-delivery-fare').value);
+                if (isNaN(fareValue) || fareValue < 0) {
+                    showToast("กรุณาระบุจำนวนเงินที่ถูกต้อง", "error");
+                    return;
+                }
+                shipment.deliveryFare = fareValue;
+                showToast(`บันทึกค่าแมส ${fareValue} บาท สำหรับพัสดุ ${currentUploadTracking} เรียบร้อย ยอดชำระจะขึ้นในระบบของลูกค้า`, "success");
+            } else if (shipment.localMethod === "ไปรษณีย์ EMS") {
+                const emsValue = document.getElementById('input-ems-tracking').value.trim();
+                if (!emsValue) {
+                    showToast("กรุณาป้อนหมายเลข EMS ให้ถูกต้อง", "error");
+                    return;
+                }
+                shipment.localTracking = emsValue;
+                showToast(`ระบุเลขไปรษณีย์ EMS: ${emsValue} ให้กับพัสดุ ${currentUploadTracking} เรียบร้อยแล้ว`, "success");
+            }
+
+            closeModal('modal-dispatch');
+            renderData();
+        }
+
+        // Address label print modal open
+        function openAddressPrintModal(trackingId) {
+            const shipment = DB.shipments.find(s => s.trackingId === trackingId);
+            if (!shipment) return;
+
+            document.getElementById('print-tracking-label').innerText = shipment.trackingId;
+            document.getElementById('print-customer-name').innerText = shipment.customerName;
+            document.getElementById('print-customer-address').innerText = shipment.deliveryAddress;
+            document.getElementById('print-customer-phone').innerText = `โทรศัพท์: ${shipment.phone}`;
+
+            document.getElementById('modal-address-print').classList.remove('hidden');
+        }
+
+        // Simulated print prompt response
+        function triggerPrintSimulated() {
+            showToast("ส่งคำสั่งสั่งพิมพ์ใบปะหน้าไปยังเครื่องพิมพ์เรียบร้อยแล้ว!", "success");
+            closeModal('modal-address-print');
+        }
+
+        // General manual updates for tracking states
+        function updateShipmentStatus(trackingId, nextStatus) {
+            const shipment = DB.shipments.find(s => s.trackingId === trackingId);
+            if (shipment) {
+                shipment.status = nextStatus;
+                showToast(`อัปเดตพัสดุ ${trackingId} เป็น "${nextStatus}" เรียบร้อยแล้ว`, "success");
+                renderData();
+            }
+        }
+
+        // Simulated customer directory query window
+        function showCustomerShipmentsSimulated(name, customerId) {
+            showToast(`ดึงรายการพัสดุนำเข้าทั้งหมดของ ${name} (${customerId}) ขึ้นระบบจำลองเสร็จสิ้น`, "success");
+        }
+
+        // Image Viewer simulation trigger
+        function viewBoxPhotoSimulated(imageSrc, trackingId) {
+            const printModal = document.getElementById('modal-address-print');
+            openAddressPrintModal(trackingId); // Use similar template or view
+            showToast(`กำลังเปิดภาพถ่ายกล่องพัสดุ ${trackingId}`, "success");
+        }
+
+        // Logout simulation
+        function simulateLogout() {
+            showToast("ออกจากระบบจำลองเรียบร้อยแล้ว... พากลับไปยังหน้าหลัก", "success");
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        }
+
+        // Closing generic overlay modals helper
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.add('hidden');
+        }
+
+        // Toast Alert message pop-up dispatcher replacement for alert()
+        function showToast(message, type = "success") {
+            const toast = document.getElementById('toast');
+            const messageEl = document.getElementById('toast-message');
+            const bgIcon = document.getElementById('toast-icon-bg');
+            const icon = document.getElementById('toast-icon');
+
+            messageEl.innerText = message;
+
+            if (type === "success") {
+                bgIcon.className = "w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-xs text-white";
+                icon.className = "fas fa-check";
+            } else {
+                bgIcon.className = "w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-xs text-white";
+                icon.className = "fas fa-exclamation-triangle";
+            }
+
+            // Slide in animation
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            // Slide out automatically
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 3500);
+        }
+
+        // Onload init routing triggers
+        window.onload = function () {
+            // Render first overview page instantly on initialization
+            renderData();
+            filterDeliveryMethod(2); // Prefilter Delivery section on 'โกดังเรียกแมสให้'
+        };
+    </script>
+</body>
+
+</html>

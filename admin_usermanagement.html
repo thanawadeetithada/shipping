@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ข้อมูลผู้ใช้งาน - SUCHAR CARGO ADMIN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Kanit', sans-serif; background-color: #f8f9fa; }
+        .bg-brand { background-color: #c51c24; }
+        .text-brand { color: #c51c24; }
+        .bg-brand-dark { background-color: #8b1319; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden text-gray-800">
+
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 md:hidden" onclick="toggleMobileSidebar()"></div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex flex-col z-50 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:flex shadow-xl">
+        <div class="py-6 px-6 bg-brand-dark flex flex-col items-center justify-center relative border-b border-red-900">
+            <div class="text-2xl font-bold leading-none mb-1 tracking-wide">SUCHAR</div>
+            <div class="text-[10px] tracking-widest text-red-200 bg-black/20 px-2 py-0.5 rounded-full mt-1">ADMIN PANEL</div>
+            <button class="absolute top-6 right-4 text-white md:hidden hover:text-red-200" onclick="toggleMobileSidebar()"><i class="fas fa-times text-xl"></i></button>
+        </div>
+
+        <nav class="flex-grow p-4 space-y-1.5 overflow-y-auto text-sm">
+            <a href="admin_dashboard.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-chart-pie w-5 text-center"></i> ภาพรวมแผงควบคุม
+            </a>
+            <a href="admin_checkslip.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-receipt w-5 text-center"></i> ตรวจสอบสลิป <span id="badge-slips-count" class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full ml-auto">0</span>
+            </a>
+            <a href="admin_parcel.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-box w-5 text-center"></i> อัปเดตสถานะพัสดุ
+            </a>
+            <a href="admin_manage_delivery.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-motorcycle w-5 text-center"></i> จัดการส่งในไทย <span id="badge-delivery-count" class="bg-yellow-500 text-gray-900 text-[10px] font-bold px-2 py-0.5 rounded-full ml-auto">0</span>
+            </a>
+            <a href="admin_usermanagement.html" class="flex items-center gap-3 bg-brand text-white px-4 py-3 rounded-md font-medium shadow-md transition duration-200">
+                <i class="fas fa-users w-5 text-center"></i> ข้อมูลลูกค้า
+            </a>
+        </nav>
+        <div class="p-4 bg-gray-950 hover:text-white hover:bg-red-600/80">
+            <button onclick="simulateLogout()" class="flex items-center justify-center gap-2 text-gray-400  w-full px-4 py-2.5  transition text-sm font-medium"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+        <header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center z-30">
+    
+    <div class="flex items-center gap-4 flex-1">
+        <button class="text-gray-600 hover:text-brand md:hidden p-1 transition" onclick="toggleMobileSidebar()">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+        </div>
+    
+    <div class="hidden md:flex flex-1 justify-center space-x-6 text-sm font-medium">
+        <a href="<?= getScriptUrl() ?>?page=index" target="_top" class="text-gray-600 hover:text-brand transition">หน้าหลัก</a>
+        <a href="<?= getScriptUrl() ?>?page=pricing" target="_top" class="text-gray-600 hover:text-brand transition">อัตราค่าขนส่ง</a>
+    </div>
+    
+    <div class="flex items-center justify-end flex-1">
+        <div class="flex items-center gap-3 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
+            <img src="https://ui-avatars.com/api/?name=Admin+Ploy&background=c51c24&color=fff" class="w-8 h-8 rounded-full shadow-sm">
+            <span class="text-sm font-medium text-gray-700 pr-2">Admin Ploy</span>
+        </div>
+    </div>
+    
+</header>
+
+        <div class="flex-1 overflow-y-auto p-4 md:p-8">
+            <div id="view-customers" class="max-w-7xl mx-auto space-y-6">
+                <div class="border-b border-gray-200 pb-4">
+                    <h1 class="text-2xl font-bold text-gray-800"><i class="fas fa-users-cog text-brand mr-2"></i> ข้อมูลลูกค้าและผู้ใช้งาน</h1>
+                    <p class="text-sm text-gray-500 mt-1">เรียกดูข้อมูลติดต่อ ที่อยู่จัดส่งพัสดุ</p>
+                </div>
+
+                <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+                    <div class="p-4 border-b border-gray-200 bg-gray-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                            <i class="fas fa-id-card-alt text-gray-400"></i> ทะเบียนลูกค้าทั้งหมด
+                        </h3>
+                        <div class="relative w-full sm:w-72">
+                            <input type="text" id="customer-search-input" onkeyup="filterCustomerTable()" placeholder="ค้นหารหัส / ชื่อ / เบอร์โทร..." class="w-full pl-9 pr-4 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand bg-white">
+                            <i class="fas fa-search absolute left-3 top-2 text-gray-400 text-sm"></i>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-white border-b-2 border-gray-100 text-gray-600 font-medium">
+                                <tr>
+                                    <th class="p-4">รหัสลูกค้า</th>
+                                    <th class="p-4">ชื่อ-นามสกุล</th>
+                                    <th class="p-4">เบอร์โทรติดต่อ</th>
+                                    <th class="p-4">ที่อยู่จัดส่งพัสดุในไทย</th>
+                                    <th class="p-4 text-center">สิทธิ์ใช้งาน</th>
+                                    <th class="p-4 text-right">จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-gray-700" id="customers-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <div id="modal-slip" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4"></div>
+
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-gray-900 text-white px-6 py-3 rounded-md shadow-lg flex items-center gap-3 transition-all transform translate-y-20 opacity-0 pointer-events-none duration-300">
+        <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-xs text-white" id="toast-icon-bg"><i class="fas fa-check" id="toast-icon"></i></div>
+        <p class="text-sm font-medium" id="toast-message"></p>
+    </div>
+
+    <script src="admin_common.js"></script>
+</body>
+</html>

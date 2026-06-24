@@ -1,277 +1,204 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SUCHAR CARGO</title>
+    <title>SUCHAR CARGO - หน้าหลัก</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Kanit', sans-serif; background-color: #f3f4f6; }
-        .bg-brand { background-color: #c51c24; }
-        .text-brand { color: #c51c24; }
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .bg-brand {
+            background-color: #c51c24;
+        }
+
+        .text-brand {
+            color: #c51c24;
+        }
+
+        .bg-brand-dark {
+            background-color: #8b1319;
+        }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 py-10 relative">
 
-    <?!= include('spinner'); ?>
+<body>
 
-    <div id="loginSection" class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden block">
-        <div class="bg-brand py-8 px-6 text-center text-white">
-            <div class="text-3xl font-bold leading-none mb-1">SUCHAR</div>
-            <div class="text-sm tracking-widest opacity-80">CARGO</div>
+    <nav class="bg-white shadow-sm py-4 px-6 flex justify-between items-center">
+        <div class="text-2xl font-bold text-brand flex flex-col leading-none">
+            <span>SUCHAR</span>
+            <span class="text-sm text-black">CARGO</span>
+        </div>
+        <div class="hidden md:flex space-x-6 text-sm font-medium">
+            <a href="<?= getScriptUrl() ?>?page=index" target="_top" class="text-brand">หน้าหลัก</a>
+            <a href="<?= getScriptUrl() ?>?page=pricing" target="_top"
+                class="text-gray-600 hover:text-brand">อัตราค่าขนส่ง</a>
         </div>
 
-        <div class="p-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">เข้าสู่ระบบ</h2>
-            
-            <form id="loginForm" onsubmit="handleLogin(event)">
-                <div id="errorMsg" class="hidden text-sm font-medium text-red-500 text-center p-3 mb-4 border border-red-200 bg-red-50 rounded-xl">เบอร์โทรศัพท์ หรือ รหัสผ่านไม่ถูกต้อง</div>
+        <div id="navActionContainer">
+            <? var url = getScriptUrl(); ?>
+            <button id="loginNavBtn" onclick="window.top.location.href='<?= url ?>?page=login'"
+                class="bg-brand text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition">
+                เข้าสู่ระบบ
+            </button>
+        </div>
+    </nav>
 
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อ-นามสกุล / เบอร์โทรศัพท์</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="fas fa-phone text-gray-400"></i>
-                            </div>
-                            <input type="text" id="phone_login" required class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white transition-colors text-s text-gray-700" placeholder="08X-XXX-XXXX">
-                        </div>
-                    </div>
+    <section class="relative bg-gray-900 py-20 px-4 text-center bg-cover bg-center"
+        style="background-image: url('https://images.unsplash.com/photo-1586528116311-ad8ed7c427eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+        <div class="absolute inset-0 bg-brand opacity-80 mix-blend-multiply"></div>
+        <div class="relative z-10 max-w-3xl mx-auto text-white">
+            <h1 class="text-3xl md:text-5xl font-bold mb-4 drop-shadow-md">นำเข้าสินค้าจากจีน-ไทย ครบวงจร</h1>
+            <h2 class="text-xl md:text-3xl mb-8 drop-shadow-md">เช็คสถานะสินค้าได้ตลอด 24 ชั่วโมง</h2>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">รหัสผ่าน</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="fas fa-lock text-gray-400"></i>
-                            </div>
-                            <input type="password" id="password_login" required class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white transition-colors text-s text-gray-700" placeholder="••••••••">
-                            
-                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onclick="togglePassword('password_login', 'eye-icon-login')">
-                                <i id="eye-icon-login" class="fas fa-eye text-gray-400 hover:text-gray-600"></i>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" id="loginBtn" class="w-full bg-brand text-white font-bold py-3 px-4 rounded-lg mt-6 hover:bg-red-700 transition flex items-center justify-center gap-2">
-                    <span>เข้าสู่ระบบ</span>
+            <div class="bg-white p-2 rounded-lg flex flex-col md:flex-row shadow-lg max-w-2xl mx-auto">
+                <input type="text" placeholder="กรอกรหัสลูกค้า หรือ Tracking Number"
+                    class="flex-grow px-4 py-3 text-gray-700 outline-none rounded-t-lg md:rounded-l-lg md:rounded-t-none">
+                <button onclick="window.top.location.href='<?= getScriptUrl() ?>?page=trackin_info'"
+                    class="bg-brand text-white px-8 py-3 rounded-md font-medium hover:bg-red-700 transition flex items-center justify-center gap-2 mt-2 md:mt-0">
+                    <i class="fas fa-search"></i> เช็คสถานะ
                 </button>
-            </form>
+            </div>
+            <p class="mt-4 text-sm text-gray-200">ตัวอย่างรหัส: SC250621001</p>
+        </div>
+    </section>
 
-            <div class="mt-6 text-center text-sm text-gray-600 border-t pt-6">
-                ยังไม่มีบัญชีใช่หรือไม่? 
-                <a href="javascript:void(0)" onclick="switchPage('registerSection')" class="text-brand font-bold hover:underline">สมัครสมาชิกที่นี่</a>
+    <section class="bg-brand-dark py-6 px-4">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 text-white">
+            <div class="flex items-center gap-4">
+                <div class="text-3xl"><i class="fas fa-shield-alt"></i></div>
+                <div>
+                    <h4 class="font-bold">ปลอดภัย 100%</h4>
+                    <p class="text-xs text-gray-300">รับประกันสินค้าทุกชิ้น</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-3xl"><i class="far fa-clock"></i></div>
+                <div>
+                    <h4 class="font-bold">รวดเร็ว ตรงเวลา</h4>
+                    <p class="text-xs text-gray-300">ขนส่งไว ได้ของแน่นอน</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-3xl"><i class="fas fa-hand-holding-usd"></i></div>
+                <div>
+                    <h4 class="font-bold">ราคาคุ้มค่า</h4>
+                    <p class="text-xs text-gray-300">ค่าขนส่งเริ่มต้นเพียง 50 บาท/กก.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-3xl"><i class="fas fa-headset"></i></div>
+                <div>
+                    <h4 class="font-bold">บริการลูกค้า 24 ชม.</h4>
+                    <p class="text-xs text-gray-300">พร้อมดูแลและให้คำปรึกษา</p>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 
+    <section class="py-16 px-4 bg-white text-center">
+        <h2 class="text-2xl md:text-3xl font-bold mb-2">ขั้นตอนการใช้บริการ</h2>
+        <p class="text-gray-500 mb-12">ง่ายๆ เพียง 5 ขั้นตอน</p>
 
-    <div id="registerSection" class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden hidden">
-        <div class="bg-brand py-6 px-6 text-center text-white relative">
-            <div class="text-2xl font-bold leading-none mb-1">SUCHAR</div>
-            <div class="text-xs tracking-widest opacity-80">CARGO</div>
-            <h1 class="mt-4 text-xl font-medium">สมัครสมาชิกใหม่</h1>
-        </div>
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center relative">
+            <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gray-200 -z-10 -translate-y-10"></div>
 
-        <div class="p-8">
-            <form id="registerForm" onsubmit="handleRegister(event)">
-                
-                <div id="statusMsg" class="hidden text-sm font-medium text-red-500 text-center p-3 mb-4 border border-red-200 bg-red-50 rounded-xl"></div>
-                
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อ-นามสกุล <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="fas fa-user text-gray-400"></i>
-                            </div>
-                            <input type="text" id="fullname_reg" required class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white transition-colors text-s text-gray-700" placeholder="ระบุชื่อและนามสกุล" autocomplete="off">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">เบอร์โทรศัพท์ <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="fas fa-phone text-gray-400"></i>
-                            </div>
-                            <input type="tel" id="phone_reg" required class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white transition-colors text-s text-gray-700" placeholder="08X-XXX-XXXX" autocomplete="off">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">รหัสผ่าน <span class="text-red-500">*</span></label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <i class="fas fa-lock text-gray-400"></i>
-                                </div>
-                                <input type="password" id="password_reg" required class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white transition-colors text-s text-gray-700" placeholder="รหัสผ่าน">
-                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onclick="togglePassword('password_reg', 'eye-icon-pass')">
-                                    <i id="eye-icon-pass" class="fas fa-eye text-gray-400 hover:text-gray-600"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">ยืนยันรหัสผ่าน <span class="text-red-500">*</span></label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <i class="fas fa-lock text-gray-400"></i>
-                                </div>
-                                <input type="password" id="confirm_password_reg" required class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white transition-colors text-s text-gray-700" placeholder="ยืนยันรหัสผ่าน">
-                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onclick="togglePassword('confirm_password_reg', 'eye-icon-confirm')">
-                                    <i id="eye-icon-confirm" class="fas fa-eye text-gray-400 hover:text-gray-600"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">ที่อยู่สำหรับจัดส่งสินค้า</label>
-                        <textarea id="address_reg" rows="3" class="w-full pl-5 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white transition-colors text-s text-gray-700" placeholder="ระบุบ้านเลขที่, ถนน, แขวง, เขต, จังหวัด, รหัสไปรษณีย์" autocomplete="off"></textarea>
-                    </div>
+            <div class="flex flex-col items-center mb-8 md:mb-0 bg-white px-4">
+                <div class="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center font-bold mb-4">1
                 </div>
-                
-                <button type="submit" id="regBtn" class="w-full bg-brand text-white font-bold py-3 px-4 rounded-lg mt-6 hover:bg-red-700 transition flex items-center justify-center gap-2 shadow-md">
-                    <span>สมัครสมาชิก</span>
-                </button>
-            </form>
-
-            <div class="mt-6 text-center text-sm text-gray-600 border-t pt-6">
-                มีบัญชีอยู่แล้ว?
-                <a href="javascript:void(0)" onclick="switchPage('loginSection')" class="text-brand font-bold hover:underline">เข้าสู่ระบบ</a>
+                <div
+                    class="w-20 h-20 rounded-full border-2 border-red-100 text-brand flex items-center justify-center text-3xl mb-4 bg-white">
+                    <i class="fas fa-clipboard-list"></i></div>
+                <h4 class="font-bold text-sm">สั่งซื้อสินค้า</h4>
+                <p class="text-xs text-gray-500 max-w-[120px]">ลูกค้าสั่งซื้อสินค้าจากจีน<br>หรือสั่งผ่านแอดมิน</p>
+            </div>
+            <div class="flex flex-col items-center mb-8 md:mb-0 bg-white px-4">
+                <div class="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center font-bold mb-4">2
+                </div>
+                <div
+                    class="w-20 h-20 rounded-full border-2 border-red-100 text-brand flex items-center justify-center text-3xl mb-4 bg-white">
+                    <i class="fas fa-money-bill-wave"></i></div>
+                <h4 class="font-bold text-sm">ชำระค่าสินค้า</h4>
+                <p class="text-xs text-gray-500 max-w-[120px]">ชำระค่าสินค้าให้กับร้านค้า<br>หรือโรงงานในจีน</p>
+            </div>
+            <div class="flex flex-col items-center mb-8 md:mb-0 bg-white px-4">
+                <div class="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center font-bold mb-4">3
+                </div>
+                <div
+                    class="w-20 h-20 rounded-full border-2 border-red-100 text-brand flex items-center justify-center text-3xl mb-4 bg-white">
+                    <i class="fas fa-box"></i></div>
+                <h4 class="font-bold text-sm">ส่งสินค้าเข้าโกดังจีน</h4>
+                <p class="text-xs text-gray-500 max-w-[120px]">ร้านค้าจัดส่งสินค้ามาให้<br>ที่โกดังจีนของเรา</p>
+            </div>
+            <div class="flex flex-col items-center mb-8 md:mb-0 bg-white px-4">
+                <div class="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center font-bold mb-4">4
+                </div>
+                <div
+                    class="w-20 h-20 rounded-full border-2 border-red-100 text-brand flex items-center justify-center text-3xl mb-4 bg-white">
+                    <i class="fas fa-truck"></i></div>
+                <h4 class="font-bold text-sm">ขนส่งจากจีนมาไทย</h4>
+                <p class="text-xs text-gray-500 max-w-[120px]">สินค้าจะถูกจัดส่งจากจีน<br>มายังโกดังไทย</p>
+            </div>
+            <div class="flex flex-col items-center bg-white px-4">
+                <div class="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center font-bold mb-4">5
+                </div>
+                <div
+                    class="w-20 h-20 rounded-full border-2 border-red-100 text-brand flex items-center justify-center text-3xl mb-4 bg-white">
+                    <i class="fas fa-home"></i></div>
+                <h4 class="font-bold text-sm">จัดส่งถึงมือลูกค้า</h4>
+                <p class="text-xs text-gray-500 max-w-[120px]">ส่งสินค้าให้ลูกค้า<br>ถึงบ้านปลอดภัย</p>
             </div>
         </div>
-    </div>
+    </section>
+
+    <section class="bg-brand text-white py-8 px-4">
+        <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+                <div class="text-3xl font-bold mb-1"><i class="fas fa-box-open mr-2"></i> 20,000+</div>
+                <div class="text-sm">พัสดุที่จัดส่งสำเร็จ</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold mb-1"><i class="fas fa-users mr-2"></i> 8,500+</div>
+                <div class="text-sm">ลูกค้าที่ใช้บริการ</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold mb-1"><i class="fas fa-truck-fast mr-2"></i> 99.8%</div>
+                <div class="text-sm">จัดส่งตรงเวลา</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold mb-1"><i class="fas fa-heart mr-2"></i> 4.9/5</div>
+                <div class="text-sm">คะแนนรีวิวจากลูกค้า</div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-6 px-4">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-xl font-bold text-brand flex flex-col leading-none text-center md:text-left">
+                <span>SUCHAR</span>
+                <span class="text-sm text-white">CARGO</span>
+            </div>
+            <div class="flex gap-6 text-sm">
+                <span><i class="fas fa-phone-alt mr-2"></i> 02-114-8008</span>
+                <span><i class="fab fa-line text-green-400 mr-2"></i> @sucharcargo</span>
+                <span><i class="fas fa-envelope mr-2"></i> support@sucharcargo.com</span>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        function switchPage(pageId) {
-            document.getElementById('loginSection').classList.add('hidden');
-            document.getElementById('registerSection').classList.add('hidden');
-            document.getElementById('errorMsg').classList.add('hidden');
-            document.getElementById('statusMsg').classList.add('hidden');        
-            document.getElementById('loginForm').reset();
-            document.getElementById('registerForm').reset();
-            document.getElementById(pageId).classList.remove('hidden');          
-            document.title = pageId === 'loginSection' ? "เข้าสู่ระบบ - SUCHAR CARGO" : "สมัครสมาชิก - SUCHAR CARGO";
-        }
-
-        function togglePassword(inputId, iconId) {
-            const input = document.getElementById(inputId);
-            const icon = document.getElementById(iconId);
-
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.remove("fa-eye");
-                icon.classList.add("fa-eye-slash");
-            } else {
-                input.type = "password";
-                icon.classList.remove("fa-eye-slash");
-                icon.classList.add("fa-eye");
-            }
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            const phone = document.getElementById('phone_login').value;
-            const password = document.getElementById('password_login').value;
-            const btn = document.getElementById('loginBtn');
-            const errorMsg = document.getElementById('errorMsg');
-
-            // 1. เรียกใช้งาน Spinner โหลดเต็มหน้าจอ
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            const loadingText = document.getElementById('loadingText');
-            const loadingIcon = document.getElementById('loadingIcon');
-
-            // 2. ปิดปุ่มเข้าสู่ระบบไม่ให้กดซ้ำ (แต่ไม่เปลี่ยนสี ไม่เปลี่ยนข้อความปุ่ม)
-            btn.disabled = true;
-            errorMsg.classList.add('hidden');
-
-            // 3. แสดง Spinner เต็มหน้าจอ
-            loadingOverlay.classList.remove('hidden');
-            loadingIcon.className = "fas fa-circle-notch fa-spin text-6xl mb-4";
-            loadingText.innerText = "กำลังตรวจสอบข้อมูล...";
-
-            google.script.run
-                .withSuccessHandler(function(response) {
-                    if(response.success) {
-                        // บันทึก Session
-                        sessionStorage.setItem("userSession", JSON.stringify(response.user));
-
-                        // เปลี่ยนไปหน้า main ทันที (ปล่อยให้ Spinner หมุนค้างไว้ระหว่างโหลดหน้าใหม่ จะได้ดูสมูท)
-                        <? var url = getScriptUrl(); ?>
-                        window.top.location.href = "<?= url ?>?page=main"; 
-                    } else {
-                        // ถ้าล็อกอินผิด ปิด Spinner, เปิดปุ่มให้กดใหม่ และโชว์ Error
-                        loadingOverlay.classList.add('hidden');
-                        btn.disabled = false;
-                        errorMsg.classList.remove('hidden');
-                        errorMsg.innerText = response.message;
-                    }
-                })
-                .withFailureHandler(function(error) {
-                    // กรณีเซิร์ฟเวอร์พัง ปิด Spinner และโชว์ข้อความ
-                    loadingOverlay.classList.add('hidden');
-                    btn.disabled = false;
-                    errorMsg.classList.remove('hidden');
-                    errorMsg.innerText = "ไม่สามารถติดต่อเซิร์ฟเวอร์ได้";
-                })
-                .verifyLogin(phone, password);
-        }
-
-        function handleRegister(e) {
-            e.preventDefault();
-            const password = document.getElementById('password_reg').value;
-            const confirmPassword = document.getElementById('confirm_password_reg').value;
-            const statusMsg = document.getElementById('statusMsg');
-            
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            const loadingText = document.getElementById('loadingText');
-            const loadingIcon = document.getElementById('loadingIcon');
-
-            if (password !== confirmPassword) {
-                statusMsg.classList.remove('hidden', 'text-green-600');
-                statusMsg.classList.add('block', 'text-red-500');
-                statusMsg.innerText = "รหัสผ่านไม่ตรงกัน";
-                return;
-            }
-
-            const data = {
-                fullname: document.getElementById('fullname_reg').value,
-                phone: document.getElementById('phone_reg').value,
-                password: password,
-                address: document.getElementById('address_reg').value
-            };
-
-            statusMsg.classList.add('hidden');
-            loadingOverlay.classList.remove('hidden');
-            loadingIcon.className = "fas fa-circle-notch fa-spin text-6xl mb-4"; 
-            loadingText.innerText = "กำลังบันทึกข้อมูล...";
-
-            google.script.run
-                .withSuccessHandler(function (response) {
-                    if (response.success) {
-                        loadingIcon.className = "fas fa-check-circle text-green-400 text-6xl mb-4";
-                        loadingText.innerText = "สมัครสมาชิกสำเร็จ!";
-
-                        setTimeout(() => {
-                            loadingOverlay.classList.add('hidden');
-                            switchPage('loginSection');
-                        }, 1000);
-
-                    } else {
-                        loadingOverlay.classList.add('hidden');
-                        statusMsg.classList.remove('hidden', 'text-green-600');
-                        statusMsg.classList.add('block', 'text-red-500');
-                        statusMsg.innerText = response.message;
-                    }
-                })
-                .registerNewUser(data);
-        }
+        <? var scriptUrl = getScriptUrl(); ?>
+        const GLOBAL_SCRIPT_URL = "<?= scriptUrl ?>";
     </script>
+
+    <?!= include('auth'); ?>
+
 </body>
+
 </html>

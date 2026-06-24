@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จัดการระบบส่งในไทย - SUCHAR CARGO ADMIN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Kanit', sans-serif; background-color: #f8f9fa; }
+        .bg-brand { background-color: #c51c24; }
+        .text-brand { color: #c51c24; }
+        .bg-brand-dark { background-color: #8b1319; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden text-gray-800">
+
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 md:hidden" onclick="toggleMobileSidebar()"></div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex flex-col z-50 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:flex shadow-xl">
+        <div class="py-6 px-6 bg-brand-dark flex flex-col items-center justify-center relative border-b border-red-900">
+            <div class="text-2xl font-bold leading-none mb-1 tracking-wide">SUCHAR</div>
+            <div class="text-[10px] tracking-widest text-red-200 bg-black/20 px-2 py-0.5 rounded-full mt-1">ADMIN PANEL</div>
+            <button class="absolute top-6 right-4 text-white md:hidden hover:text-red-200" onclick="toggleMobileSidebar()"><i class="fas fa-times text-xl"></i></button>
+        </div>
+
+        <nav class="flex-grow p-4 space-y-1.5 overflow-y-auto text-sm">
+            <a href="admin_dashboard.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-chart-pie w-5 text-center"></i> ภาพรวมแผงควบคุม
+            </a>
+            <a href="admin_checkslip.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-receipt w-5 text-center"></i> ตรวจสอบสลิป <span id="badge-slips-count" class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full ml-auto">0</span>
+            </a>
+            <a href="admin_parcel.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-box w-5 text-center"></i> อัปเดตสถานะพัสดุ
+            </a>
+            <a href="admin_manage_delivery.html" class="flex items-center gap-3 bg-brand text-white px-4 py-3 rounded-md font-medium shadow-md transition duration-200">
+                <i class="fas fa-motorcycle w-5 text-center"></i> จัดการส่งในไทย <span id="badge-delivery-count" class="bg-white text-brand text-[10px] font-bold px-2 py-0.5 rounded-full ml-auto">0</span>
+            </a>
+            <a href="admin_usermanagement.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-users w-5 text-center"></i> ข้อมูลลูกค้า
+            </a>
+        </nav>
+        <div class="p-4 bg-gray-950 hover:text-white hover:bg-red-600/80">
+            <button onclick="simulateLogout()" class="flex items-center justify-center gap-2 text-gray-400  w-full px-4 py-2.5  transition text-sm font-medium"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+        <header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center z-30">
+    
+    <div class="flex items-center gap-4 flex-1">
+        <button class="text-gray-600 hover:text-brand md:hidden p-1 transition" onclick="toggleMobileSidebar()">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+        </div>
+    
+    <div class="hidden md:flex flex-1 justify-center space-x-6 text-sm font-medium">
+        <a href="<?= getScriptUrl() ?>?page=index" target="_top" class="text-gray-600 hover:text-brand transition">หน้าหลัก</a>
+        <a href="<?= getScriptUrl() ?>?page=pricing" target="_top" class="text-gray-600 hover:text-brand transition">อัตราค่าขนส่ง</a>
+    </div>
+    
+    <div class="flex items-center justify-end flex-1">
+        <div class="flex items-center gap-3 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
+            <img src="https://ui-avatars.com/api/?name=Admin+Ploy&background=c51c24&color=fff" class="w-8 h-8 rounded-full shadow-sm">
+            <span class="text-sm font-medium text-gray-700 pr-2">Admin Ploy</span>
+        </div>
+    </div>
+    
+</header>
+
+        <div class="flex-1 overflow-y-auto p-4 md:p-8">
+            <div id="view-delivery" class="max-w-7xl mx-auto space-y-6">
+                <div class="border-b border-gray-200 pb-4">
+                    <h1 class="text-2xl font-bold text-gray-800"><i class="fas fa-truck-loading text-brand mr-2"></i> จัดการระบบส่งในไทย</h1>
+                    <p class="text-sm text-gray-500 mt-1">คัดแยกและดำเนินขั้นตอนตามประเภทขนส่งที่ลูกค้าเลือก</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div onclick="filterDeliveryMethod(1)" id="card-dm-1" class="delivery-method-card bg-white p-5 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md transition">
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="w-10 h-10 bg-gray-100 text-gray-600 rounded-md flex items-center justify-center text-lg"><i class="fas fa-id-card"></i></div>
+                            <span class="bg-gray-100 text-gray-600 font-bold text-xs px-2 py-0.5 rounded-full" id="count-dm-1">0</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">เรียกแมสมารับเอง</h4>
+                        <p class="text-xs text-gray-500 mt-1">ลูกค้าแจ้งคิวพนักงานขับรถเข้ามารับ</p>
+                    </div>
+
+                    <div onclick="filterDeliveryMethod(2)" id="card-dm-2" class="delivery-method-card bg-white p-5 rounded-lg border-2 border-brand shadow-md cursor-pointer transition">
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="w-10 h-10 bg-red-50 text-brand rounded-md flex items-center justify-center text-lg"><i class="fas fa-motorcycle"></i></div>
+                            <span class="bg-brand text-white font-bold text-xs px-2 py-0.5 rounded-full shadow-sm" id="count-dm-2">0</span>
+                        </div>
+                        <h4 class="font-bold text-brand">โกดังเรียกแมสให้</h4>
+                        <p class="text-xs text-gray-500 mt-1">แอดมินเรียกรถให้ และกรอกยอดค่าส่ง</p>
+                    </div>
+
+                    <div onclick="filterDeliveryMethod(3)" id="card-dm-3" class="delivery-method-card bg-white p-5 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:shadow-md transition">
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="w-10 h-10 bg-gray-100 text-gray-600 rounded-md flex items-center justify-center text-lg"><i class="fas fa-shipping-fast"></i></div>
+                            <span class="bg-gray-100 text-gray-600 font-bold text-xs px-2 py-0.5 rounded-full" id="count-dm-3">0</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">ส่งไปรษณีย์ EMS</h4>
+                        <p class="text-xs text-gray-500 mt-1">พิมพ์ใบปะหน้า ป้อนหมายเลขพัสดุไทย</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+                    <div class="p-4 border-b border-gray-200 bg-gray-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h3 class="font-bold text-gray-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-brand"></i> รายการรอจัดส่ง</h3>
+                            <p class="text-xs text-gray-500 mt-0.5" id="delivery-method-subtitle">แสดงพัสดุที่มีรูปแบบจัดส่ง: โกดังเรียกแมสให้</p>
+                        </div>
+                        <div class="relative w-full sm:w-64">
+                            <input type="text" id="delivery-search" onkeyup="filterDeliveryTable()" placeholder="ค้นหา Tracking / ลูกค้า..." class="w-full pl-9 pr-4 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand bg-white">
+                            <i class="fas fa-search absolute left-3 top-2 text-gray-400 text-sm"></i>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-white border-b-2 border-gray-100 text-gray-600 font-medium">
+                                <tr>
+                                    <th class="p-4">เลขพัสดุจีน-ไทย</th>
+                                    <th class="p-4">รายละเอียดลูกค้า / ที่อยู่</th>
+                                    <th class="p-4">น้ำหนัก (KG)</th>
+                                    <th class="p-4" id="th-delivery-meta">ค่ารถ / รายละเอียดส่ง</th>
+                                    <th class="p-4 text-center">สถานะจัดส่ง</th>
+                                    <th class="p-4 text-right">ดำเนินการ</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-gray-700" id="delivery-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="modal-dispatch" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-md w-full overflow-hidden shadow-2xl">
+            <div class="bg-brand p-4 text-white flex justify-between items-center">
+                <h3 class="font-bold text-base" id="dispatch-modal-title"><i class="fas fa-motorcycle mr-2"></i> แจ้งข้อมูลจัดส่ง</h3>
+                <button onclick="closeModal('modal-dispatch')" class="text-white hover:text-red-200 transition text-lg"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="text-sm bg-gray-50 p-3 rounded-md border border-gray-100">
+                    <p class="font-semibold text-gray-700">พัสดุเลขที่: <span id="dispatch-modal-tracking" class="text-brand"></span></p>
+                    <p class="text-xs text-gray-500 mt-0.5">ลูกค้า: <span id="dispatch-modal-customer"></span></p>
+                    <p class="text-xs text-gray-500 mt-1" id="dispatch-modal-address"></p>
+                </div>
+                
+                <div id="dispatch-form-messenger" class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700">ยอดค่าแมสเซนเจอร์ (บาท)</label>
+                    <div class="relative">
+                        <span class="absolute left-3.5 top-2 text-gray-500 font-medium">฿</span>
+                        <input type="number" id="input-delivery-fare" placeholder="เช่น 250" class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand">
+                    </div>
+                </div>
+                
+                <div id="dispatch-form-ems" class="space-y-2 hidden">
+                    <label class="block text-sm font-medium text-gray-700">หมายเลขพัสดุ EMS (Tracking No.)</label>
+                    <input type="text" id="input-ems-tracking" placeholder="เช่น ED123456789TH" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand uppercase">
+                </div>
+                
+                <div class="flex gap-2 pt-4 border-t border-gray-100">
+                    <button onclick="closeModal('modal-dispatch')" class="flex-1 py-2 border border-gray-300 rounded-md hover:bg-gray-50 text-sm font-medium text-gray-700 transition">ยกเลิก</button>
+                    <button onclick="saveDispatchDetails()" class="flex-1 py-2 bg-brand text-white rounded-md text-sm font-medium hover:bg-red-700 transition shadow-sm">บันทึกข้อมูล</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-address-print" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-lg w-full overflow-hidden shadow-2xl">
+            <div class="bg-gray-800 p-4 text-white flex justify-between items-center">
+                <h3 class="font-bold text-base"><i class="fas fa-print mr-2"></i> ตัวอย่างใบปะหน้า</h3>
+                <button onclick="closeModal('modal-address-print')" class="text-gray-400 hover:text-white transition text-lg"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="p-6 space-y-4 bg-gray-100">
+                <div class="border border-gray-300 p-6 bg-white text-gray-900 rounded-sm shadow-sm space-y-4 font-mono select-all" id="printable-area">
+                    <div class="flex justify-between items-start border-b-2 border-black pb-4">
+                        <div>
+                            <div class="font-bold text-xl uppercase">SUCHAR CARGO</div>
+                            <div class="text-xs mt-1 text-gray-600">คลังสินค้ากรุงเทพฯ (ประเทศไทย)</div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-sm border-2 border-black px-2 py-1 font-bold tracking-wider" id="print-tracking-label"></span>
+                            <div class="text-[10px] mt-2 font-bold uppercase">VIA: THAILAND POST (EMS)</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">TO (ผู้รับ)</div>
+                        <div class="text-lg font-bold" id="print-customer-name"></div>
+                        <div class="text-sm mt-1 leading-relaxed max-w-[80%]" id="print-customer-address"></div>
+                        <div class="text-sm font-bold mt-3" id="print-customer-phone"></div>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="closeModal('modal-address-print')" class="flex-1 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-sm font-medium transition">ปิด</button>
+                    <button onclick="triggerPrintSimulated()" class="flex-1 py-2 bg-gray-800 text-white rounded-md text-sm font-medium hover:bg-black transition flex items-center justify-center gap-2">
+                        <i class="fas fa-print"></i> พิมพ์ใบปะหน้า
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="modal-slip" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4"></div>
+
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-gray-900 text-white px-6 py-3 rounded-md shadow-lg flex items-center gap-3 transition-all transform translate-y-20 opacity-0 pointer-events-none duration-300">
+        <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-xs text-white" id="toast-icon-bg"><i class="fas fa-check" id="toast-icon"></i></div>
+        <p class="text-sm font-medium" id="toast-message"></p>
+    </div>
+
+    <script src="admin_common.js"></script>
+</body>
+</html>

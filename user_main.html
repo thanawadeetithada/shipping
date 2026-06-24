@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แจ้งนำเข้าสินค้า - SUCHAR CARGO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Kanit', sans-serif; background-color: #f8f9fa; }
+        .bg-brand { background-color: #c51c24; }
+        .text-brand { color: #c51c24; }
+        .bg-brand-dark { background-color: #8b1319; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden text-gray-800">
+
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 md:hidden" onclick="toggleMobileSidebar()"></div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex flex-col z-50 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:flex shadow-xl">
+        <div class="py-6 px-6 bg-brand-dark flex flex-col items-center justify-center relative border-b border-red-900">
+            <div class="text-2xl font-bold leading-none mb-1 tracking-wide">SUCHAR</div>
+            <div class="text-[10px] tracking-widest text-red-200 bg-black/20 px-2 py-0.5 rounded-full mt-1">CUSTOMER PORTAL</div>
+            <button class="absolute top-6 right-4 text-white md:hidden hover:text-red-200" onclick="toggleMobileSidebar()"><i class="fas fa-times text-xl"></i></button>
+        </div>
+
+        <nav class="flex-grow p-4 space-y-1.5 overflow-y-auto text-sm">
+            <a href="user_dashboard.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-home w-5 text-center"></i> แดชบอร์ดของฉัน
+            </a>
+            <a href="user_import.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-box-open w-5 text-center"></i> แจ้งนำเข้าสินค้า
+            </a>
+            <a href="user_tracking.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-box-open w-5 text-center"></i> สถานะพัสดุทั้งหมด
+            </a>
+            <a href="user_payment.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-file-invoice-dollar w-5 text-center"></i> จัดส่งสินค้า
+            </a>
+        </nav>
+        <div class="p-4 bg-gray-950">
+            <button onclick="window.location.href='index.html'" class="flex items-center justify-center gap-2 text-gray-400 hover:text-white hover:bg-red-600/80 w-full px-4 py-2.5 rounded-md border border-gray-800 transition text-sm font-medium"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+        <header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center z-30 flex-shrink-0">
+            <div class="flex items-center gap-4 flex-1">
+                <button class="text-gray-600 hover:text-brand md:hidden p-1 transition" onclick="toggleMobileSidebar()"><i class="fas fa-bars text-xl"></i></button>
+            </div>
+            <div class="hidden md:flex flex-1 justify-center space-x-6 text-sm font-medium">
+                <a href="user_main.html" class="text-gray-600 hover:text-brand transition">หน้าหลัก</a>
+                <a href="user_pricing.html" class="text-gray-600 hover:text-brand transition">อัตราค่าขนส่ง</a>
+            </div>
+            <div class="flex items-center justify-end flex-1">
+                <div class="flex items-center gap-3 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
+                    <img src="https://ui-avatars.com/api/?name=Somchai+J&background=c51c24&color=fff" class="w-8 h-8 rounded-full shadow-sm">
+                    <span class="text-sm font-medium text-gray-700 pr-2 hidden sm:block">ทดสอบ เว็บไซต์</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto">
+            
+            <section class="relative bg-gray-900 py-20 px-4 text-center bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1586528116311-ad8ed7c427eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+                <div class="absolute inset-0 bg-brand opacity-80 mix-blend-multiply"></div>
+                <div class="relative z-10 max-w-3xl mx-auto text-white">
+                    <h1 class="text-3xl md:text-5xl font-bold mb-4 drop-shadow-md">นำเข้าสินค้าจากจีน-ไทย ครบวงจร</h1>
+                    <h2 class="text-xl md:text-3xl mb-8 drop-shadow-md">เช็คสถานะสินค้าได้ตลอด 24 ชั่วโมง</h2>
+
+                    <div class="bg-white p-2 rounded-lg flex flex-col md:flex-row shadow-lg max-w-2xl mx-auto">
+                        <input type="text" placeholder="กรอกรหัสลูกค้า หรือ Tracking Number" class="flex-grow px-4 py-3 text-gray-700 outline-none rounded-t-lg md:rounded-l-lg md:rounded-t-none">
+                        <button onclick="window.top.location.href='<?= getScriptUrl() ?>?page=trackin_info'" class="bg-brand text-white px-8 py-3 rounded-md font-medium hover:bg-red-700 transition flex items-center justify-center gap-2 mt-2 md:mt-0">
+                            <i class="fas fa-search"></i> เช็คสถานะ
+                        </button>
+                    </div>
+                    <p class="mt-4 text-sm text-gray-200">ตัวอย่างรหัส: SC250621001</p>
+                </div>
+            </section>
+
+            <section class="bg-brand-dark py-6 px-4">
+                <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 text-white">
+                    <div class="flex items-center gap-4">
+                        <div class="text-3xl"><i class="fas fa-shield-alt"></i></div>
+                        <div>
+                            <h4 class="font-bold">ปลอดภัย 100%</h4>
+                            <p class="text-xs text-gray-300">รับประกันสินค้าทุกชิ้น</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-3xl"><i class="far fa-clock"></i></div>
+                        <div>
+                            <h4 class="font-bold">รวดเร็ว ตรงเวลา</h4>
+                            <p class="text-xs text-gray-300">ขนส่งไว ได้ของแน่นอน</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-3xl"><i class="fas fa-hand-holding-usd"></i></div>
+                        <div>
+                            <h4 class="font-bold">ราคาคุ้มค่า</h4>
+                            <p class="text-xs text-gray-300">ค่าขนส่งเริ่มต้นเพียง 50 บาท/กก.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-3xl"><i class="fas fa-headset"></i></div>
+                        <div>
+                            <h4 class="font-bold">บริการลูกค้า 24 ชม.</h4>
+                            <p class="text-xs text-gray-300">พร้อมดูแลและให้คำปรึกษา</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-16 px-4 bg-white text-center">
+                <h2 class="text-2xl md:text-3xl font-bold mb-2">ขั้นตอนการใช้บริการ</h2>
+                <p class="text-gray-500 mb-12">ง่ายๆ เพียง 5 ขั้นตอน</p>
+
+                <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center relative">
+                    <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gray-200 -z-10 -translate-y-10"></div>
+
+                    <div class="flex flex-col items-center mb-8 md:mb-0 bg-white px-4">
+                        <div class="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center font-bold mb-4">1</div>
+                        <div class="w-20 h-20 rounded-full border-2 border-red-100 text-brand flex items-center justify-center text-3xl mb-4 bg-white">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <h4 class="font-bold text-sm">สั่งซื้อสินค้า</h4>
+                        <p class="text-xs text-gray-500 max-w-[120px]">ลูกค้าสั่งซื้อสินค้าจากจีน<br>หรือสั่งผ่านแอดมิน</p>
+                    </div>
+                    <div class="flex flex-col items-center mb-8 md:mb-0 bg-white px-4">
+                        <div class="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center font-bold mb-4">2</div>
+                        <div class="w-20 h-20 rounded-full border-2 border-red-100 text-brand flex items-center justify-center text-3xl mb-4 bg-white">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <h4 class="font-bold text-sm">ชำระค่าสินค้า</h4>
+                        <p class="text-xs text-gray-500 max-w-[120px]">ชำระค่าสินค้าให้กับร้านค้า<br>หรือโรงงานในจีน</p>
+                    </div>
+                    <div class="flex flex-col items-center mb-8 md:mb-0 bg-white px-4">
+                        <div class="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center font-bold mb-4">3</div>
+                        <div class="w-20 h-20 rounded-full border-2 border-red-100 text-brand flex items-center justify-center text-3xl mb-4 bg-white">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <h4 class="font-bold text-sm">ส่งสินค้าเข้าโกดังจีน</h4>
+                        <p class="text-xs text-gray-500 max-w-[120px]">ร้านค้าจัดส่งสินค้ามาให้<br>ที่โกดังจีนของเรา</p>
+                    </div>
+                    <div class="flex flex-col items-center mb-8 md:mb-0 bg-white px-4">
+                        <div class="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center font-bold mb-4">4</div>
+                        <div class="w-20 h-20 rounded-full border-2 border-red-100 text-brand flex items-center justify-center text-3xl mb-4 bg-white">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h4 class="font-bold text-sm">ขนส่งจากจีนมาไทย</h4>
+                        <p class="text-xs text-gray-500 max-w-[120px]">สินค้าจะถูกจัดส่งจากจีน<br>มายังโกดังไทย</p>
+                    </div>
+                    <div class="flex flex-col items-center bg-white px-4">
+                        <div class="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center font-bold mb-4">5</div>
+                        <div class="w-20 h-20 rounded-full border-2 border-red-100 text-brand flex items-center justify-center text-3xl mb-4 bg-white">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <h4 class="font-bold text-sm">จัดส่งถึงมือลูกค้า</h4>
+                        <p class="text-xs text-gray-500 max-w-[120px]">ส่งสินค้าให้ลูกค้า<br>ถึงบ้านปลอดภัย</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-brand text-white py-8 px-4">
+                <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                    <div>
+                        <div class="text-3xl font-bold mb-1"><i class="fas fa-box-open mr-2"></i> 20,000+</div>
+                        <div class="text-sm">พัสดุที่จัดส่งสำเร็จ</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold mb-1"><i class="fas fa-users mr-2"></i> 8,500+</div>
+                        <div class="text-sm">ลูกค้าที่ใช้บริการ</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold mb-1"><i class="fas fa-truck-fast mr-2"></i> 99.8%</div>
+                        <div class="text-sm">จัดส่งตรงเวลา</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold mb-1"><i class="fas fa-heart mr-2"></i> 4.9/5</div>
+                        <div class="text-sm">คะแนนรีวิวจากลูกค้า</div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>

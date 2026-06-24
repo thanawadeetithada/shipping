@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แจ้งนำเข้าสินค้า - SUCHAR CARGO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Kanit', sans-serif; background-color: #f8f9fa; }
+        .bg-brand { background-color: #c51c24; }
+        .text-brand { color: #c51c24; }
+        .bg-brand-dark { background-color: #8b1319; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden text-gray-800">
+
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 md:hidden" onclick="toggleMobileSidebar()"></div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex flex-col z-50 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:flex shadow-xl">
+        <div class="py-6 px-6 bg-brand-dark flex flex-col items-center justify-center relative border-b border-red-900">
+            <div class="text-2xl font-bold leading-none mb-1 tracking-wide">SUCHAR</div>
+            <div class="text-[10px] tracking-widest text-red-200 bg-black/20 px-2 py-0.5 rounded-full mt-1">CUSTOMER PORTAL</div>
+            <button class="absolute top-6 right-4 text-white md:hidden hover:text-red-200" onclick="toggleMobileSidebar()"><i class="fas fa-times text-xl"></i></button>
+        </div>
+
+        <nav class="flex-grow p-4 space-y-1.5 overflow-y-auto text-sm">
+            <a href="user_dashboard.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-home w-5 text-center"></i> แดชบอร์ดของฉัน
+            </a>
+            <a href="user_import.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-box-open w-5 text-center"></i> แจ้งนำเข้าสินค้า
+            </a>
+            <a href="user_tracking.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-box-open w-5 text-center"></i> สถานะพัสดุทั้งหมด
+            </a>
+            <a href="user_payment.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-file-invoice-dollar w-5 text-center"></i> จัดส่งสินค้า
+            </a>
+        </nav>
+        <div class="p-4 bg-gray-950">
+            <button onclick="window.location.href='index.html'" class="flex items-center justify-center gap-2 text-gray-400 hover:text-white hover:bg-red-600/80 w-full px-4 py-2.5 rounded-md border border-gray-800 transition text-sm font-medium"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+        <header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center z-30 flex-shrink-0">
+            <div class="flex items-center gap-4 flex-1">
+                <button class="text-gray-600 hover:text-brand md:hidden p-1 transition" onclick="toggleMobileSidebar()"><i class="fas fa-bars text-xl"></i></button>
+            </div>
+            <div class="hidden md:flex flex-1 justify-center space-x-6 text-sm font-medium">
+                <a href="user_main.html" class="text-gray-600 hover:text-brand transition">หน้าหลัก</a>
+                <a href="user_pricing.html" class="text-brand">อัตราค่าขนส่ง</a>
+            </div>
+            <div class="flex items-center justify-end flex-1">
+                <div class="flex items-center gap-3 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
+                    <img src="https://ui-avatars.com/api/?name=Somchai+J&background=c51c24&color=fff" class="w-8 h-8 rounded-full shadow-sm">
+                    <span class="text-sm font-medium text-gray-700 pr-2 hidden sm:block">ทดสอบ เว็บไซต์</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto">
+            
+             <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- PAGE 3: PRICING (อัตราค่าขนส่ง) -->
+            <div id="page-pricing" class="page-section">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">อัตราค่าขนส่ง จีน-ไทย</h2>
+
+                <div class="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+                    <!-- ทางรถ -->
+                    <div
+                        class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow">
+                        <div class="bg-gray-800 text-white p-6 text-center">
+                            <i class="fa-solid fa-truck text-4xl mb-3 text-red-400"></i>
+                            <h3 class="text-xl font-bold">ขนส่งทางรถ (EK)</h3>
+                            <p class="text-sm text-gray-300 mt-1">ใช้เวลา 4-7 วันทำการ</p>
+                        </div>
+                        <div class="p-6">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-gray-50 text-gray-600 font-medium">
+                                    <tr>
+                                        <th class="py-3 px-4 rounded-tl-lg">ประเภทสินค้า</th>
+                                        <th class="py-3 px-4 text-right">ราคา / KG</th>
+                                        <th class="py-3 px-4 text-right rounded-tr-lg">ราคา / CBM</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    <tr>
+                                        <td class="py-4 px-4 font-medium">สินค้าทั่วไป (มอก.)</td>
+                                        <td class="py-4 px-4 text-right font-bold text-primary">35 ฿</td>
+                                        <td class="py-4 px-4 text-right text-gray-600">4,500 ฿</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-4 px-4 font-medium">สินค้าพิเศษ / ลิขสิทธิ์</td>
+                                        <td class="py-4 px-4 text-right font-bold text-primary">55 ฿</td>
+                                        <td class="py-4 px-4 text-right text-gray-600">6,500 ฿</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- ทางเรือ -->
+                    <div
+                        class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow">
+                        <div class="bg-blue-800 text-white p-6 text-center">
+                            <i class="fa-solid fa-ship text-4xl mb-3 text-blue-300"></i>
+                            <h3 class="text-xl font-bold">ขนส่งทางเรือ (SEA)</h3>
+                            <p class="text-sm text-blue-200 mt-1">ใช้เวลา 12-15 วันทำการ</p>
+                        </div>
+                        <div class="p-6">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-gray-50 text-gray-600 font-medium">
+                                    <tr>
+                                        <th class="py-3 px-4 rounded-tl-lg">ประเภทสินค้า</th>
+                                        <th class="py-3 px-4 text-right">ราคา / KG</th>
+                                        <th class="py-3 px-4 text-right rounded-tr-lg">ราคา / CBM</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    <tr>
+                                        <td class="py-4 px-4 font-medium">สินค้าทั่วไป (มอก.)</td>
+                                        <td class="py-4 px-4 text-right font-bold text-blue-600">25 ฿</td>
+                                        <td class="py-4 px-4 text-right text-gray-600">3,500 ฿</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-4 px-4 font-medium">สินค้าพิเศษ / ลิขสิทธิ์</td>
+                                        <td class="py-4 px-4 text-right font-bold text-blue-600">45 ฿</td>
+                                        <td class="py-4 px-4 text-right text-gray-600">5,500 ฿</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="mt-8 text-center text-sm text-gray-500 bg-gray-50 py-4 rounded-xl max-w-5xl mx-auto border border-gray-200">
+                    <p><i class="fa-solid fa-circle-info text-primary mr-1"></i> กรณีสินค้ามีน้ำหนักเบาแต่ขนาดใหญ่
+                        ระบบจะคำนวณราคาจาก <span class="font-bold">ปริมาตร (CBM)</span> เป็นหลัก
+                        เพื่อความคุ้มค่าของลูกค้า</p>
+                </div>
+            </div>
+        </main>
+
+            
+        </div>
+    </main>
+
+    <script>
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>

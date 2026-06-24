@@ -26,7 +26,7 @@
     function renderProfileNav(url, user, container) {
         const userProfileHTML = `
             <div class="flex items-center gap-4 text-sm font-medium">
-                <a href="${url}?page=userprofile" class="text-gray-800 hover:text-brand transition cursor-pointer">
+                <a href="${url}?page=userprofile" target="_top" class="text-gray-800 hover:text-brand transition cursor-pointer">
                     <i class="fas fa-user-circle text-brand mr-1 text-lg"></i> คุณ ${user.fullname}
                 </a>
                 <button type="button" onclick="logout()" class="bg-brand text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition shadow-sm">
