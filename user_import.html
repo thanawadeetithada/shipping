@@ -170,9 +170,9 @@
                                 </thead>
                                 <tbody id="itemTableBody" class="divide-y divide-gray-200 bg-white">
                                     <tr>
-                                       <td colspan="4" class="px-4 py-8 text-center text-gray-400">
-                                            <i class="fas fa-box-open text-3xl mb-2"></i><br>
-                                            ยังไม่มีรายการสินค้า กรุณาเพิ่มข้อมูลด้านบน
+                                       <td colspan="4" class="px-4 py-12 text-center">
+                                            <i class="fas fa-circle-notch fa-spin text-4xl text-brand mb-3"></i>
+                                            <p class="text-gray-500 font-medium">กำลังโหลดข้อมูลรายการพัสดุ...</p>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -284,6 +284,16 @@
                 showAlert('ข้อผิดพลาด', 'ไม่พบรหัสสมาชิก กรุณาเข้าสู่ระบบใหม่', 'red');
                 return;
             }
+
+            // แสดง Spinner ในตารางระหว่างรอข้อมูล
+            document.getElementById('itemTableBody').innerHTML = `
+                <tr>
+                    <td colspan="4" class="px-4 py-12 text-center">
+                        <i class="fas fa-circle-notch fa-spin text-4xl text-brand mb-3"></i>
+                        <p class="text-gray-500 font-medium">กำลังโหลดข้อมูลรายการพัสดุ...</p>
+                    </td>
+                </tr>
+            `;
 
             google.script.run
                 .withSuccessHandler(function (data) {
