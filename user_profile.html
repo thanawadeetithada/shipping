@@ -19,10 +19,9 @@
         /* คลาสสำหรับซ่อนหน้าเว็บชั่วคราวตอนเช็ค Session */
         .hide-content { display: none !important; }
     </style>
-    <script>
-        // ดักจับคนไม่ได้ล็อกอิน (แบบปลอดภัย ไม่ทำให้เว็บพัง)
-        if (!localStorage.getItem('userSession')) {
-            window.top.location.href = '<?= getScriptUrl() ?>?page=index';
+     <script>
+       if (!localStorage.getItem('userSession')) {
+          window.location.replace('<?= getScriptUrl() ?>?page=index');
         }
     </script>
 </head>
