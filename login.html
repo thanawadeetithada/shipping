@@ -283,7 +283,7 @@
                 .withSuccessHandler(function (response) {
                     if (response.success) {
                         showSpinner('เข้าสู่ระบบสำเร็จ!');
-                        localStorage.setItem('userData', JSON.stringify(response.user));
+                        localStorage.setItem('userSession', JSON.stringify(response.user));
                         setTimeout(() => {
                             window.top.location.href = "<?= getScriptUrl() ?>?page=" + response.redirectPage;
                         }, 1000);

@@ -1,21 +1,18 @@
 function doGet(e) {
-  var page = 'index'; 
-  if (e && e.parameter && e.parameter.page) {
-    page = e.parameter.page;
-  }
+  var page = e && e.parameter && e.parameter.page ? e.parameter.page : 'index'; 
+  console.log("กำลังโหลดไฟล์: " + page + ".html");
   
   try {
+    // 1. ใช้ Template เสมอ เพื่อให้ใช้งาน <?!= include(...) ?> ได้
     return HtmlService.createTemplateFromFile(page)
         .evaluate()
         .setTitle('SUCHAR CARGO')
         .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
         .addMetaTag('viewport', 'width=device-width, initial-scale=1');
   } catch (error) {
-    // 🛠 แก้ไขตรงนี้: โชว์ Error ออกมาตรงๆ บนหน้าเว็บแทนการแอบโหลดหน้า index
     return ContentService.createTextOutput(
-      "❌ เกิดข้อผิดพลาดในการโหลดหน้า (" + page + ".html)\n\n" + 
-      "รายละเอียด Error: " + error.message + 
-      "\n\n(คำแนะนำ: โปรดตรวจสอบไฟล์ " + page + ".html ว่าพิมพ์แท็ก <? ?> ผิด หรือลืม include ไฟล์บางตัวหรือไม่)"
+      "❌ ไม่พบหน้า: " + page + ".html\n" + 
+      "Error: " + error.message
     );
   }
 }

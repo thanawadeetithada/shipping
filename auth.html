@@ -38,19 +38,4 @@
             container.insertAdjacentHTML('beforeend', userProfileHTML);
         }
     }
-
-    function logout() {
-        sessionStorage.removeItem("userSession");
-        sessionStorage.clear();
-        
-        // เด้งกลับหน้า index ทันที
-        const baseUrl = typeof GLOBAL_SCRIPT_URL !== 'undefined' ? GLOBAL_SCRIPT_URL : "";
-        if (baseUrl) {
-            window.top.location.href = baseUrl + "?page=index";
-        } else {
-            google.script.run.withSuccessHandler(function(url) {
-                window.top.location.href = url + "?page=index";
-            }).getScriptUrl();
-        }
-    }
 </script>

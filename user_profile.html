@@ -16,59 +16,84 @@
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        /* คลาสสำหรับซ่อนหน้าเว็บชั่วคราวตอนเช็ค Session */
+        .hide-content { display: none !important; }
     </style>
+    <script>
+        // ดักจับคนไม่ได้ล็อกอิน (แบบปลอดภัย ไม่ทำให้เว็บพัง)
+        if (!localStorage.getItem('userSession')) {
+            window.top.location.href = '<?= getScriptUrl() ?>?page=index';
+        }
+    </script>
 </head>
 <body class="flex h-screen overflow-hidden text-gray-800">
 
-    <div id="loadingOverlay" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center backdrop-blur-sm transition-opacity">
-        <div class="bg-white p-8 rounded-2xl shadow-2xl flex flex-col items-center text-center max-w-sm w-full mx-4 transform scale-100 transition-transform">
-            <i id="loadingIcon" class="fas fa-circle-notch fa-spin text-brand text-6xl mb-4"></i>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">กรุณารอสักครู่</h3>
-            <p id="loadingText" class="text-gray-500 text-sm">กำลังดำเนินการ...</p>
-        </div>
-    </div>
+    <?!= include('profile_modal'); ?>
 
     <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 md:hidden" onclick="toggleMobileSidebar()"></div>
 
-    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex flex-col z-50 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:flex shadow-xl">
+      <aside id="sidebar"
+        class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex flex-col z-50 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:flex shadow-xl">
         <div class="py-6 px-6 bg-brand-dark flex flex-col items-center justify-center relative border-b border-red-900">
             <div class="text-2xl font-bold leading-none mb-1 tracking-wide">SUCHAR</div>
             <div class="text-[10px] tracking-widest text-red-200 bg-black/20 px-2 py-0.5 rounded-full mt-1">CUSTOMER PORTAL</div>
-            <button class="absolute top-6 right-4 text-white md:hidden hover:text-red-200" onclick="toggleMobileSidebar()"><i class="fas fa-times text-xl"></i></button>
+            <button class="absolute top-6 right-4 text-white md:hidden hover:text-red-200"
+                onclick="toggleMobileSidebar()"><i class="fas fa-times text-xl"></i></button>
         </div>
 
         <nav class="flex-grow p-4 space-y-1.5 overflow-y-auto text-sm">
-            <a href="user_dashboard.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+            <a href="<?= getScriptUrl() ?>?page=user_dashboard" target="_top"
+                class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
                 <i class="fas fa-home w-5 text-center"></i> แดชบอร์ดของฉัน
             </a>
-             <a href="user_import.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+            <a href="<?= getScriptUrl() ?>?page=user_import" target="_top"
+                class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
                 <i class="fas fa-box-open w-5 text-center"></i> แจ้งนำเข้าสินค้า
             </a>
-            <a href="user_tracking.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
-                <i class="fas fa-box-open w-5 text-center"></i> สถานะพัสดุทั้งหมด
-            </a>
-            <a href="user_payment.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+            <a href="<?= getScriptUrl() ?>?page=user_payment" target="_top"
+                class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
                 <i class="fas fa-file-invoice-dollar w-5 text-center"></i> จัดส่งสินค้า
+            </a>
+            <a href="<?= getScriptUrl() ?>?page=user_tracking" target="_top"
+                class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-box-open w-5 text-center"></i> สถานะพัสดุทั้งหมด
             </a>
         </nav>
         <div class="p-4">
-            <button onclick="window.location.href='index.html'" class="flex items-center justify-center gap-2 text-gray-400 hover:text-white hover:bg-red-600/80 w-full px-4 py-2.5 rounded-md border border-gray-800 transition text-sm font-medium"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</button>
+            <button onclick="logoutuser()"
+                class="flex items-center justify-center gap-2 text-gray-400 hover:text-white hover:bg-red-600/80 w-full px-4 py-2.5 rounded-md border border-gray-800 transition text-sm font-medium"><i
+                    class="fas fa-sign-out-alt"></i> ออกจากระบบ</button>
         </div>
     </aside>
 
     <main class="flex-1 flex flex-col h-screen overflow-hidden">
-        <header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center z-30">
-            <div class="flex items-center gap-4 flex-1">
-                <button class="text-gray-600 hover:text-brand md:hidden p-1 transition" onclick="toggleMobileSidebar()"><i class="fas fa-bars text-xl"></i></button>
+        <header
+            class="bg-white shadow-sm py-3 px-4 md:py-4 md:px-6 flex items-center justify-between z-30 relative min-h-[64px] md:min-h-[72px]">
+            <div class="flex items-center gap-4 shrink-0">
+                <button class="text-gray-600 hover:text-brand md:hidden p-1 transition" onclick="toggleMobileSidebar()">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
             </div>
-            <div class="hidden md:flex flex-1 justify-center space-x-6 text-sm font-medium">
-                <a href="user_main.html" class="text-gray-600 hover:text-brand transition">หน้าหลัก</a>
-                <a href="user_pricing.html" class="text-gray-600 hover:text-brand transition">อัตราค่าขนส่ง</a>
+
+            <div
+                class="flex space-x-3 md:space-x-6 text-xs sm:text-sm font-medium md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
+                <a href="<?= getScriptUrl() ?>?page=user_main" target="_top"
+                    class="text-gray-600 hover:text-brand transition whitespace-nowrap">หน้าหลัก</a>
+                <a href="<?= getScriptUrl() ?>?page=user_pricing" target="_top"
+                    class="text-gray-600 hover:text-brand transition whitespace-nowrap">อัตราค่าขนส่ง</a>
             </div>
-            <div class="flex items-center justify-end flex-1">
-                <div class="flex items-center gap-3 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100 cursor-pointer">
-                    <img src="https://ui-avatars.com/api/?name=Somchai+J&background=c51c24&color=fff" class="w-8 h-8 rounded-full shadow-sm">
-                    <span class="text-sm font-medium text-gray-700 pr-2 hidden sm:block">ทดสอบ เว็บไซต์</span>
+            <div class="flex items-center justify-end shrink-0">
+                <div onclick="window.top.location.href='<?= getScriptUrl() ?>?page=user_profile'" target="_top"
+                    class="flex items-center gap-2 md:gap-3 bg-brand px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-brand cursor-pointer hover:bg-brand-dark transition text-white">
+
+                    <img id="headerAvatar" src="https://ui-avatars.com/api/?name=User&background=fff&color=c51c24"
+                        class="w-7 h-7 md:w-8 md:h-8 rounded-full shadow-sm">
+
+                    <span id="headerUsername"
+                        class="text-xs md:text-sm font-medium pr-1 md:pr-2 hidden sm:block whitespace-nowrap">
+                        กำลังโหลด...
+                    </span>
+
                 </div>
             </div>
         </header>
@@ -148,7 +173,7 @@
                             </div>
                             
                             <div class="mt-8 flex gap-3">
-                                <button type="button" onclick="window.location.href='user_dashboard.html'" class="flex-1 bg-white border border-gray-300 text-gray-700 font-medium py-3 px-4 rounded-lg hover:bg-gray-50 transition">
+                                <button type="button" onclick="window.top.location.href='<?= getScriptUrl() ?>?page=user_dashboard'" class="flex-1 bg-white border border-gray-300 text-gray-700 font-medium py-3 px-4 rounded-lg hover:bg-gray-50 transition">
                                     ยกเลิก
                                 </button>
                                 <button type="submit" id="updateBtn" class="flex-[2] bg-brand text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-dark transition flex items-center justify-center gap-2 shadow-md">
@@ -164,84 +189,32 @@
     </main>
 
     <script>
-        // ควบคุมเมนูมือถือ
+        document.addEventListener('DOMContentLoaded', function () {
+            const sessionData = localStorage.getItem('userSession');
+
+            if (sessionData) {
+                try {
+                    const user = JSON.parse(sessionData);
+                    const fullname = user.fullname || user.name || "ไม่ระบุชื่อ";
+                    const usernameElement = document.getElementById('headerUsername');
+                    if (usernameElement) {
+                        usernameElement.innerText = fullname;
+                    }
+                } catch (e) {
+                    console.error("รูปแบบข้อมูลเซสชันไม่ถูกต้อง:", e);
+                }
+            }
+        });
         function toggleMobileSidebar() {
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('sidebarBackdrop');
             sidebar.classList.toggle('-translate-x-full');
             backdrop.classList.toggle('hidden');
         }
-
-        // Mock Data เมื่อโหลดหน้าเว็บ
-        document.addEventListener('DOMContentLoaded', function() {
-            // จำลองข้อมูลผู้ใช้
-            const mockUser = {
-                memberId: "SC-8890",
-                fullname: "ทดสอบ เว็บไซต์",
-                phone: "081-234-5678",
-                address: "123/456 หมู่บ้านตัวอย่าง ถ.รามอินทรา แขวงบางเขน เขตบางเขน กรุงเทพฯ 10220"
-            };
-
-            document.getElementById('profile_memberId').value = mockUser.memberId;
-            document.getElementById('profile_fullname').value = mockUser.fullname;
-            document.getElementById('profile_phone').value = mockUser.phone;
-            document.getElementById('profile_address').value = mockUser.address;
-        });
-
-        // ฟังก์ชันเปิด-ปิดตารหัสผ่าน
-        function togglePassword(inputId, iconId) {
-            const input = document.getElementById(inputId);
-            const icon = document.getElementById(iconId);
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.replace("fa-eye", "fa-eye-slash");
-            } else {
-                input.type = "password";
-                icon.classList.replace("fa-eye-slash", "fa-eye");
-            }
-        }
-
-        // ฟังก์ชันจัดการการบันทึกข้อมูล (Mock Loading)
-        function handleUpdateProfile(e) {
-            e.preventDefault();
-
-            const password = document.getElementById('profile_password').value;
-            const confirmPassword = document.getElementById('profile_confirm_password').value;
-            const statusMsg = document.getElementById('statusMsg');
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            const loadingText = document.getElementById('loadingText');
-            const loadingIcon = document.getElementById('loadingIcon');
-
-            // ตรวจสอบรหัสผ่านว่าตรงกันหรือไม่
-            if (password !== "" || confirmPassword !== "") {
-                if (password !== confirmPassword) {
-                    statusMsg.classList.remove('hidden', 'border-green-200', 'bg-green-50', 'text-green-600');
-                    statusMsg.classList.add('border-red-200', 'bg-red-50', 'text-red-500');
-                    statusMsg.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> รหัสผ่านใหม่และยืนยันรหัสผ่านไม่ตรงกัน';
-                    return;
-                }
-            }
-
-            // ซ่อนข้อความ Error
-            statusMsg.classList.add('hidden');
-            
-            // เปิดหน้าต่าง Loading
-            loadingOverlay.classList.remove('hidden');
-            loadingIcon.className = "fas fa-circle-notch fa-spin text-brand text-6xl mb-4"; 
-            loadingText.innerText = "กำลังตรวจสอบและบันทึกข้อมูล...";
-
-            // จำลองการโหลดข้อมูล 1.5 วินาที
-            setTimeout(() => {
-                // เปลี่ยนไอคอนและข้อความเมื่อสำเร็จ
-                loadingIcon.className = "fas fa-check-circle text-green-500 text-6xl mb-4";
-                loadingText.innerText = "บันทึกข้อมูลสำเร็จ! กำลังกลับไปหน้าแดชบอร์ด...";
-                
-                // จำลองการเปลี่ยนหน้า
-                setTimeout(() => {
-                    window.location.href = "user_dashboard.html";
-                }, 1000);
-
-            }, 1500);
+        function logoutuser() {
+            localStorage.removeItem('userSession');
+            localStorage.clear();
+            window.top.location.href = '<?= getScriptUrl() ?>?page=index';
         }
     </script>
 </body>

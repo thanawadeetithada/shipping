@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,59 +9,98 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Kanit', sans-serif; background-color: #f8f9fa; }
-        .bg-brand { background-color: #c51c24; }
-        .text-brand { color: #c51c24; }
-        .bg-brand-dark { background-color: #8b1319; }
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .bg-brand {
+            background-color: #c51c24;
+        }
+
+        .text-brand {
+            color: #c51c24;
+        }
+
+        .bg-brand-dark {
+            background-color: #8b1319;
+        }
     </style>
+   <script>
+        if (!localStorage.getItem('userSession')) {
+          window.location.replace('<?= getScriptUrl() ?>?page=index');
+        }
+    </script>
 </head>
+
 <body class="flex h-screen overflow-hidden text-gray-800">
 
-    <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 md:hidden" onclick="toggleMobileSidebar()"></div>
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 md:hidden"
+        onclick="toggleMobileSidebar()"></div>
 
-    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex flex-col z-50 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:flex shadow-xl">
+     <aside id="sidebar"
+        class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex flex-col z-50 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:flex shadow-xl">
         <div class="py-6 px-6 bg-brand-dark flex flex-col items-center justify-center relative border-b border-red-900">
             <div class="text-2xl font-bold leading-none mb-1 tracking-wide">SUCHAR</div>
-            <div class="text-[10px] tracking-widest text-red-200 bg-black/20 px-2 py-0.5 rounded-full mt-1">CUSTOMER PORTAL</div>
-            <button class="absolute top-6 right-4 text-white md:hidden hover:text-red-200" onclick="toggleMobileSidebar()"><i class="fas fa-times text-xl"></i></button>
+            <div class="text-[10px] tracking-widest text-red-200 bg-black/20 px-2 py-0.5 rounded-full mt-1">CUSTOMER
+                PORTAL</div>
+            <button class="absolute top-6 right-4 text-white md:hidden hover:text-red-200"
+                onclick="toggleMobileSidebar()"><i class="fas fa-times text-xl"></i></button>
         </div>
 
         <nav class="flex-grow p-4 space-y-1.5 overflow-y-auto text-sm">
-            <a href="user_dashboard.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+            <a href="<?= getScriptUrl() ?>?page=user_dashboard" target="_top"
+                class="flex items-center gap-3 bg-brand text-white px-4 py-3 rounded-md font-medium shadow-md transition duration-200">
                 <i class="fas fa-home w-5 text-center"></i> แดชบอร์ดของฉัน
             </a>
-            <a href="user_import.html" class="flex items-center gap-3 bg-brand text-white px-4 py-3 rounded-md font-medium shadow-md transition duration-200">
+            <a href="<?= getScriptUrl() ?>?page=user_import" target="_top"
+                class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
                 <i class="fas fa-box-open w-5 text-center"></i> แจ้งนำเข้าสินค้า
             </a>
-            <a href="user_tracking.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
-                <i class="fas fa-box-open w-5 text-center"></i> สถานะพัสดุทั้งหมด
-            </a>
-            <a href="user_payment.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+            <a href="<?= getScriptUrl() ?>?page=user_payment" target="_top"
+                class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
                 <i class="fas fa-file-invoice-dollar w-5 text-center"></i> จัดส่งสินค้า
+            </a>
+            <a href="<?= getScriptUrl() ?>?page=user_tracking" target="_top"
+                class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                <i class="fas fa-box-open w-5 text-center"></i> สถานะพัสดุทั้งหมด
             </a>
         </nav>
         <div class="p-4">
-            <button onclick="window.location.href='index.html'" class="flex items-center justify-center gap-2 text-gray-400 hover:text-white hover:bg-red-600/80 w-full px-4 py-2.5 rounded-md border border-gray-800 transition text-sm font-medium"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</button>
+            <button onclick="logoutuser()"
+                class="flex items-center justify-center gap-2 text-gray-400 hover:text-white hover:bg-red-600/80 w-full px-4 py-2.5 rounded-md border border-gray-800 transition text-sm font-medium"><i
+                    class="fas fa-sign-out-alt"></i> ออกจากระบบ</button>
         </div>
     </aside>
 
     <main class="flex-1 flex flex-col h-screen overflow-hidden">
-      <header class="bg-white shadow-sm py-3 px-4 md:py-4 md:px-6 flex items-center justify-between z-30 relative min-h-[64px] md:min-h-[72px]">
+        <header
+            class="bg-white shadow-sm py-3 px-4 md:py-4 md:px-6 flex items-center justify-between z-30 relative min-h-[64px] md:min-h-[72px]">
             <div class="flex items-center gap-4 shrink-0">
                 <button class="text-gray-600 hover:text-brand md:hidden p-1 transition" onclick="toggleMobileSidebar()">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
 
-            <div class="flex space-x-3 md:space-x-6 text-xs sm:text-sm font-medium md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
-                <a href="user_main.html" class="text-gray-600 hover:text-brand transition whitespace-nowrap">หน้าหลัก</a>
-                <a href="user_pricing.html" class="text-gray-600 hover:text-brand transition whitespace-nowrap">อัตราค่าขนส่ง</a>
+            <div
+                class="flex space-x-3 md:space-x-6 text-xs sm:text-sm font-medium md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
+                <a href="<?= getScriptUrl() ?>?page=user_main" target="_top"
+                    class="text-gray-600 hover:text-brand transition whitespace-nowrap">หน้าหลัก</a>
+                <a href="<?= getScriptUrl() ?>?page=user_pricing" target="_top"
+                    class="text-gray-600 hover:text-brand transition whitespace-nowrap">อัตราค่าขนส่ง</a>
             </div>
-
             <div class="flex items-center justify-end shrink-0">
-                <div class="flex items-center gap-2 md:gap-3 bg-gray-50 px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-gray-100 cursor-pointer hover:bg-gray-100 transition">
-                    <img src="https://ui-avatars.com/api/?name=Somchai+J&background=c51c24&color=fff" class="w-7 h-7 md:w-8 md:h-8 rounded-full shadow-sm">
-                    <span class="text-xs md:text-sm font-medium text-gray-700 pr-1 md:pr-2 hidden sm:block whitespace-nowrap">ทดสอบ เว็บไซต์</span>
+                <div onclick="window.top.location.href='<?= getScriptUrl() ?>?page=user_profile'" target="_top"
+                    class="flex items-center gap-2 md:gap-3 bg-gray-50 px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-gray-100 cursor-pointer hover:bg-gray-100 transition">
+
+                    <img id="headerAvatar" src="https://ui-avatars.com/api/?name=User&background=c51c24&color=fff"
+                        class="w-7 h-7 md:w-8 md:h-8 rounded-full shadow-sm">
+
+                    <span id="headerUsername"
+                        class="text-xs md:text-sm font-medium text-gray-700 pr-1 md:pr-2 hidden sm:block whitespace-nowrap">
+                        กำลังโหลด...
+                    </span>
+
                 </div>
             </div>
         </header>
@@ -69,28 +109,37 @@
             <div class="max-w-6xl mx-auto space-y-6">
                 <div class="border-b border-gray-200 pb-4">
                     <h1 class="text-2xl font-bold text-gray-800">แจ้งนำเข้าสินค้าล่วงหน้า</h1>
-                    <p class="text-sm text-gray-500 mt-1">กรอกเลข Tracking ที่ได้จากร้านจีน และเพิ่มลงในรายการเพื่อให้โกดังจีนทราบข้อมูลพัสดุของคุณ</p>
+                    <p class="text-sm text-gray-500 mt-1">กรอกเลข Tracking ที่ได้จากร้านจีน
+                        และเพิ่มลงในรายการเพื่อให้โกดังจีนทราบข้อมูลพัสดุของคุณ</p>
                 </div>
 
                 <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
-                    
+
                     <div class="bg-gray-50 p-5 rounded-md border border-gray-200 mb-6">
                         <h3 class="text-md font-semibold text-gray-700 mb-3" id="formTitle">เพิ่มรายการสินค้า</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">เลข Tracking ของจีน <span class="text-brand">*</span></label>
-                                <input type="text" id="trackingInput" class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand" placeholder="เช่น YT123456789">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">เลข Tracking ของจีน <span
+                                        class="text-brand">*</span></label>
+                                <input type="text" id="trackingInput"
+                                    class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+                                    placeholder="เช่น YT123456789">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อสินค้า / รายละเอียดเบื้องต้น</label>
-                                <input type="text" id="detailInput" class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand" placeholder="เช่น เสื้อกันหนาว 3 ตัว">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อสินค้า /
+                                    รายละเอียดเบื้องต้น</label>
+                                <input type="text" id="detailInput"
+                                    class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+                                    placeholder="เช่น เสื้อกันหนาว 3 ตัว">
                             </div>
                         </div>
                         <div class="mt-4 flex justify-end gap-2">
-                            <button id="cancelEditBtn" onclick="cancelEdit()" class="hidden px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 text-sm font-medium transition">
+                            <button id="cancelEditBtn" onclick="cancelEdit()"
+                                class="hidden px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 text-sm font-medium transition">
                                 ยกเลิกการแก้ไข
                             </button>
-                            <button onclick="addOrUpdateItem()" id="submitBtn" class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 shadow-sm text-sm font-medium flex items-center gap-2 transition">
+                            <button onclick="addOrUpdateItem()" id="submitBtn"
+                                class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 shadow-sm text-sm font-medium flex items-center gap-2 transition">
                                 <i class="fas fa-plus" id="submitIcon"></i> <span id="submitText">เพิ่มลงตาราง</span>
                             </button>
                         </div>
@@ -98,8 +147,10 @@
 
                     <div>
                         <div class="flex justify-between items-center mb-3">
-                            <h3 class="text-lg font-bold text-gray-800"><i class="fas fa-list-ul mr-2 text-brand"></i> รายการพัสดุที่จะแจ้งนำเข้า</h3>
-                            <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-md">รวม <span id="itemCount" class="font-bold text-brand">0</span> รายการ</span>
+                            <h3 class="text-lg font-bold text-gray-800"><i class="fas fa-list-ul mr-2 text-brand"></i>
+                                รายการพัสดุที่จะแจ้งนำเข้า</h3>
+                            <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-md">รวม <span
+                                    id="itemCount" class="font-bold text-brand">0</span> รายการ</span>
                         </div>
                         <div class="overflow-x-auto border border-gray-200 rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200 text-sm text-left">
@@ -128,36 +179,63 @@
         </div>
     </main>
 
-    <script>
-        // สถานะและข้อมูล
-        let items = [];
-        let editIndex = -1; // -1 หมายถึงกำลังอยู่ในโหมด "เพิ่ม" ถ้าเป็นตัวเลขอื่นคือโหมด "แก้ไข"
+    <?!= include('import_modals'); ?>
 
-        // การเปิด-ปิด Sidebar มือถือ
+    <script>
+        let currentMemberId = ""; // ประกาศตัวแปรไว้ก่อน
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // 1. ดึงข้อมูล Session
+            const sessionData = localStorage.getItem('userSession');
+
+            if (sessionData) {
+                try {
+                    const user = JSON.parse(sessionData);
+                    const fullname = user.fullname || user.name || "ไม่ระบุชื่อ";
+
+                    // สมมติว่าใน session คุณเก็บรหัสลูกค้าไว้ในคีย์ที่ชื่อ customer_id หรือ member_id
+                    currentMemberId = user.customer_id || user.id || user.member_id;
+
+                    // อัปเดตชื่อใน Header
+                    const usernameElement = document.querySelector('.flex.items-center.justify-end span');
+                    if (usernameElement) {
+                        usernameElement.innerText = fullname;
+                    }
+                } catch (e) {
+                    console.error("รูปแบบข้อมูลเซสชันไม่ถูกต้อง:", e);
+                }
+            }
+
+            // 2. โหลดข้อมูลตารางหลังจากดึง currentMemberId แล้ว
+            loadTableData();
+        });
+
         function toggleMobileSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const backdrop = document.getElementById('sidebarBackdrop');
-            sidebar.classList.toggle('-translate-x-full');
-            backdrop.classList.toggle('hidden');
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('sidebarBackdrop').classList.toggle('hidden');
         }
 
-        // ฟังก์ชันอัปเดตตาราง
-        function renderTable() {
+        function loadTableData() {
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function (data) {
+                    renderTable(data);
+                    hideLoading();
+                })
+                .withFailureHandler(function (error) {
+                    hideLoading();
+                    showModal('successModalOverlay', 'เกิดข้อผิดพลาด', error.message, 'red');
+                })
+                .loadImportItems(currentMemberId);
+        }
+
+        function renderTable(items) {
             const tbody = document.getElementById('itemTableBody');
-            const countSpan = document.getElementById('itemCount');
-            
-            countSpan.innerText = items.length;
+            document.getElementById('itemCount').innerText = items.length;
             tbody.innerHTML = '';
 
             if (items.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="px-4 py-8 text-center text-gray-400">
-                            <i class="fas fa-box-open text-3xl mb-2"></i><br>
-                            ยังไม่มีรายการสินค้า กรุณาเพิ่มข้อมูลด้านบน
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML = `<tr><td colspan="4" class="px-4 py-8 text-center text-gray-400"><i class="fas fa-box-open text-3xl mb-2"></i><br>ยังไม่มีรายการสินค้า</td></tr>`;
                 return;
             }
 
@@ -170,10 +248,10 @@
                     <td class="px-4 py-3 text-gray-600">${item.detail || '-'}</td>
                     <td class="px-4 py-3 text-center">
                         <div class="flex justify-center gap-2">
-                            <button onclick="editItem(${index})" class="text-blue-500 hover:text-blue-700 hover:bg-blue-50 p-1.5 rounded transition" title="แก้ไข">
+                            <button onclick="openEditModal('${item.orderNum}', '${item.tracking}', '${item.detail}')" class="text-blue-500 hover:text-blue-700 hover:bg-blue-50 p-1.5 rounded transition">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button onclick="deleteItem(${index})" class="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded transition" title="ลบ">
+                            <button onclick="openDeleteModal('${item.orderNum}')" class="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded transition">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>
@@ -183,88 +261,110 @@
             });
         }
 
-        // ฟังก์ชัน เพิ่ม หรือ อัปเดตข้อมูล
+
         function addOrUpdateItem() {
             const trackingInput = document.getElementById('trackingInput');
             const detailInput = document.getElementById('detailInput');
-            
             const tracking = trackingInput.value.trim();
             const detail = detailInput.value.trim();
 
             if (!tracking) {
-                alert('กรุณากรอกเลข Tracking');
-                trackingInput.focus();
+                showModal('successModalOverlay', 'แจ้งเตือน', 'กรุณากรอกเลข Tracking ของจีน', 'red');
                 return;
             }
 
-            if (editIndex === -1) {
-                // โหมดเพิ่มข้อมูล
-                items.push({ tracking, detail });
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function (response) {
+                    if (response.success) {
+                        trackingInput.value = '';
+                        detailInput.value = '';
+                        loadTableData(); // โหลดตารางใหม่
+                        showModal('successModalOverlay', 'สำเร็จ!', response.message, 'green');
+                    } else {
+                        hideLoading();
+                        showModal('successModalOverlay', 'ผิดพลาด', response.message, 'red');
+                    }
+                })
+                .addItemToSheet(currentMemberId, tracking, detail);
+        }
+
+        let deleteTargetId = "";
+        function openDeleteModal(orderNum) {
+            deleteTargetId = orderNum;
+            document.getElementById('deleteModalOverlay').classList.remove('hidden');
+        }
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+            closeModal('deleteModalOverlay');
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function (response) {
+                    if (response.success) {
+                        loadTableData();
+                        showModal('successModalOverlay', 'ลบสำเร็จ!', response.message, 'green');
+                    }
+                })
+                .deleteItemFromSheet(deleteTargetId);
+        });
+
+        function openEditModal(orderNum, tracking, detail) {
+            document.getElementById('editOrderNum').value = orderNum;
+            document.getElementById('editTrackingInput').value = tracking;
+            document.getElementById('editDetailInput').value = detail;
+            document.getElementById('editModalOverlay').classList.remove('hidden');
+        }
+
+        function submitEdit() {
+            const orderNum = document.getElementById('editOrderNum').value;
+            const tracking = document.getElementById('editTrackingInput').value.trim();
+            const detail = document.getElementById('editDetailInput').value.trim();
+
+            if (!tracking) {
+                alert('กรุณากรอกเลข Tracking'); return;
+            }
+
+            closeModal('editModalOverlay');
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function (response) {
+                    if (response.success) {
+                        loadTableData();
+                        showModal('successModalOverlay', 'อัปเดตสำเร็จ!', response.message, 'blue');
+                    }
+                })
+                .updateItemInSheet(orderNum, tracking, detail);
+        }
+
+        function showLoading() { document.getElementById('loadingOverlay').classList.remove('hidden'); }
+        function hideLoading() { document.getElementById('loadingOverlay').classList.add('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function showModal(id, title, msg, color) {
+            hideLoading();
+            document.getElementById('successModalTitle').innerText = title;
+            document.getElementById('successModalMsg').innerText = msg;
+
+            const iconWrap = document.getElementById('successModalTitle').previousElementSibling;
+            if (color === 'red') {
+                iconWrap.className = "w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner text-red-500";
+                iconWrap.innerHTML = '<i class="fas fa-times text-3xl"></i>';
+            } else if (color === 'blue') {
+                iconWrap.className = "w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner text-blue-500";
+                iconWrap.innerHTML = '<i class="fas fa-check text-3xl"></i>';
             } else {
-                // โหมดอัปเดตข้อมูล
-                items[editIndex] = { tracking, detail };
-                cancelEdit(); // รีเซ็ตฟอร์มกลับไปเป็นโหมดเพิ่ม
+                iconWrap.className = "w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner text-green-500";
+                iconWrap.innerHTML = '<i class="fas fa-check text-3xl"></i>';
             }
 
-            // เคลียร์ช่องกรอก
-            trackingInput.value = '';
-            detailInput.value = '';
-            trackingInput.focus();
-            
-            renderTable();
+            document.getElementById(id).classList.remove('hidden');
         }
-
-        // ฟังก์ชันเตรียมข้อมูลเพื่อแก้ไข
-        function editItem(index) {
-            editIndex = index;
-            const item = items[index];
-            
-            document.getElementById('trackingInput').value = item.tracking;
-            document.getElementById('detailInput').value = item.detail;
-            
-            // เปลี่ยนหน้าตา UI ของฟอร์ม
-            document.getElementById('formTitle').innerText = `แก้ไขรายการที่ ${index + 1}`;
-            document.getElementById('formTitle').className = "text-md font-semibold text-blue-600 mb-3";
-            document.getElementById('submitText').innerText = 'บันทึกการแก้ไข';
-            document.getElementById('submitIcon').className = 'fas fa-check';
-            document.getElementById('submitBtn').className = "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shadow-sm text-sm font-medium flex items-center gap-2 transition";
-            document.getElementById('cancelEditBtn').classList.remove('hidden');
-
-            document.getElementById('trackingInput').focus();
-        }
-
-        // ฟังก์ชันลบข้อมูล
-        function deleteItem(index) {
-            if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบรายการนี้?')) {
-                items.splice(index, 1);
-                
-                // หากกำลังแก้ไขรายการที่ถูกลบอยู่ ให้ยกเลิกการแก้ไขด้วย
-                if (editIndex === index) cancelEdit();
-                else if (editIndex > index) editIndex--; // ปรับ index ถ้าลบตัวก่อนหน้า
-
-                renderTable();
-            }
-        }
-
-        // ฟังก์ชันยกเลิกโหมดแก้ไข
-        function cancelEdit() {
-            editIndex = -1;
-            document.getElementById('trackingInput').value = '';
-            document.getElementById('detailInput').value = '';
-            
-            // คืนค่า UI ของฟอร์มกลับเป็นปกติ
-            document.getElementById('formTitle').innerText = 'เพิ่มรายการสินค้า';
-            document.getElementById('formTitle').className = "text-md font-semibold text-gray-700 mb-3";
-            document.getElementById('submitText').innerText = 'เพิ่มลงตาราง';
-            document.getElementById('submitIcon').className = 'fas fa-plus';
-            document.getElementById('submitBtn').className = "px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 shadow-sm text-sm font-medium flex items-center gap-2 transition";
-            document.getElementById('cancelEditBtn').classList.add('hidden');
-        }
-
-        // ฟังก์ชันยืนยันส่งข้อมูลทั้งหมด
-        function gotoPayment() {
-          
+        function logoutuser() {
+            localStorage.removeItem('userSession');
+            localStorage.clear();
+            window.top.location.href = '<?= getScriptUrl() ?>?page=index';
         }
     </script>
 </body>
+
 </html>
