@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,23 +9,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Kanit', sans-serif; background-color: #f8f9fa; }
-        .bg-brand { background-color: #c51c24; }
-        .text-brand { color: #c51c24; }
-        .bg-brand-dark { background-color: #8b1319; }
-        .checkbox-brand:checked { background-color: #c51c24; border-color: #c51c24; }
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .bg-brand {
+            background-color: #c51c24;
+        }
+
+        .text-brand {
+            color: #c51c24;
+        }
+
+        .bg-brand-dark {
+            background-color: #8b1319;
+        }
+
+        .checkbox-brand:checked {
+            background-color: #c51c24;
+            border-color: #c51c24;
+        }
     </style>
-     <script>
+    <script>
         if (!localStorage.getItem('userSession')) {
-          window.location.replace('<?= getScriptUrl() ?>?page=index');
+            window.location.replace('<?= getScriptUrl() ?>?page=index');
         }
     </script>
 </head>
+
 <body class="flex h-screen overflow-hidden text-gray-800">
 
-    <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 md:hidden" onclick="toggleMobileSidebar()"></div>
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 md:hidden"
+        onclick="toggleMobileSidebar()"></div>
 
-     <aside id="sidebar"
+    <aside id="sidebar"
         class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex flex-col z-50 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:flex shadow-xl">
         <div class="py-6 px-6 bg-brand-dark flex flex-col items-center justify-center relative border-b border-red-900">
             <div class="text-2xl font-bold leading-none mb-1 tracking-wide">SUCHAR</div>
@@ -36,7 +55,7 @@
 
         <nav class="flex-grow p-4 space-y-1.5 overflow-y-auto text-sm">
             <a href="<?= getScriptUrl() ?>?page=user_dashboard" target="_top"
-                class="flex items-center gap-3 bg-brand text-white px-4 py-3 rounded-md font-medium shadow-md transition duration-200">
+                class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
                 <i class="fas fa-home w-5 text-center"></i> แดชบอร์ดของฉัน
             </a>
             <a href="<?= getScriptUrl() ?>?page=user_import" target="_top"
@@ -44,7 +63,7 @@
                 <i class="fas fa-box-open w-5 text-center"></i> แจ้งนำเข้าสินค้า
             </a>
             <a href="<?= getScriptUrl() ?>?page=user_payment" target="_top"
-                class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                class="flex items-center gap-3 bg-brand text-white px-4 py-3 rounded-md font-medium shadow-md transition duration-200">
                 <i class="fas fa-file-invoice-dollar w-5 text-center"></i> จัดส่งสินค้า
             </a>
             <a href="<?= getScriptUrl() ?>?page=user_tracking" target="_top"
@@ -93,58 +112,49 @@
 
         <div class="flex-1 overflow-y-auto p-4 md:p-8">
             <div class="max-w-6xl mx-auto space-y-6">
-                
+
                 <div class="border-b border-gray-200 pb-4">
                     <h1 class="text-2xl font-bold text-gray-800">ชำระเงินและเลือกจัดส่ง</h1>
-                    <p class="text-sm text-gray-500 mt-1">เลือกพัสดุที่ถึงโกดังไทยเพื่อรวมบิลชำระค่าขนส่ง (จีน-ไทย) และระบุวิธีรับสินค้า</p>
+                    <p class="text-sm text-gray-500 mt-1">เลือกพัสดุที่ถึงโกดังไทยเพื่อรวมบิลชำระค่าขนส่ง (จีน-ไทย)
+                        และระบุวิธีรับสินค้า</p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    
+
                     <div class="lg:col-span-2 space-y-6">
-                        
+
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i class="fas fa-check-square text-brand mr-2"></i> 1. เลือกพัสดุที่ต้องการรวมบิล</h2>
-                            
-                            <div class="space-y-3">
-                                <label class="border border-gray-200 rounded-lg p-4 flex items-center gap-4 hover:border-brand cursor-pointer transition bg-gray-50">
-                                    <input type="checkbox" class="w-5 h-5 text-brand rounded focus:ring-brand checkbox-brand" checked>
-                                    <div class="flex-1">
-                                        <div class="flex justify-between">
-                                            <span class="font-bold text-gray-800">SC250621001</span>
-                                            <span class="font-bold text-brand">140.00 ฿</span>
-                                        </div>
-                                        <div class="text-xs text-gray-500 mt-1">น้ำหนัก: 4.0 KG | ขนส่ง: ทางรถ | ค่าส่งจีน-ไทย: 35฿/KG</div>
-                                    </div>
-                                </label>
-                                <label class="border border-gray-200 rounded-lg p-4 flex items-center gap-4 hover:border-brand cursor-pointer transition bg-gray-50">
-                                    <input type="checkbox" class="w-5 h-5 text-brand rounded focus:ring-brand checkbox-brand" checked>
-                                    <div class="flex-1">
-                                        <div class="flex justify-between">
-                                            <span class="font-bold text-gray-800">SC250621002</span>
-                                            <span class="font-bold text-brand">210.00 ฿</span>
-                                        </div>
-                                        <div class="text-xs text-gray-500 mt-1">น้ำหนัก: 6.0 KG | ขนส่ง: ทางรถ | ค่าส่งจีน-ไทย: 35฿/KG</div>
-                                    </div>
-                                </label>
+                            <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i
+                                    class="fas fa-check-square text-brand mr-2"></i> 1. เลือกพัสดุที่ต้องการรวมบิล</h2>
+
+                            <div class="space-y-3" id="parcel-list">
+                                <div class="text-center py-6 text-gray-500">
+                                    <i class="fas fa-spinner fa-spin text-3xl text-brand mb-3"></i>
+                                    <p>กำลังโหลดข้อมูลพัสดุ...</p>
+                                </div>
                             </div>
                         </div>
 
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i class="fas fa-truck-fast text-brand mr-2"></i> 2. เลือกประเภทขนส่ง (จีน-ไทย)</h2>
-                            
+                            <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i
+                                    class="fas fa-truck-fast text-brand mr-2"></i> 2. เลือกประเภทขนส่ง (จีน-ไทย)</h2>
+
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <label class="border-2 border-brand bg-red-50 rounded-xl p-4 cursor-pointer relative">
-                                    <input type="radio" name="shipping" checked class="absolute top-4 right-4 text-brand focus:ring-brand">
+                                <label id="label-car" onclick="selectShipping('car')"
+                                    class="border-2 border-brand bg-red-50 rounded-xl p-4 cursor-pointer relative transition">
+                                    <input type="radio" name="shipping" id="radio-car" value="car" checked
+                                        class="absolute top-4 right-4 text-brand focus:ring-brand">
                                     <i class="fas fa-truck text-2xl text-brand mb-2"></i>
                                     <h3 class="font-bold text-gray-800">ทางรถ (EK)</h3>
-                                    <p class="text-xs text-gray-500 mt-1">4-7 วัน • เริ่มต้น 35฿/KG</p>
+                                    <p class="text-xs text-gray-500 mt-1" id="car-desc">กำลังโหลด...</p>
                                 </label>
-                                <label class="border-2 border-gray-200 hover:border-gray-300 rounded-xl p-4 cursor-pointer relative opacity-60 transition">
-                                    <input type="radio" name="shipping" class="absolute top-4 right-4 text-brand focus:ring-brand">
+                                <label id="label-boat" onclick="selectShipping('boat')"
+                                    class="border-2 border-gray-200 hover:border-gray-300 rounded-xl p-4 cursor-pointer relative opacity-60 transition">
+                                    <input type="radio" name="shipping" id="radio-boat" value="boat"
+                                        class="absolute top-4 right-4 text-brand focus:ring-brand">
                                     <i class="fas fa-ship text-2xl text-blue-600 mb-2"></i>
                                     <h3 class="font-bold text-gray-700">ทางเรือ (SEA)</h3>
-                                    <p class="text-xs text-gray-500 mt-1">12-15 วัน • เริ่มต้น 25฿/KG</p>
+                                    <p class="text-xs text-gray-500 mt-1" id="boat-desc">กำลังโหลด...</p>
                                 </label>
                             </div>
                         </div>
@@ -152,40 +162,58 @@
                     </div>
 
                     <div class="space-y-6">
-                        
+
                         <div class="bg-gray-900 text-white p-6 rounded-xl shadow-sm">
-                            <h3 class="font-bold text-lg mb-4 pb-2 border-b border-gray-700 text-brand">สรุปยอดชำระเงิน</h3>
+                            <h3 class="font-bold text-lg mb-4 pb-2 border-b border-gray-700 text-brand">สรุปยอดชำระเงิน
+                            </h3>
                             <div class="space-y-2">
-                                <div class="flex justify-between text-sm"><span class="text-gray-400">จำนวนพัสดุ</span><span>2 กล่อง</span></div>
-                                <div class="flex justify-between text-sm"><span class="text-gray-400">น้ำหนักรวม</span><span>10.00 KG</span></div>
-                                <div class="flex justify-between text-sm"><span class="text-gray-400">คิดตามเรท (ทางรถ)</span><span>35 ฿ / KG</span></div>
+                                <div class="flex justify-between text-sm"><span
+                                        class="text-gray-400">จำนวนพัสดุ</span><span id="summary-count">0 กล่อง</span>
+                                </div>
+                                <div class="flex justify-between text-sm"><span
+                                        class="text-gray-400">น้ำหนักรวม</span><span id="summary-weight">0.00 KG</span>
+                                </div>
+                                <div class="flex justify-between text-sm"><span
+                                        class="text-gray-400">ค่าบริการ</span><span id="summary-base-fee">0.00 ฿</span>
+                                </div>
+
+                                <div class="flex justify-between text-sm"><span class="text-gray-400"
+                                        id="summary-rate-label">คิดตามเรท (ทางรถ)</span><span id="summary-rate-val">0 ฿
+                                        / KG</span></div>
                             </div>
                             <hr class="border-gray-700 my-4">
                             <div class="flex justify-between items-center">
                                 <span class="font-bold">ยอดที่ต้องชำระ</span>
-                                <span class="text-3xl font-bold text-green-400">350.00 ฿</span>
+                                <span class="text-3xl font-bold text-green-400" id="summary-total">0.00 ฿</span>
                             </div>
                         </div>
 
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i class="fas fa-qrcode text-brand mr-2"></i> 3. ชำระเงินและแจ้งโอน</h2>
-                            
+                            <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i
+                                    class="fas fa-qrcode text-brand mr-2"></i> 3. ชำระเงินและแจ้งโอน</h2>
+
                             <div class="flex flex-col space-y-6">
-                                <div class="bg-gray-50 p-4 rounded-xl flex flex-col items-center justify-center border border-gray-100">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" alt="QR Code" class="w-32 h-32 mb-2 opacity-80">
-                                    <p class="text-xs text-center text-gray-500 font-medium">สแกนเพื่อชำระเงิน<br>PromptPay</p>
+                                <div
+                                    class="bg-gray-50 p-4 rounded-xl flex flex-col items-center justify-center border border-gray-100">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg"
+                                        alt="QR Code" class="w-32 h-32 mb-2 opacity-80">
+                                    <p class="text-xs text-center text-gray-500 font-medium">
+                                        สแกนเพื่อชำระเงิน<br>PromptPay</p>
                                 </div>
-                                
+
                                 <div class="w-full space-y-4">
                                     <div class="p-4 bg-blue-50 border border-blue-100 rounded-lg text-center">
-                                        <p class="font-bold text-blue-800 text-sm">ธนาคารกสิกรไทย (KBANK)</p>
-                                        <p class="text-blue-600 text-xl tracking-wider font-bold my-1">123-4-56789-0</p>
-                                        <p class="text-blue-600 text-xs mt-1">บจก. สุชาร์ คาร์โก้ (SUCHAR CARGO)</p>
+                                        <p class="font-bold text-blue-800 text-sm" id="bank-name">กำลังโหลด...</p>
+                                        <p class="text-blue-600 text-xl tracking-wider font-bold my-1" id="bank-acc">
+                                            กำลังโหลด...</p>
+                                        <p class="text-blue-600 text-xs mt-1" id="bank-acc-name">กำลังโหลด...</p>
                                     </div>
 
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">แนบสลิปโอนเงิน <span class="text-red-500">*</span></label>
-                                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 hover:border-brand cursor-pointer transition">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">แนบสลิปโอนเงิน <span
+                                                class="text-red-500">*</span></label>
+                                        <div
+                                            class="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 hover:border-brand cursor-pointer transition">
                                             <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
                                             <span class="text-sm text-gray-500">คลิกเพื่ออัปโหลดรูปภาพ</span>
                                         </div>
@@ -194,7 +222,9 @@
                             </div>
                         </div>
 
-                        <button onclick="alert('บันทึกข้อมูลและแจ้งโอนเรียบร้อย!'); window.location.href='user_dashboard.html'" class="w-full bg-brand text-white text-lg font-bold py-4 rounded-xl shadow-md hover:bg-red-700 transition flex items-center justify-center gap-2">
+                        <button
+                            onclick="alert('บันทึกข้อมูลและแจ้งโอนเรียบร้อย!'); window.location.href='user_dashboard.html'"
+                            class="w-full bg-brand text-white text-lg font-bold py-4 rounded-xl shadow-md hover:bg-red-700 transition flex items-center justify-center gap-2">
                             ยืนยันการทำรายการ <i class="fas fa-check-circle"></i>
                         </button>
 
@@ -205,13 +235,21 @@
     </main>
 
     <script>
-       document.addEventListener('DOMContentLoaded', function () {
+        // ตัวแปรเก็บ State ปัจจุบัน
+        let currentSettings = { carRate: 0, boatRate: 0, baseFee: "" };
+        let currentParcels = [];
+        let selectedRateType = 'car'; // เริ่มต้นเลือกทางรถ
+
+        document.addEventListener('DOMContentLoaded', function () {
             const sessionData = localStorage.getItem('userSession');
+            let memberId = "";
 
             if (sessionData) {
                 try {
                     const user = JSON.parse(sessionData);
                     const fullname = user.fullname || user.name || "ไม่ระบุชื่อ";
+                    memberId = user.memberId || user.customer_id || user.id || user.member_id || "";
+
                     const usernameElement = document.getElementById('headerUsername');
                     if (usernameElement) {
                         usernameElement.innerText = fullname;
@@ -220,7 +258,148 @@
                     console.error("รูปแบบข้อมูลเซสชันไม่ถูกต้อง:", e);
                 }
             }
+
+            loadPaymentPageData(memberId);
         });
+
+        // ======================= ดึงข้อมูลจาก Backend =======================
+        function loadPaymentPageData(memberId) {
+            google.script.run
+                .withSuccessHandler(function (response) {
+                    if (response.success) {
+                        currentSettings = response.settings;
+                        currentParcels = response.parcels;
+                        updateUI();
+                    } else {
+                        alert("ดึงข้อมูลล้มเหลว: " + response.message);
+                    }
+                })
+                .withFailureHandler(function (err) {
+                    alert("ข้อผิดพลาดในการเชื่อมต่อ: " + err.message);
+                })
+                .getPaymentPageData(memberId);
+        }
+
+        // ======================= อัปเดตหน้าจอหลัก =======================
+        function updateUI() {
+            // อัปเดตข้อมูลข้อ 2 (ประเภทขนส่ง)
+            document.getElementById('car-desc').innerText = `${currentSettings.carDays} วัน • เริ่มต้น ${currentSettings.carRate}฿/KG`;
+            document.getElementById('boat-desc').innerText = `${currentSettings.boatDays} วัน • เริ่มต้น ${currentSettings.boatRate}฿/KG`;
+
+            // อัปเดตข้อมูลข้อ 4 (ธนาคาร)
+            document.getElementById('bank-name').innerText = currentSettings.bankName;
+            document.getElementById('bank-acc').innerText = currentSettings.bankAcc;
+            document.getElementById('bank-acc-name').innerText = currentSettings.bankAccName;
+
+            // วาดรายการพัสดุ (ข้อ 1)
+            renderParcels();
+        }
+
+        function renderParcels() {
+            const listDiv = document.getElementById('parcel-list');
+            listDiv.innerHTML = '';
+
+            if (currentParcels.length === 0) {
+                listDiv.innerHTML = `<div class="text-center py-6 text-gray-500 bg-gray-50 rounded-xl border border-gray-200">ไม่มีพัสดุที่รอชำระเงิน</div>`;
+                calculateTotal();
+                return;
+            }
+
+            currentParcels.forEach((p, index) => {
+                let label = document.createElement('label');
+                label.className = "border border-gray-200 rounded-lg p-4 flex items-center gap-4 hover:border-brand cursor-pointer transition bg-gray-50";
+                label.innerHTML = `
+                    <input type="checkbox" class="w-5 h-5 text-brand rounded focus:ring-brand checkbox-brand parcel-checkbox" 
+                        data-index="${index}" data-weight="${p.weight}" checked onchange="calculateTotal()">
+                    <div class="flex-1">
+                        <div class="flex justify-between">
+                            <span class="font-bold text-gray-800">${p.tracking}</span>
+                            <span class="font-bold text-brand" id="item-price-${index}">0.00 ฿</span>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">น้ำหนัก: ${p.weight.toFixed(2)} KG | ค่าส่งจีน-ไทย: ${currentSettings.baseFee}</div>
+                    </div>
+                `;
+                listDiv.appendChild(label);
+            });
+
+            calculateTotal();
+        }
+
+        // ======================= จัดการตัวเลือกขนส่ง (ข้อ 2) =======================
+        function selectShipping(type) {
+            selectedRateType = type;
+
+            const carLabel = document.getElementById('label-car');
+            const boatLabel = document.getElementById('label-boat');
+            const carInput = document.getElementById('radio-car');
+            const boatInput = document.getElementById('radio-boat');
+
+            if (type === 'car') {
+                carInput.checked = true;
+                carLabel.className = "border-2 border-brand bg-red-50 rounded-xl p-4 cursor-pointer relative transition opacity-100";
+                boatLabel.className = "border-2 border-gray-200 hover:border-gray-300 rounded-xl p-4 cursor-pointer relative opacity-60 transition";
+            } else {
+                boatInput.checked = true;
+                boatLabel.className = "border-2 border-blue-500 bg-blue-50 rounded-xl p-4 cursor-pointer relative transition opacity-100";
+                carLabel.className = "border-2 border-gray-200 hover:border-gray-300 rounded-xl p-4 cursor-pointer relative opacity-60 transition";
+            }
+
+            calculateTotal(); // คำนวณเงินใหม่ทันทีที่เปลี่ยนเรท
+        }
+
+        // ======================= คำนวณสรุปยอด (ข้อ 3) =======================
+        function calculateTotal() {
+            // ดึงค่าเรท (เผื่อ backend ส่งมาเป็น String ให้ดึงเฉพาะตัวเลขมาคำนวณ)
+            let rawRate = selectedRateType === 'car' ? currentSettings.carRate : currentSettings.boatRate;
+            let rate = 0;
+            if (typeof rawRate === 'string') {
+                let match = rawRate.match(/\d+(\.\d+)?/);
+                rate = match ? parseFloat(match[0]) : 0;
+            } else {
+                rate = parseFloat(rawRate) || 0;
+            }
+
+            // ดึงค่าบริการและแปลงเป็นตัวเลข
+            let rawBaseFee = currentSettings.baseFee || "0";
+            let baseFeeMatch = rawBaseFee.toString().match(/\d+(\.\d+)?/);
+            let baseFee = baseFeeMatch ? parseFloat(baseFeeMatch[0]) : 0;
+
+            let totalWeight = 0;
+            let count = 0;
+            let checkboxes = document.querySelectorAll('.parcel-checkbox');
+
+            checkboxes.forEach((cb) => {
+                let index = cb.dataset.index;
+                let weight = parseFloat(cb.dataset.weight) || 0;
+                let itemPrice = weight * rate;
+
+                // อัปเดตราคาของแต่ละกล่อง
+                document.getElementById(`item-price-${index}`).innerText = itemPrice.toFixed(2) + ' ฿';
+
+                if (cb.checked) {
+                    totalWeight += weight;
+                    count++;
+                }
+            });
+
+            // ค่าบริการจะถูกบวกก็ต่อเมื่อมีการเลือกพัสดุอย่างน้อย 1 ชิ้น
+            let activeBaseFee = count > 0 ? baseFee : 0;
+            let finalTotal = (totalWeight * rate) + activeBaseFee;
+
+            // อัปเดตสรุปยอดรวม
+            document.getElementById('summary-count').innerText = count + ' กล่อง';
+            document.getElementById('summary-weight').innerText = totalWeight.toFixed(2) + ' KG';
+            
+            // อัปเดตค่าบริการในตารางสรุป
+            let baseFeeElem = document.getElementById('summary-base-fee');
+            if(baseFeeElem) {
+                baseFeeElem.innerText = activeBaseFee.toFixed(2) + ' ฿';
+            }
+
+            document.getElementById('summary-rate-label').innerText = `คิดตามเรท (${selectedRateType === 'car' ? 'ทางรถ' : 'ทางเรือ'})`;
+            document.getElementById('summary-rate-val').innerText = rate + ' ฿ / KG';
+            document.getElementById('summary-total').innerText = finalTotal.toFixed(2) + ' ฿';
+        }
 
         function toggleMobileSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -228,6 +407,7 @@
             sidebar.classList.toggle('-translate-x-full');
             backdrop.classList.toggle('hidden');
         }
+
         function logoutuser() {
             localStorage.removeItem('userSession');
             localStorage.clear();
@@ -235,4 +415,5 @@
         }    
     </script>
 </body>
+
 </html>
