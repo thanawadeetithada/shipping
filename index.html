@@ -30,21 +30,22 @@
 
 <body>
 
-    <nav class="bg-white shadow-sm py-4 px-6 flex justify-between items-center">
-        <div class="text-2xl font-bold text-brand flex flex-col leading-none">
+    <nav class="bg-white shadow-sm py-3 px-4 md:py-4 md:px-6 flex items-center justify-between relative min-h-[64px] md:min-h-[72px]">
+        <div class="text-xl md:text-2xl font-bold text-brand flex flex-col leading-none shrink-0">
             <span>SUCHAR</span>
-            <span class="text-sm text-black">CARGO</span>
+            <span class="text-xs md:text-sm text-black">CARGO</span>
         </div>
-        <div class="hidden md:flex space-x-6 text-sm font-medium">
-            <a href="<?= getScriptUrl() ?>?page=index" target="_top" class="text-brand">หน้าหลัก</a>
+        
+        <div class="flex space-x-3 md:space-x-6 text-xs sm:text-sm font-medium md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
+            <a href="<?= getScriptUrl() ?>?page=index" target="_top" class="text-brand whitespace-nowrap">หน้าหลัก</a>
             <a href="<?= getScriptUrl() ?>?page=pricing" target="_top"
-                class="text-gray-600 hover:text-brand">อัตราค่าขนส่ง</a>
+                class="text-gray-600 hover:text-brand whitespace-nowrap">อัตราค่าขนส่ง</a>
         </div>
 
-        <div id="navActionContainer">
+        <div id="navActionContainer" class="shrink-0">
             <? var url = getScriptUrl(); ?>
             <button id="loginNavBtn" onclick="window.top.location.href='<?= url ?>?page=login'"
-                class="bg-brand text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition">
+                class="bg-brand text-white px-3 py-1.5 md:px-4 md:py-2 rounded-md text-xs md:text-sm font-medium hover:bg-red-700 transition whitespace-nowrap">
                 เข้าสู่ระบบ
             </button>
         </div>
@@ -178,19 +179,28 @@
         </div>
     </section>
 
-    <footer class="bg-gray-900 text-white py-6 px-4">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="text-xl font-bold text-brand flex flex-col leading-none text-center md:text-left">
-                <span>SUCHAR</span>
-                <span class="text-sm text-white">CARGO</span>
+  <footer class="bg-gray-900 text-white py-8 px-4">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+        
+        <div class="text-xl font-bold flex flex-col leading-none text-center md:text-left">
+            <span class="text-brand">SUCHAR</span>
+            <span class="text-sm text-gray-300">CARGO</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-3 text-sm text-center md:text-left">
+            <div class="flex items-center justify-center md:justify-start">
+                <i class="fas fa-phone-alt mr-2 text-brand"></i> 02-114-8008
             </div>
-            <div class="flex gap-6 text-sm">
-                <span><i class="fas fa-phone-alt mr-2"></i> 02-114-8008</span>
-                <span><i class="fab fa-line text-green-400 mr-2"></i> @sucharcargo</span>
-                <span><i class="fas fa-envelope mr-2"></i> support@sucharcargo.com</span>
+            <div class="flex items-center justify-center md:justify-start">
+                <i class="fab fa-line text-green-400 mr-2 text-lg"></i> @sucharcargo
+            </div>
+            <div class="flex items-center justify-center md:justify-start sm:col-span-2 lg:col-span-1">
+                <i class="fas fa-envelope mr-2 text-brand"></i> support@sucharcargo.com
             </div>
         </div>
-    </footer>
+        
+    </div>
+</footer>
 
     <script>
         <? var scriptUrl = getScriptUrl(); ?>

@@ -9,7 +9,14 @@ function registerNewUser(data) {
       return { success: false, message: "ไม่พบชีตชื่อ 'สมาชิก' ในฐานข้อมูล" };
     }
     var dataRange = sheet.getDataRange().getValues();
+    var newName = data.fullname ? data.fullname.toString().trim() : "";
+    
     for (var i = 1; i < dataRange.length; i++) {
+      var existingName = dataRange[i][1] ? dataRange[i][1].toString().trim() : "";
+      if (existingName === newName && newName !== "") { 
+        return { success: false, message: "ชื่อ-นามสกุลนี้ถูกใช้งานสมัครสมาชิกแล้ว" };
+      }
+      
       if (dataRange[i][2] == data.phone) { 
         return { success: false, message: "เบอร์โทรศัพท์นี้ถูกใช้งานสมัครสมาชิกแล้ว" };
       }
@@ -33,9 +40,10 @@ function registerNewUser(data) {
       Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, data.password)
     );
     
+    // ตอนบันทึกข้อมูล ให้ใช้ตัวแปร newName ที่ทำการ trim เรียบร้อยแล้วลงไปด้วยครับ
     var rowData = [
       newMemberId,
-      data.fullname,
+      newName, 
       "'" + data.phone,
       data.address,
       'user',

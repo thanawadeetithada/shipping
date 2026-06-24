@@ -1,0 +1,17 @@
+<div id="successModalOverlay" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4 transition-opacity duration-300">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all text-center p-8 border-t-4 border-green-500">
+        
+        <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
+            <i class="fas fa-check text-4xl text-green-500"></i>
+        </div>
+        
+        <h3 class="text-2xl font-bold text-gray-800 mb-2">สมัครสมาชิกสำเร็จ!</h3>
+        <p id="successModalMsg" class="text-gray-600 mb-6 text-sm">
+            </p>
+        
+        <button id="successModalBtn" onclick="goToLoginFromModal()" class="w-full bg-brand text-white font-bold py-3 px-4 rounded-xl hover:bg-brand-dark transition-colors shadow-md hover:shadow-lg flex justify-center items-center gap-2">
+            <span>ตกลง</span>
+        </button>
+
+    </div>
+</div>
