@@ -29,14 +29,11 @@
 </head>
 <body class="flex h-screen overflow-hidden text-gray-800">
 
-    <?!= include('profile_modal'); ?>
-
     <div id="loadingOverlay"
-        class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden flex items-center justify-center flex-col text-white transition-opacity">
-        <i id="loadingIcon" class="fas fa-circle-notch fa-spin text-6xl mb-4"></i>
+        class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-[60] hidden flex-col items-center justify-center text-white transition-opacity">
+        <i class="fas fa-circle-notch fa-spin text-6xl mb-4"></i>
         <h2 id="loadingText" class="text-xl font-medium tracking-wide">กำลังบันทึกข้อมูล...</h2>
     </div>
-
     <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 md:hidden" onclick="toggleMobileSidebar()"></div>
 
     <aside id="sidebar"
