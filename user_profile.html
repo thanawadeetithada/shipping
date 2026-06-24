@@ -16,8 +16,10 @@
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        /* คลาสสำหรับซ่อนหน้าเว็บชั่วคราวตอนเช็ค Session */
         .hide-content { display: none !important; }
+        
+        /* สไตล์สำหรับ Spinner */
+        .fa-spin { animation-duration: 0.8s !important; }
     </style>
      <script>
        if (!localStorage.getItem('userSession')) {
@@ -29,9 +31,15 @@
 
     <?!= include('profile_modal'); ?>
 
+    <div id="loadingOverlay"
+        class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden flex items-center justify-center flex-col text-white transition-opacity">
+        <i id="loadingIcon" class="fas fa-circle-notch fa-spin text-6xl mb-4"></i>
+        <h2 id="loadingText" class="text-xl font-medium tracking-wide">กำลังบันทึกข้อมูล...</h2>
+    </div>
+
     <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 md:hidden" onclick="toggleMobileSidebar()"></div>
 
-      <aside id="sidebar"
+    <aside id="sidebar"
         class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex flex-col z-50 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:flex shadow-xl">
         <div class="py-6 px-6 bg-brand-dark flex flex-col items-center justify-center relative border-b border-red-900">
             <div class="text-2xl font-bold leading-none mb-1 tracking-wide">SUCHAR</div>
@@ -74,15 +82,14 @@
                 </button>
             </div>
 
-            <div
-                class="flex space-x-3 md:space-x-6 text-xs sm:text-sm font-medium md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
+            <div class="flex space-x-3 md:space-x-6 text-xs sm:text-sm font-medium md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
                 <a href="<?= getScriptUrl() ?>?page=user_main" target="_top"
                     class="text-gray-600 hover:text-brand transition whitespace-nowrap">หน้าหลัก</a>
                 <a href="<?= getScriptUrl() ?>?page=user_pricing" target="_top"
                     class="text-gray-600 hover:text-brand transition whitespace-nowrap">อัตราค่าขนส่ง</a>
             </div>
             <div class="flex items-center justify-end shrink-0">
-                <div onclick="window.top.location.href='<?= getScriptUrl() ?>?page=user_profile'" target="_top"
+                <div onclick="window.top.location.href='<?= getScriptUrl() ?>?page=user_profile'"
                     class="flex items-center gap-2 md:gap-3 bg-brand px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-brand cursor-pointer hover:bg-brand-dark transition text-white">
 
                     <img id="headerAvatar" src="https://ui-avatars.com/api/?name=User&background=fff&color=c51c24"
@@ -92,7 +99,6 @@
                         class="text-xs md:text-sm font-medium pr-1 md:pr-2 hidden sm:block whitespace-nowrap">
                         กำลังโหลด...
                     </span>
-
                 </div>
             </div>
         </header>
@@ -172,9 +178,6 @@
                             </div>
                             
                             <div class="mt-8 flex gap-3">
-                                <button type="button" onclick="window.top.location.href='<?= getScriptUrl() ?>?page=user_dashboard'" class="flex-1 bg-white border border-gray-300 text-gray-700 font-medium py-3 px-4 rounded-lg hover:bg-gray-50 transition">
-                                    ยกเลิก
-                                </button>
                                 <button type="submit" id="updateBtn" class="flex-[2] bg-brand text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-dark transition flex items-center justify-center gap-2 shadow-md">
                                     <i class="fas fa-save"></i> <span>บันทึกการแก้ไข</span>
                                 </button>
@@ -194,22 +197,141 @@
             if (sessionData) {
                 try {
                     const user = JSON.parse(sessionData);
+                    
+                    if (document.getElementById('profile_memberId')) document.getElementById('profile_memberId').value = user.memberId || '';
+                    if (document.getElementById('profile_fullname')) document.getElementById('profile_fullname').value = user.fullname || user.name || '';
+                    if (document.getElementById('profile_phone')) document.getElementById('profile_phone').value = user.phone || '';
+                    if (document.getElementById('profile_address')) document.getElementById('profile_address').value = user.address || '';
+
                     const fullname = user.fullname || user.name || "ไม่ระบุชื่อ";
                     const usernameElement = document.getElementById('headerUsername');
                     if (usernameElement) {
                         usernameElement.innerText = fullname;
+                    }
+                    
+                    const avatarElement = document.getElementById('headerAvatar');
+                    if (avatarElement) {
+                        avatarElement.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(fullname) + "&background=fff&color=c51c24";
                     }
                 } catch (e) {
                     console.error("รูปแบบข้อมูลเซสชันไม่ถูกต้อง:", e);
                 }
             }
         });
+
+        // ฟังก์ชันควบคุม Spinner
+        function toggleSpinner(show, message = "กำลังบันทึกข้อมูล...") {
+            const overlay = document.getElementById('loadingOverlay');
+            const loadingText = document.getElementById('loadingText');
+            
+            if (show) {
+                loadingText.innerText = message;
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex'); // ทำให้ flex ทำงานจัดกึ่งกลาง
+            } else {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+            }
+        }
+
+        function handleUpdateProfile(event) {
+            event.preventDefault();
+            
+            const memberId = document.getElementById('profile_memberId').value;
+            const fullname = document.getElementById('profile_fullname').value.trim();
+            const phone = document.getElementById('profile_phone').value.trim();
+            const address = document.getElementById('profile_address').value.trim();
+            const password = document.getElementById('profile_password').value;
+            const confirmPassword = document.getElementById('profile_confirm_password').value;
+            
+            const statusMsg = document.getElementById('statusMsg');
+            
+            // ซ่อนข้อความแจ้งเตือนเดิมก่อน
+            statusMsg.classList.add('hidden');
+            
+            if (password || confirmPassword) {
+                if (password !== confirmPassword) {
+                    showStatus("รหัสผ่านใหม่และยืนยันรหัสผ่านไม่ตรงกัน", false);
+                    return;
+                }
+            }
+            
+            // แสดงหน้าจอ Loading แบบเต็มจอ
+            toggleSpinner(true, "กำลังตรวจสอบและบันทึกข้อมูล...");
+            
+            const userData = {
+                memberId: memberId,
+                fullname: fullname,
+                phone: phone,
+                address: address,
+                password: password || null
+            };
+            
+            google.script.run
+                .withSuccessHandler(function(response) {
+                    // ปิดหน้าจอ Loading
+                    toggleSpinner(false);
+                    
+                    if (response.success) {
+                        showStatus(response.message, true);
+                        
+                        // อัปเดต localStorage เฉพาะเมื่อสำเร็จ
+                        const currentSession = JSON.parse(localStorage.getItem('userSession'));
+                        currentSession.fullname = fullname;
+                        currentSession.phone = phone;
+                        currentSession.address = address;
+                        localStorage.setItem('userSession', JSON.stringify(currentSession));
+                        
+                        if (document.getElementById('headerUsername')) document.getElementById('headerUsername').innerText = fullname;
+                        if (document.getElementById('headerAvatar')) document.getElementById('headerAvatar').src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(fullname) + "&background=fff&color=c51c24";
+                        
+                        document.getElementById('profile_password').value = '';
+                        document.getElementById('profile_confirm_password').value = '';
+                    } else {
+                        showStatus(response.message, false);
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    // ปิดหน้าจอ Loading และแสดงข้อความ Error
+                    toggleSpinner(false);
+                    showStatus("เกิดข้อผิดพลาดจากระบบเซิร์ฟเวอร์: " + error.message, false);
+                })
+                .updateUserProfile(userData);
+        }
+
+        function showStatus(msg, isSuccess) {
+            const statusMsg = document.getElementById('statusMsg');
+            statusMsg.innerText = msg;
+            statusMsg.classList.remove('hidden', 'bg-green-50', 'text-green-700', 'border-green-200', 'bg-red-50', 'text-red-700', 'border-red-200');
+            
+            if (isSuccess) {
+                statusMsg.classList.add('bg-green-50', 'text-green-700', 'border-green-200');
+            } else {
+                statusMsg.classList.add('bg-red-50', 'text-red-700', 'border-red-200');
+            }
+        }
+
+        function togglePassword(inputId, eyeId) {
+            const input = document.getElementById(inputId);
+            const eye = document.getElementById(eyeId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                eye.classList.remove('fa-eye');
+                eye.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                eye.classList.remove('fa-eye-slash');
+                eye.classList.add('fa-eye');
+            }
+        }
+
         function toggleMobileSidebar() {
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('sidebarBackdrop');
             sidebar.classList.toggle('-translate-x-full');
             backdrop.classList.toggle('hidden');
         }
+
         function logoutuser() {
             localStorage.removeItem('userSession');
             localStorage.clear();
