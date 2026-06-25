@@ -64,6 +64,22 @@
         </div>
     </div>
 
+    <div id="successModalOverlay" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all text-center p-8 border-t-4 border-green-500">
+            
+            <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
+                <i class="fas fa-check text-4xl text-green-500"></i>
+            </div>
+            
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">สำเร็จ!</h3>
+            <p id="successModalMsg" class="text-gray-600 mb-6 text-sm"></p>
+            
+            <button onclick="closeSuccessModal()" class="w-full bg-brand text-white font-bold py-3 px-4 rounded-xl hover:bg-brand-dark transition-colors shadow-md hover:shadow-lg flex justify-center items-center gap-2">
+                <span>ตกลง</span>
+            </button>
+        </div>
+    </div>
+
     <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 md:hidden"
         onclick="toggleMobileSidebar()"></div>
 
@@ -339,7 +355,7 @@
     <script>
         let memberId = "";
 
-        // ฟังก์ชันควบคุม Modal แจ้งเตือน
+        // ฟังก์ชันควบคุม Modal แจ้งเตือนข้อผิดพลาด
         function showAlertModal(msg) {
             document.getElementById('alertModalMsg').innerText = msg;
             document.getElementById('alertModalOverlay').classList.remove('hidden');
@@ -347,6 +363,16 @@
 
         function closeAlertModal() {
             document.getElementById('alertModalOverlay').classList.add('hidden');
+        }
+
+        // ฟังก์ชันควบคุม Modal แจ้งเตือนสำเร็จ
+        function showSuccessModal(msg) {
+            document.getElementById('successModalMsg').innerText = msg;
+            document.getElementById('successModalOverlay').classList.remove('hidden');
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModalOverlay').classList.add('hidden');
         }
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -505,11 +531,11 @@
             }
         }
 
-        // คัดลอกเลข
+        // คัดลอกเลข แล้วแสดง Success Modal แทน alert เดิม
         function copyToClipboard(id) {
             const text = document.getElementById(id).innerText;
             navigator.clipboard.writeText(text).then(() => {
-                alert("คัดลอกเลขออเดอร์เรียบร้อยแล้ว");
+                showSuccessModal("คัดลอกเลขออเดอร์เรียบร้อยแล้ว");
             });
         }
 

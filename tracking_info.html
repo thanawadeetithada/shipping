@@ -40,6 +40,22 @@
         <h2 id="loadingText" class="text-xl font-medium tracking-wide">กำลังดึงข้อมูล...</h2>
     </div>
 
+     <div id="successModalOverlay" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all text-center p-8 border-t-4 border-green-500">
+            
+            <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
+                <i class="fas fa-check text-4xl text-green-500"></i>
+            </div>
+            
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">สำเร็จ!</h3>
+            <p id="successModalMsg" class="text-gray-600 mb-6 text-sm"></p>
+            
+            <button onclick="closeSuccessModal()" class="w-full bg-brand text-white font-bold py-3 px-4 rounded-xl hover:bg-brand-dark transition-colors shadow-md hover:shadow-lg flex justify-center items-center gap-2">
+                <span>ตกลง</span>
+            </button>
+        </div>
+    </div>
+
     <header class="bg-white shadow-sm py-3 px-4 md:py-4 md:px-6 flex items-center justify-between z-30 relative min-h-[64px] md:min-h-[72px]">
         <div class="text-xl md:text-2xl font-bold text-brand flex flex-col leading-none shrink-0">
             <span>SUCHAR</span>
@@ -379,7 +395,9 @@
 
         function copyToClipboard(id) {
             const text = document.getElementById(id).innerText;
-            navigator.clipboard.writeText(text);
+            navigator.clipboard.writeText(text).then(() => {
+                showSuccessModal("คัดลอกเลขออเดอร์เรียบร้อยแล้ว");
+            });
         }
 
         // ฟังก์ชันควบคุม Modal
@@ -391,6 +409,16 @@
         function closeAlertModal() {
             document.getElementById('alertModalOverlay').classList.add('hidden');
         }
+
+         function showSuccessModal(msg) {
+            document.getElementById('successModalMsg').innerText = msg;
+            document.getElementById('successModalOverlay').classList.remove('hidden');
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModalOverlay').classList.add('hidden');
+        }
+
     </script>
 </body>
 
