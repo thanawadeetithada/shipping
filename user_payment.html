@@ -9,27 +9,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Kanit', sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        .bg-brand {
-            background-color: #c51c24;
-        }
-
-        .text-brand {
-            color: #c51c24;
-        }
-
-        .bg-brand-dark {
-            background-color: #8b1319;
-        }
-
-        .checkbox-brand:checked {
-            background-color: #c51c24;
-            border-color: #c51c24;
-        }
+        body { font-family: 'Kanit', sans-serif; background-color: #f8f9fa; }
+        .bg-brand { background-color: #c51c24; }
+        .text-brand { color: #c51c24; }
+        .bg-brand-dark { background-color: #8b1319; }
+        .checkbox-brand:checked { background-color: #c51c24; border-color: #c51c24; }
+        .fa-spin { animation-duration: 0.8s !important; }
     </style>
     <script>
         if (!localStorage.getItem('userSession')) {
@@ -39,6 +24,26 @@
 </head>
 
 <body class="flex h-screen overflow-hidden text-gray-800">
+
+    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-[60] hidden flex-col items-center justify-center text-white transition-opacity">
+        <i class="fas fa-circle-notch fa-spin text-6xl mb-4"></i>
+        <h2 id="loadingText" class="text-xl font-medium tracking-wide">กำลังโหลดข้อมูล...</h2>
+    </div>
+
+    <div id="successModalOverlay" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all text-center p-8 border-t-4 border-green-500">
+            <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
+                <i class="fas fa-check text-4xl text-green-500"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">ทำรายการสำเร็จ!</h3>
+            <p id="successModalMsg" class="text-gray-600 mb-6 text-sm">
+                บันทึกข้อมูลและแจ้งโอนเรียบร้อยแล้ว
+            </p>
+            <button id="successModalBtn" onclick="goToDashboardFromModal()" class="w-full bg-brand text-white font-bold py-3 px-4 rounded-xl hover:bg-red-700 transition-colors shadow-md hover:shadow-lg flex justify-center items-center gap-2">
+                <span>ตกลง</span>
+            </button>
+        </div>
+    </div>
 
     <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 md:hidden"
         onclick="toggleMobileSidebar()"></div>
@@ -115,8 +120,7 @@
 
                 <div class="border-b border-gray-200 pb-4">
                     <h1 class="text-2xl font-bold text-gray-800">ชำระเงินและเลือกจัดส่ง</h1>
-                    <p class="text-sm text-gray-500 mt-1">เลือกพัสดุที่ถึงโกดังไทยเพื่อรวมบิลชำระค่าขนส่ง (จีน-ไทย)
-                        และระบุวิธีรับสินค้า</p>
+                    <p class="text-sm text-gray-500 mt-1">เลือกพัสดุที่ต้องการรวมบิลชำระค่าขนส่ง (จีน-ไทย) และระบุวิธีรับสินค้า</p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -212,21 +216,23 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">แนบสลิปโอนเงิน <span
                                                 class="text-red-500">*</span></label>
-                                        <div
+                                        <input type="file" id="slipInput" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+                                        <label for="slipInput"
                                             class="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 hover:border-brand cursor-pointer transition">
                                             <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
-                                            <span class="text-sm text-gray-500">คลิกเพื่ออัปโหลดรูปภาพ</span>
-                                        </div>
+                                            <span class="text-sm text-gray-500 text-center" id="file-name-display">คลิกเพื่ออัปโหลดสลิป</span>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <button
-                            onclick="alert('บันทึกข้อมูลและแจ้งโอนเรียบร้อย!'); window.location.href='user_dashboard.html'"
-                            class="w-full bg-brand text-white text-lg font-bold py-4 rounded-xl shadow-md hover:bg-red-700 transition flex items-center justify-center gap-2">
-                            ยืนยันการทำรายการ <i class="fas fa-check-circle"></i>
-                        </button>
+    id="submitPaymentBtn"
+    onclick="submitPayment()"
+    class="w-full bg-brand text-white text-lg font-bold py-4 rounded-xl shadow-md transition flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400 hover:bg-red-700">
+    ยืนยันการทำรายการ <i class="fas fa-check-circle"></i>
+</button>
 
                     </div>
                 </div>
@@ -235,14 +241,23 @@
     </main>
 
     <script>
-        // ตัวแปรเก็บ State ปัจจุบัน
-        let currentSettings = { carRate: 0, boatRate: 0, baseFee: "" };
+        // Global State
+        let currentSettings = { carRateText: "", carRateNum: 0, boatRateText: "", boatRateNum: 0, baseFee: "" };
         let currentParcels = [];
-        let selectedRateType = 'car'; // เริ่มต้นเลือกทางรถ
+        let selectedRateType = 'car';
+        let memberId = "";
+
+        // ตัวแปรเก็บยอดสรุปก่อนส่งเข้า Backend
+        let globalFinalTotal = 0;
+        let globalTotalTransportFee = 0;
+
+        // ตัวแปรเก็บภาพสลิป
+        let slipBase64 = "";
+        let slipMimeType = "";
+        let slipFileName = "";
 
         document.addEventListener('DOMContentLoaded', function () {
             const sessionData = localStorage.getItem('userSession');
-            let memberId = "";
 
             if (sessionData) {
                 try {
@@ -251,21 +266,32 @@
                     memberId = user.memberId || user.customer_id || user.id || user.member_id || "";
 
                     const usernameElement = document.getElementById('headerUsername');
-                    if (usernameElement) {
-                        usernameElement.innerText = fullname;
-                    }
+                    if (usernameElement) usernameElement.innerText = fullname;
                 } catch (e) {
                     console.error("รูปแบบข้อมูลเซสชันไม่ถูกต้อง:", e);
                 }
             }
 
+            showLoading("กำลังโหลดข้อมูลพัสดุ...");
             loadPaymentPageData(memberId);
         });
 
-        // ======================= ดึงข้อมูลจาก Backend =======================
+        function showLoading(msg) {
+            document.getElementById('loadingText').innerText = msg || "กำลังประมวลผล...";
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+            document.getElementById('loadingOverlay').classList.add('flex');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+            document.getElementById('loadingOverlay').classList.remove('flex');
+        }
+
+        // ======================= โหลดข้อมูลตั้งต้น =======================
         function loadPaymentPageData(memberId) {
             google.script.run
                 .withSuccessHandler(function (response) {
+                    hideLoading();
                     if (response.success) {
                         currentSettings = response.settings;
                         currentParcels = response.parcels;
@@ -275,23 +301,21 @@
                     }
                 })
                 .withFailureHandler(function (err) {
+                    hideLoading();
                     alert("ข้อผิดพลาดในการเชื่อมต่อ: " + err.message);
                 })
                 .getPaymentPageData(memberId);
         }
 
-        // ======================= อัปเดตหน้าจอหลัก =======================
+        // ======================= จัดการหน้า UI =======================
         function updateUI() {
-            // อัปเดตข้อมูลข้อ 2 (ประเภทขนส่ง)
-            document.getElementById('car-desc').innerText = `${currentSettings.carDays} วัน • เริ่มต้น ${currentSettings.carRate}฿/KG`;
-            document.getElementById('boat-desc').innerText = `${currentSettings.boatDays} วัน • เริ่มต้น ${currentSettings.boatRate}฿/KG`;
+            document.getElementById('car-desc').innerText = `${currentSettings.carDays} • ${currentSettings.carRateText}`;
+            document.getElementById('boat-desc').innerText = `${currentSettings.boatDays} • ${currentSettings.boatRateText}`;
 
-            // อัปเดตข้อมูลข้อ 4 (ธนาคาร)
             document.getElementById('bank-name').innerText = currentSettings.bankName;
             document.getElementById('bank-acc').innerText = currentSettings.bankAcc;
             document.getElementById('bank-acc-name').innerText = currentSettings.bankAccName;
 
-            // วาดรายการพัสดุ (ข้อ 1)
             renderParcels();
         }
 
@@ -316,7 +340,7 @@
                             <span class="font-bold text-gray-800">${p.tracking}</span>
                             <span class="font-bold text-brand" id="item-price-${index}">0.00 ฿</span>
                         </div>
-                        <div class="text-xs text-gray-500 mt-1">น้ำหนัก: ${p.weight.toFixed(2)} KG | ค่าส่งจีน-ไทย: ${currentSettings.baseFee}</div>
+                        <div class="text-xs text-gray-500 mt-1">น้ำหนัก: ${p.weight.toFixed(2)} KG | Order: ${p.orderNum}</div>
                     </div>
                 `;
                 listDiv.appendChild(label);
@@ -325,7 +349,6 @@
             calculateTotal();
         }
 
-        // ======================= จัดการตัวเลือกขนส่ง (ข้อ 2) =======================
         function selectShipping(type) {
             selectedRateType = type;
 
@@ -344,22 +367,12 @@
                 carLabel.className = "border-2 border-gray-200 hover:border-gray-300 rounded-xl p-4 cursor-pointer relative opacity-60 transition";
             }
 
-            calculateTotal(); // คำนวณเงินใหม่ทันทีที่เปลี่ยนเรท
+            calculateTotal();
         }
 
-        // ======================= คำนวณสรุปยอด (ข้อ 3) =======================
         function calculateTotal() {
-            // ดึงค่าเรท (เผื่อ backend ส่งมาเป็น String ให้ดึงเฉพาะตัวเลขมาคำนวณ)
-            let rawRate = selectedRateType === 'car' ? currentSettings.carRate : currentSettings.boatRate;
-            let rate = 0;
-            if (typeof rawRate === 'string') {
-                let match = rawRate.match(/\d+(\.\d+)?/);
-                rate = match ? parseFloat(match[0]) : 0;
-            } else {
-                rate = parseFloat(rawRate) || 0;
-            }
+            let rateNum = selectedRateType === 'car' ? currentSettings.carRateNum : currentSettings.boatRateNum;
 
-            // ดึงค่าบริการและแปลงเป็นตัวเลข
             let rawBaseFee = currentSettings.baseFee || "0";
             let baseFeeMatch = rawBaseFee.toString().match(/\d+(\.\d+)?/);
             let baseFee = baseFeeMatch ? parseFloat(baseFeeMatch[0]) : 0;
@@ -371,9 +384,8 @@
             checkboxes.forEach((cb) => {
                 let index = cb.dataset.index;
                 let weight = parseFloat(cb.dataset.weight) || 0;
-                let itemPrice = weight * rate;
+                let itemPrice = weight * rateNum;
 
-                // อัปเดตราคาของแต่ละกล่อง
                 document.getElementById(`item-price-${index}`).innerText = itemPrice.toFixed(2) + ' ฿';
 
                 if (cb.checked) {
@@ -382,30 +394,116 @@
                 }
             });
 
-            // ค่าบริการจะถูกบวกก็ต่อเมื่อมีการเลือกพัสดุอย่างน้อย 1 ชิ้น
             let activeBaseFee = count > 0 ? baseFee : 0;
-            let finalTotal = (totalWeight * rate) + activeBaseFee;
+            
+            // เก็บตัวแปร Global ไว้ใช้ตอนกดบันทึก
+            globalTotalTransportFee = (totalWeight * rateNum);
+            globalFinalTotal = globalTotalTransportFee + activeBaseFee;
 
-            // อัปเดตสรุปยอดรวม
             document.getElementById('summary-count').innerText = count + ' กล่อง';
             document.getElementById('summary-weight').innerText = totalWeight.toFixed(2) + ' KG';
             
-            // อัปเดตค่าบริการในตารางสรุป
             let baseFeeElem = document.getElementById('summary-base-fee');
-            if(baseFeeElem) {
-                baseFeeElem.innerText = activeBaseFee.toFixed(2) + ' ฿';
-            }
+            if(baseFeeElem) baseFeeElem.innerText = activeBaseFee.toFixed(2) + ' ฿';
 
             document.getElementById('summary-rate-label').innerText = `คิดตามเรท (${selectedRateType === 'car' ? 'ทางรถ' : 'ทางเรือ'})`;
-            document.getElementById('summary-rate-val').innerText = rate + ' ฿ / KG';
-            document.getElementById('summary-total').innerText = finalTotal.toFixed(2) + ' ฿';
+            document.getElementById('summary-rate-val').innerText = rateNum + ' ฿ / KG';
+            document.getElementById('summary-total').innerText = globalFinalTotal.toFixed(2) + ' ฿';
+
+            // ----------------------------------------------------
+            // เพิ่มโค้ดเช็คปุ่ม Disable ตรงนี้ (ล่างสุดของฟังก์ชัน)
+            // ----------------------------------------------------
+            let submitBtn = document.getElementById('submitPaymentBtn');
+            if (submitBtn) {
+                if (count === 0) {
+                    submitBtn.disabled = true; // ไม่มีพัสดุให้กดปุ่มไม่ได้
+                } else {
+                    submitBtn.disabled = false; // มีพัสดุ 1 ชิ้นขึ้นไป กดปุ่มได้ปกติ
+                }
+            }
         }
 
+        // ======================= จัดการไฟล์รูปภาพ (สลิป) =======================
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                slipFileName = file.name;
+                slipMimeType = file.type;
+                
+                // แปลงไฟล์เป็น Base64
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    slipBase64 = e.target.result.split(',')[1]; // ตัดเอาเฉพาะข้อมูล Base64
+                    document.getElementById('file-name-display').innerText = "แนบไฟล์แล้ว: " + slipFileName;
+                    document.getElementById('file-name-display').classList.add('text-brand', 'font-bold');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // ======================= บันทึกข้อมูล (Submit) =======================
+        function submitPayment() {
+            // 1. ตรวจสอบว่าเลือกพัสดุหรือไม่
+            const checkboxes = document.querySelectorAll('.parcel-checkbox:checked');
+            if (checkboxes.length === 0) {
+                alert("กรุณาเลือกพัสดุอย่างน้อย 1 รายการเพื่อชำระเงิน");
+                return;
+            }
+
+            // 2. ตรวจสอบว่าแนบสลิปหรือยัง
+            if (!slipBase64) {
+                alert("กรุณาแนบภาพสลิปโอนเงินก่อนยืนยันการทำรายการ");
+                return;
+            }
+
+            // 3. รวบรวม OrderNumber ของพัสดุที่ถูกเลือก
+            const selectedOrderNums = [];
+            checkboxes.forEach((cb) => {
+                let idx = cb.dataset.index;
+                selectedOrderNums.push(currentParcels[idx].orderNum);
+            });
+
+            // 4. สร้าง Payload ส่งไป Backend
+            const payload = {
+                memberId: memberId,
+                orderList: selectedOrderNums,
+                shippingType: selectedRateType === 'car' ? 'EK' : 'SEA',
+                totalTransportFee: globalTotalTransportFee,
+                finalTotal: globalFinalTotal,
+                slipBase64: slipBase64,
+                slipMime: slipMimeType,
+                slipName: slipFileName
+            };
+
+            showLoading("กำลังอัปโหลดสลิปและบันทึกข้อมูล...");
+
+            google.script.run
+                .withSuccessHandler(function (response) {
+                    hideLoading();
+                    if (response.success) {
+                        // เปลี่ยนจาก alert() เป็นการเปิด Modal
+                        document.getElementById('successModalMsg').innerText = response.message || "บันทึกข้อมูลและแจ้งโอนเรียบร้อยแล้ว";
+                        document.getElementById('successModalOverlay').classList.remove('hidden');
+                    } else {
+                        alert("เกิดข้อผิดพลาด: " + response.message);
+                    }
+                })
+                .withFailureHandler(function (err) {
+                    hideLoading();
+                    alert("ข้อผิดพลาดในการเชื่อมต่อ: " + err.message);
+                })
+                .submitPaymentData(payload);
+        }
+
+        // ======================= โยนหน้าไปยัง Dashboard จาก Modal =======================
+        function goToDashboardFromModal() {
+            window.location.href = '<?= getScriptUrl() ?>?page=user_dashboard';
+        }
+
+        // ======================= เมนู / ออกจากระบบ =======================
         function toggleMobileSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const backdrop = document.getElementById('sidebarBackdrop');
-            sidebar.classList.toggle('-translate-x-full');
-            backdrop.classList.toggle('hidden');
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('sidebarBackdrop').classList.toggle('hidden');
         }
 
         function logoutuser() {
