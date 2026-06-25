@@ -12,9 +12,10 @@
         .bg-brand { background-color: #c51c24; }
         .text-brand { color: #c51c24; }
         .bg-brand-dark { background-color: #8b1319; }
+        .fa-spin { animation-duration: 0.8s !important; }
     </style>
-     <script>
-        if (!localStorage.getItem('userSession')) {
+      <script>
+       if (!localStorage.getItem('userSession')) {
           window.location.replace('<?= getScriptUrl() ?>?page=index');
         }
     </script>
@@ -35,7 +36,7 @@
 
         <nav class="flex-grow p-4 space-y-1.5 overflow-y-auto text-sm">
             <a href="<?= getScriptUrl() ?>?page=user_dashboard" target="_top"
-                class="flex items-center gap-3 bg-brand text-white px-4 py-3 rounded-md font-medium shadow-md transition duration-200">
+                class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
                 <i class="fas fa-home w-5 text-center"></i> แดชบอร์ดของฉัน
             </a>
             <a href="<?= getScriptUrl() ?>?page=user_import" target="_top"
@@ -47,7 +48,7 @@
                 <i class="fas fa-file-invoice-dollar w-5 text-center"></i> จัดส่งสินค้า
             </a>
             <a href="<?= getScriptUrl() ?>?page=user_tracking" target="_top"
-                class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
+                class="flex items-center gap-3 bg-brand text-white px-4 py-3 rounded-md font-medium shadow-md transition duration-200">
                 <i class="fas fa-box-open w-5 text-center"></i> สถานะพัสดุทั้งหมด
             </a>
         </nav>
@@ -98,7 +99,7 @@
                         <p class="text-sm text-gray-500 mt-1">แสดงรายการสินค้าทั้งหมดตั้งแต่เข้าโกดังจีนจนถึงไทย</p>
                     </div>
                     <div class="relative w-full md:w-72">
-                        <input type="text" placeholder="ค้นหาเลขออเดอร์ / Tracking..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand">
+                        <input type="text" id="searchInput" placeholder="ค้นหาเลขออเดอร์ / Tracking / วิธีส่ง..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand">
                         <i class="fas fa-search absolute left-3 top-3 text-gray-400 text-sm"></i>
                     </div>
                 </div>
@@ -110,40 +111,17 @@
                                 <tr>
                                     <th class="p-4">เลขออเดอร์ / Tracking จีน</th>
                                     <th class="p-4">วิธีขนส่ง</th>
-                                    <th class="p-4">รหัสตู้คอนเทนเนอร์</th>
+                                    <th class="p-4">รายละเอียดสินค้า</th> 
                                     <th class="p-4 text-center">น.น. / CBM</th>
                                     <th class="p-4">วันที่อัปเดต</th>
-                                    <th class="p-4 text-right">ราคา (บาท)</th>
                                     <th class="p-4 text-center">สถานะ</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100">
-                              <tr class="hover:bg-gray-50 transition cursor-pointer" onclick="goToTrackingInfo()">
-                                      <td class="p-4">
-                                        <div class="font-bold text-gray-800">SC250621001</div>
-                                        <div class="text-xs text-gray-500">TRK: YT123456789</div>
-                                    </td>
-                                    <td class="p-4"><span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium">รถ (EK)</span></td>
-                                    <td class="p-4 text-gray-600">CONT-0012A</td>
-                                    <td class="p-4 text-center">10.0 KG<br><span class="text-xs text-gray-400">0.05 CBM</span></td>
-                                    <td class="p-4 text-gray-600">24 มิ.ย. 2026</td>
-                                    <td class="p-4 text-right font-bold text-gray-800">350.00</td>
-                                    <td class="p-4 text-center">
-                                        <span class="bg-blue-50 text-blue-600 border border-blue-200 px-3 py-1 rounded-full text-xs font-bold">กำลังมาไทย</span>
-                                    </td>
-                                </tr>
-                              <tr class="hover:bg-gray-50 transition cursor-pointer" onclick="window.top.location.href='<?= getScriptUrl() ?>?page=user_tracking_info'">
-                                      <td class="p-4">
-                                        <div class="font-bold text-gray-800">SC250621002</div>
-                                        <div class="text-xs text-gray-500">TRK: ZTO9876543</div>
-                                    </td>
-                                    <td class="p-4"><span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium">เรือ (SEA)</span></td>
-                                    <td class="p-4 text-gray-600">-</td>
-                                    <td class="p-4 text-center">-<br><span class="text-xs text-gray-400">-</span></td>
-                                    <td class="p-4 text-gray-600">23 มิ.ย. 2026</td>
-                                    <td class="p-4 text-right font-bold text-gray-800">-</td>
-                                    <td class="p-4 text-center">
-                                        <span class="bg-orange-50 text-orange-600 border border-orange-200 px-3 py-1 rounded-full text-xs font-bold">ถึงโกดังจีน</span>
+                            <tbody id="trackingTableBody" class="divide-y divide-gray-100">
+                                <tr>
+                                    <td colspan="6" class="p-12 text-center text-gray-500">
+                                        <i class="fas fa-circle-notch fa-spin text-4xl text-brand mb-3"></i>
+                                        <p>กำลังดึงข้อมูลพัสดุของคุณ...</p>
                                     </td>
                                 </tr>
                             </tbody>
@@ -154,14 +132,20 @@
             </div>
         </div>
     </main>
+
     <script>
-       document.addEventListener('DOMContentLoaded', function () {
+        let allTrackingData = [];
+
+        document.addEventListener('DOMContentLoaded', function () {
             const sessionData = localStorage.getItem('userSession');
+            let memberId = "";
 
             if (sessionData) {
                 try {
                     const user = JSON.parse(sessionData);
                     const fullname = user.fullname || user.name || "ไม่ระบุชื่อ";
+                    memberId = user.memberId || user.customer_id || user.id || user.member_id || "";
+
                     const usernameElement = document.getElementById('headerUsername');
                     if (usernameElement) {
                         usernameElement.innerText = fullname;
@@ -170,8 +154,102 @@
                     console.error("รูปแบบข้อมูลเซสชันไม่ถูกต้อง:", e);
                 }
             }
+
+            // โหลดข้อมูลเมื่อเปิดหน้าเว็บ
+            loadTrackingData(memberId);
+
+            // ติดตั้งระบบค้นหาแบบ Real-time (รองรับการค้นหาวิธีขนส่ง)
+            const searchInput = document.getElementById('searchInput');
+            if(searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const term = e.target.value.toLowerCase();
+                    const filtered = allTrackingData.filter(item => {
+                        const orderNum = (item.orderNum || "").toLowerCase();
+                        const tracking = (item.tracking || "").toLowerCase();
+                        const detail = (item.detail || "").toLowerCase();
+                        
+                        // สร้างข้อความตัวเลือกวิธีส่งสำหรับการค้นหา (ครอบคลุมทั้ง ตัวย่อ ตัวเต็ม ภาษาไทย)
+                        let shipText = (item.shippingType || "").toLowerCase();
+                        if (shipText === "ek") shipText += " รถ ทางรถ";
+                        if (shipText === "sea") shipText += " เรือ ทางเรือ";
+
+                        return orderNum.includes(term) || 
+                               tracking.includes(term) || 
+                               detail.includes(term) ||
+                               shipText.includes(term);
+                    });
+                    renderTable(filtered);
+                });
+            }
         });
 
+        // ================== ดึงข้อมูลจาก Backend ==================
+        function loadTrackingData(memberId) {
+            google.script.run
+                .withSuccessHandler(function(response) {
+                    if (response.success) {
+                        allTrackingData = response.data;
+                        renderTable(allTrackingData);
+                    } else {
+                        document.getElementById('trackingTableBody').innerHTML = `<tr><td colspan="6" class="p-8 text-center text-red-500">ดึงข้อมูลล้มเหลว: ${response.message}</td></tr>`;
+                    }
+                })
+                .withFailureHandler(function(err) {
+                    document.getElementById('trackingTableBody').innerHTML = `<tr><td colspan="6" class="p-8 text-center text-red-500">เกิดข้อผิดพลาดในการเชื่อมต่อ: ${err.message}</td></tr>`;
+                })
+                .getTrackingData(memberId);
+        }
+
+        // ================== วาดตาราง (Render Table) ==================
+        function renderTable(data) {
+            const tbody = document.getElementById('trackingTableBody');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500"><i class="fas fa-box-open text-3xl mb-2 text-gray-300"></i><br>ไม่พบข้อมูลพัสดุ</td></tr>`;
+                return;
+            }
+
+            data.forEach(item => {
+                // จัดการสีป้ายสถานะสินค้า
+                let statusBadge = '';
+                const status = item.status || 'รอเข้าโกดังจีน';
+                if (status === 'รอเข้าโกดังจีน') statusBadge = '<span class="bg-gray-100 text-gray-600 border border-gray-200 px-3 py-1 rounded-full text-xs font-bold">รอเข้าโกดังจีน</span>';
+                else if (status === 'ถึงโกดังจีน') statusBadge = '<span class="bg-orange-50 text-orange-600 border border-orange-200 px-3 py-1 rounded-full text-xs font-bold">ถึงโกดังจีน</span>';
+                else if (status === 'กำลังมาไทย') statusBadge = '<span class="bg-blue-50 text-blue-600 border border-blue-200 px-3 py-1 rounded-full text-xs font-bold">กำลังมาไทย</span>';
+                else if (status === 'ถึงโกดังไทย') statusBadge = '<span class="bg-purple-50 text-purple-600 border border-purple-200 px-3 py-1 rounded-full text-xs font-bold">ถึงโกดังไทย</span>';
+                else if (status === 'จัดส่งสำเร็จ') statusBadge = '<span class="bg-green-50 text-green-600 border border-green-200 px-3 py-1 rounded-full text-xs font-bold">จัดส่งสำเร็จ</span>';
+                else statusBadge = `<span class="bg-gray-50 text-gray-600 border border-gray-200 px-3 py-1 rounded-full text-xs font-bold">${status}</span>`;
+
+                // จัดการป้ายประเภทขนส่ง
+                let shipBadge = item.shippingType === 'EK' ? '<span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium">รถ (EK)</span>' : 
+                                (item.shippingType === 'SEA' ? '<span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium">เรือ (SEA)</span>' : 
+                                `<span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium">${item.shippingType || '-'}</span>`);
+
+                let tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 transition cursor-pointer';
+                
+                // คลิกแล้วส่ง id ไปยังฟังก์ชันเปลี่ยนหน้า
+                tr.onclick = function() {
+                    goToTrackingInfo(item.orderNum);
+                };
+                
+                tr.innerHTML = `
+                    <td class="p-4">
+                        <div class="font-bold text-gray-800">${item.orderNum}</div>
+                        <div class="text-xs text-gray-500">TRK: ${item.tracking}</div>
+                    </td>
+                    <td class="p-4">${shipBadge}</td>
+                    <td class="p-4 text-gray-600 text-sm truncate max-w-[150px]">${item.detail}</td>
+                    <td class="p-4 text-center">${item.weight} KG<br><span class="text-xs text-gray-400">${item.cbm} CBM</span></td>
+                    <td class="p-4 text-gray-600 text-sm">${item.updateDate}</td>
+                    <td class="p-4 text-center">${statusBadge}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ================== UI Helpers ==================
         function toggleMobileSidebar() {
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('sidebarBackdrop');
@@ -179,8 +257,9 @@
             backdrop.classList.toggle('hidden');
         }
 
-        function goToTrackingInfo() {
-          const targetUrl = '<?= getScriptUrl() ?>?page=user_tracking_info';
+        // ฟังก์ชันเปลี่ยนหน้าเว็บพร้อมแนบ Parameter ID
+        function goToTrackingInfo(id) {
+          const targetUrl = '<?= getScriptUrl() ?>?page=user_tracking_info&id=' + encodeURIComponent(id);
           window.top.location.href = targetUrl;
         }
 
