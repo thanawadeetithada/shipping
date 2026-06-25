@@ -187,17 +187,23 @@
             <span class="text-sm text-gray-300">CARGO</span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-3 text-sm text-center md:text-left">
-            <div class="flex items-center justify-center md:justify-start">
-                <i class="fas fa-phone-alt mr-2 text-brand"></i> 02-114-8008
+        <div
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-3 text-sm text-center md:text-left">
+                <div class="flex items-center justify-center md:justify-start">
+                    <i class="fas fa-phone-alt mr-2 text-brand"></i> 
+                    <span id="footer-phone">กำลังโหลด...</span>
+                </div>
+                <div class="flex items-center justify-center md:justify-start">
+                    <i class="fab fa-line text-green-400 mr-2 text-lg"></i> 
+                    <a href="#" id="footer-line-link" target="_blank" class="hover:text-green-400 transition">
+                        <span id="footer-line">กำลังโหลด...</span>
+                    </a>
+                </div>
+                <div class="flex items-center justify-center md:justify-start sm:col-span-2 lg:col-span-1">
+                    <i class="fas fa-envelope mr-2 text-brand"></i> 
+                    <span id="footer-email">กำลังโหลด...</span>
+                </div>
             </div>
-            <div class="flex items-center justify-center md:justify-start">
-                <i class="fab fa-line text-green-400 mr-2 text-lg"></i> @sucharcargo
-            </div>
-            <div class="flex items-center justify-center md:justify-start sm:col-span-2 lg:col-span-1">
-                <i class="fas fa-envelope mr-2 text-brand"></i> support@sucharcargo.com
-            </div>
-        </div>
         
     </div>
 </footer>
@@ -205,6 +211,40 @@
     <script>
         <? var scriptUrl = getScriptUrl(); ?>
         const GLOBAL_SCRIPT_URL = "<?= scriptUrl ?>";
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // เช็คว่าเคย Login ไว้หรือไม่ ถ้ามีให้เปลี่ยนปุ่มเป็น "ไปที่แดชบอร์ด"
+            const sessionData = localStorage.getItem('userSession');
+            if (sessionData) {
+                const loginBtn = document.getElementById('loginNavBtn');
+                if (loginBtn) {
+                    loginBtn.innerText = "แดชบอร์ดของฉัน";
+                    loginBtn.onclick = function() { window.top.location.href = GLOBAL_SCRIPT_URL + '?page=user_dashboard'; };
+                }
+            }
+
+            // เรียกดึงข้อมูล Footer
+            fetchContactFooter();
+        });
+
+        function fetchContactFooter() {
+            google.script.run
+                .withSuccessHandler(function (res) {
+                    if (res.success) {
+                        document.getElementById('footer-phone').innerText = res.phone;
+                        document.getElementById('footer-line').innerText = res.line;
+                        document.getElementById('footer-line-link').href = res.lineLink;
+                        document.getElementById('footer-email').innerText = res.email;
+                    }
+                })
+                .withFailureHandler(function (err) {
+                    console.error("Error fetching contact data:", err);
+                    document.getElementById('footer-phone').innerText = "02-114-8008";
+                    document.getElementById('footer-line').innerText = "@sucharcargo";
+                    document.getElementById('footer-email').innerText = "support@sucharcargo.com";
+                })
+                .getContactData();
+        }
     </script>
 
     <?!= include('auth'); ?>
