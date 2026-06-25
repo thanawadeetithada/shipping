@@ -1,5 +1,6 @@
 /**
  * ดึงข้อมูลพัสดุ 1 รายการ และข้อมูลบิล/สมาชิก/ติดต่อ เพื่อแสดงในหน้าสถานะแบบละเอียด
+ * (ถูกเรียกใช้โดย doGet ใน code.gs)
  */
 function getTrackingInfoData(memberId, orderId) {
   try {

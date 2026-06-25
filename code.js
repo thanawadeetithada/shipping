@@ -1,9 +1,24 @@
 function doGet(e) {
+  if (e && e.parameter && e.parameter.action) {
+    var action = e.parameter.action;
+    
+    if (action === "getTracking") {
+      var memberId = e.parameter.memberId || "";
+      var orderId = e.parameter.orderId || "";  
+      var result = getTrackingInfoData(memberId, orderId);
+      
+      return ContentService.createTextOutput(JSON.stringify(result))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+        
+    return ContentService.createTextOutput(JSON.stringify({success: false, message: "Invalid Action"}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
   var page = e && e.parameter && e.parameter.page ? e.parameter.page : 'index'; 
   console.log("กำลังโหลดไฟล์: " + page + ".html");
   
   try {
-    // 1. ใช้ Template เสมอ เพื่อให้ใช้งาน <?!= include(...) ?> ได้
     return HtmlService.createTemplateFromFile(page)
         .evaluate()
         .setTitle('SUCHAR CARGO')
@@ -22,12 +37,9 @@ function include(filename) {
 }
 
 function getScriptUrl() {
-  return ScriptApp.getService().getUrl();
+  return "https://sucharforwork.github.io/shipping/"; 
 }
 
-// เปลี่ยนจากของเดิม ให้เป็นแบบนี้
-// function getScriptUrl() {
-//   // เปลี่ยนลิงก์ด้านล่างให้เป็น URL GitHub Pages ของคุณจริงๆ
-//   // ตัวอย่างเช่น: "https://yourusername.github.io/sucharcargo/"
-//   return "https://sucharforwork.github.io/shipping/"; 
+// function getScriptUrl() { //หน้า appscript
+//   return ScriptApp.getService().getUrl();
 // }

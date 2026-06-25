@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,44 +9,65 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Kanit', sans-serif; background-color: #f8f9fa; }
-        .bg-brand { background-color: #c51c24; }
-        .text-brand { color: #c51c24; }
-        .bg-brand-dark { background-color: #8b1319; }
-        .fa-spin { animation-duration: 0.8s !important; }
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .bg-brand {
+            background-color: #c51c24;
+        }
+
+        .text-brand {
+            color: #c51c24;
+        }
+
+        .bg-brand-dark {
+            background-color: #8b1319;
+        }
+
+        .fa-spin {
+            animation-duration: 0.8s !important;
+        }
     </style>
-      <script>
-       if (!localStorage.getItem('userSession')) {
-          window.location.replace('<?= getScriptUrl() ?>?page=index');
+    <script>
+        if (!localStorage.getItem('userSession')) {
+            window.location.replace('<?= getScriptUrl() ?>?page=index');
         }
     </script>
 </head>
+
 <body class="flex h-screen overflow-hidden text-gray-800">
 
-    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-[60] flex flex-col items-center justify-center text-white transition-opacity">
+    <div id="loadingOverlay"
+        class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-[60] flex flex-col items-center justify-center text-white transition-opacity">
         <i class="fas fa-circle-notch fa-spin text-6xl mb-4"></i>
         <h2 id="loadingText" class="text-xl font-medium tracking-wide">กำลังดึงข้อมูล...</h2>
     </div>
 
-    <div id="alertModalOverlay" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all text-center p-8 border-t-4 border-red-500">
-            
+    <div id="alertModalOverlay"
+        class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4 transition-opacity duration-300">
+        <div
+            class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all text-center p-8 border-t-4 border-red-500">
+
             <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
                 <i class="fas fa-exclamation text-4xl text-red-500"></i>
             </div>
-            
+
             <h3 class="text-2xl font-bold text-gray-800 mb-2">แจ้งเตือน</h3>
             <p id="alertModalMsg" class="text-gray-600 mb-6 text-sm"></p>
-            
-            <button onclick="closeAlertModal()" class="w-full bg-brand text-white font-bold py-3 px-4 rounded-xl hover:bg-brand-dark transition-colors shadow-md hover:shadow-lg flex justify-center items-center gap-2">
+
+            <button onclick="closeAlertModal()"
+                class="w-full bg-brand text-white font-bold py-3 px-4 rounded-xl hover:bg-brand-dark transition-colors shadow-md hover:shadow-lg flex justify-center items-center gap-2">
                 <span>ตกลง</span>
             </button>
         </div>
     </div>
 
-    <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 md:hidden" onclick="toggleMobileSidebar()"></div>
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 md:hidden"
+        onclick="toggleMobileSidebar()"></div>
 
-     <aside id="sidebar"
+    <aside id="sidebar"
         class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex flex-col z-50 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:flex shadow-xl">
         <div class="py-6 px-6 bg-brand-dark flex flex-col items-center justify-center relative border-b border-red-900">
             <div class="text-2xl font-bold leading-none mb-1 tracking-wide">SUCHAR</div>
@@ -114,10 +136,11 @@
 
         <div class="flex-1 overflow-y-auto p-4 md:p-8">
             <div class="max-w-6xl mx-auto space-y-6">
-                
+
                 <div class="border-b border-gray-200 pb-4">
                     <div class="flex items-center gap-3">
-                        <a href="<?= getScriptUrl() ?>?page=user_tracking" target="_top" class="text-gray-800 hover:text-brand transition outline-none">
+                        <a href="<?= getScriptUrl() ?>?page=user_tracking" target="_top"
+                            class="text-gray-800 hover:text-brand transition outline-none">
                             <i class="fas fa-arrow-left"></i>
                         </a>
                         <h1 class="text-2xl font-bold text-gray-800">ตรวจสอบสถานะสินค้า</h1>
@@ -126,32 +149,42 @@
                 </div>
 
                 <div class="max-w-6xl mx-auto">
-        
+
                     <div class="bg-white p-2 rounded-lg shadow-md flex mb-6 mx-auto mt-6 border border-gray-100">
-                        <input type="text" id="searchOrderInput" class="flex-grow px-4 py-2 outline-none text-gray-700 bg-transparent" placeholder="Tracking Number หรือ เลขออเดอร์">
-                        <button onclick="triggerSearch()" class="bg-brand text-white px-6 py-2 rounded-md hover:bg-red-700 flex items-center gap-2 transition">
+                        <input type="text" id="searchOrderInput"
+                            class="flex-grow px-4 py-2 outline-none text-gray-700 bg-transparent"
+                            placeholder="Tracking Number หรือ เลขออเดอร์">
+                        <button onclick="triggerSearch()"
+                            class="bg-brand text-white px-6 py-2 rounded-md hover:bg-red-700 flex items-center gap-2 transition">
                             <i class="fas fa-search"></i> ค้นหา
                         </button>
                     </div>
 
-                    <div id="contentSection" class="grid grid-cols-1 lg:grid-cols-3 gap-6 opacity-0 transition-opacity duration-500">
-                        
+                    <div id="contentSection"
+                        class="grid grid-cols-1 lg:grid-cols-3 gap-6 opacity-0 transition-opacity duration-500">
+
                         <div class="lg:col-span-2 space-y-6">
-                            
-                            <div class="bg-white rounded-lg shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4 border border-gray-100">
+
+                            <div
+                                class="bg-white rounded-lg shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4 border border-gray-100">
                                 <div>
                                     <p class="text-sm text-gray-500">เลขออเดอร์</p>
                                     <h2 class="text-2xl font-bold text-brand mb-2 flex items-center gap-2">
-                                        <span id="t-orderNum">-</span> 
-                                        <i class="far fa-copy text-sm text-gray-400 cursor-pointer hover:text-gray-600 transition" onclick="copyToClipboard('t-orderNum')"></i>
+                                        <span id="t-orderNum">-</span>
+                                        <i class="far fa-copy text-sm text-gray-400 cursor-pointer hover:text-gray-600 transition"
+                                            onclick="copyToClipboard('t-orderNum')"></i>
                                     </h2>
-                                    <p class="text-sm"><span class="text-gray-500">Tracking จีน:</span> <span id="t-tracking">-</span></p>
-                                    <p class="text-sm"><span class="text-gray-500">ลูกค้า:</span> <span id="t-customerName">-</span></p>
-                                    <p class="text-sm"><span class="text-gray-500">เบอร์โทร:</span> <span id="t-customerPhone">-</span></p>
+                                    <p class="text-sm"><span class="text-gray-500">Tracking จีน:</span> <span
+                                            id="t-tracking">-</span></p>
+                                    <p class="text-sm"><span class="text-gray-500">ลูกค้า:</span> <span
+                                            id="t-customerName">-</span></p>
+                                    <p class="text-sm"><span class="text-gray-500">เบอร์โทร:</span> <span
+                                            id="t-customerPhone">-</span></p>
                                 </div>
                                 <div class="md:text-right">
                                     <p class="text-sm text-gray-500">สถานะล่าสุด</p>
-                                    <h2 class="text-xl font-bold text-green-600 flex items-center md:justify-end gap-2 mb-2">
+                                    <h2
+                                        class="text-xl font-bold text-green-600 flex items-center md:justify-end gap-2 mb-2">
                                         <span id="t-latestStatus">-</span> <i class="fas fa-check-circle"></i>
                                     </h2>
                                     <p class="text-xs text-gray-500" id="t-latestTime"></p>
@@ -162,36 +195,58 @@
                                 <h3 class="font-bold mb-6">ความคืบหน้าการจัดส่ง</h3>
                                 <div class="flex justify-between items-start relative text-center">
                                     <div class="absolute top-5 left-0 w-full h-0.5 bg-gray-200 -z-10"></div>
-                                    <div id="progress-bar" class="absolute top-5 left-0 w-0 h-0.5 bg-brand -z-10 transition-all duration-1000"></div> 
-                                    
-                                    <div class="flex flex-col items-center opacity-40 transition-opacity duration-300" id="step1-container">
-                                        <div id="step1-icon" class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mb-2"><i class="fas fa-file-signature"></i></div>
+                                    <div id="progress-bar"
+                                        class="absolute top-5 left-0 w-0 h-0.5 bg-brand -z-10 transition-all duration-1000">
+                                    </div>
+
+                                    <div class="flex flex-col items-center opacity-40 transition-opacity duration-300"
+                                        id="step1-container">
+                                        <div id="step1-icon"
+                                            class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mb-2">
+                                            <i class="fas fa-file-signature"></i></div>
                                         <span class="text-xs font-medium" id="step1-title">แจ้งนำเข้า</span>
-                                        <span class="text-[10px] text-gray-400 mt-1 leading-tight" id="step1-time"></span>
+                                        <span class="text-[10px] text-gray-400 mt-1 leading-tight"
+                                            id="step1-time"></span>
                                     </div>
-                                    
-                                    <div class="flex flex-col items-center opacity-40 transition-opacity duration-300" id="step2-container">
-                                        <div id="step2-icon" class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mb-2"><i class="fas fa-warehouse"></i></div>
+
+                                    <div class="flex flex-col items-center opacity-40 transition-opacity duration-300"
+                                        id="step2-container">
+                                        <div id="step2-icon"
+                                            class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mb-2">
+                                            <i class="fas fa-warehouse"></i></div>
                                         <span class="text-xs font-medium" id="step2-title">ถึงโกดังจีน</span>
-                                        <span class="text-[10px] text-gray-400 mt-1 leading-tight" id="step2-time"></span>
+                                        <span class="text-[10px] text-gray-400 mt-1 leading-tight"
+                                            id="step2-time"></span>
                                     </div>
-                                    
-                                    <div class="flex flex-col items-center opacity-40 transition-opacity duration-300" id="step3-container">
-                                        <div id="step3-icon" class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mb-2"><i class="fas fa-truck-moving"></i></div>
+
+                                    <div class="flex flex-col items-center opacity-40 transition-opacity duration-300"
+                                        id="step3-container">
+                                        <div id="step3-icon"
+                                            class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mb-2">
+                                            <i class="fas fa-truck-moving"></i></div>
                                         <span class="text-xs font-medium" id="step3-title">กำลังขนส่ง<br>มาไทย</span>
-                                        <span class="text-[10px] text-gray-400 mt-1 leading-tight" id="step3-time"></span>
+                                        <span class="text-[10px] text-gray-400 mt-1 leading-tight"
+                                            id="step3-time"></span>
                                     </div>
-                                    
-                                    <div class="flex flex-col items-center opacity-40 transition-opacity duration-300" id="step4-container">
-                                        <div id="step4-icon" class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mb-2"><i class="fas fa-box-open"></i></div>
+
+                                    <div class="flex flex-col items-center opacity-40 transition-opacity duration-300"
+                                        id="step4-container">
+                                        <div id="step4-icon"
+                                            class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mb-2">
+                                            <i class="fas fa-box-open"></i></div>
                                         <span class="text-xs font-medium" id="step4-title">ถึงโกดังไทย</span>
-                                        <span class="text-[10px] text-gray-400 mt-1 leading-tight" id="step4-time"></span>
+                                        <span class="text-[10px] text-gray-400 mt-1 leading-tight"
+                                            id="step4-time"></span>
                                     </div>
-                                    
-                                    <div class="flex flex-col items-center opacity-40 transition-opacity duration-300" id="step5-container">
-                                        <div id="step5-icon" class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mb-2"><i class="fas fa-home"></i></div>
+
+                                    <div class="flex flex-col items-center opacity-40 transition-opacity duration-300"
+                                        id="step5-container">
+                                        <div id="step5-icon"
+                                            class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mb-2">
+                                            <i class="fas fa-home"></i></div>
                                         <span class="text-xs font-medium" id="step5-title">จัดส่งลูกค้า</span>
-                                        <span class="text-[10px] text-gray-400 mt-1 leading-tight" id="step5-time"></span>
+                                        <span class="text-[10px] text-gray-400 mt-1 leading-tight"
+                                            id="step5-time"></span>
                                     </div>
                                 </div>
                             </div>
@@ -200,24 +255,38 @@
                                 <div class="bg-white rounded-lg shadow p-6 border border-gray-100">
                                     <h3 class="font-bold mb-4">รายละเอียดสินค้า (ข้อมูลในบิล)</h3>
                                     <div class="space-y-3 text-sm">
-                                        <div class="flex justify-between border-b pb-2"><span class="text-gray-500">จำนวนสินค้า</span><span id="s-items">- ชิ้น</span></div>
-                                        <div class="flex justify-between border-b pb-2"><span class="text-gray-500">น้ำหนักรวม</span><span id="s-weight">- KG</span></div>
-                                        <div class="flex justify-between border-b pb-2"><span class="text-gray-500">ปริมาตร (CBM)</span><span id="s-cbm">- CBM</span></div>
-                                        <div class="flex justify-between border-b pb-2"><span class="text-gray-500">ยอดสุทธิ</span><span id="s-total" class="font-medium">- บาท</span></div>
+                                        <div class="flex justify-between border-b pb-2"><span
+                                                class="text-gray-500">จำนวนสินค้า</span><span id="s-items">- ชิ้น</span>
+                                        </div>
+                                        <div class="flex justify-between border-b pb-2"><span
+                                                class="text-gray-500">น้ำหนักรวม</span><span id="s-weight">- KG</span>
+                                        </div>
+                                        <div class="flex justify-between border-b pb-2"><span
+                                                class="text-gray-500">ปริมาตร (CBM)</span><span id="s-cbm">- CBM</span>
+                                        </div>
+                                        <div class="flex justify-between border-b pb-2"><span
+                                                class="text-gray-500">ยอดสุทธิ</span><span id="s-total"
+                                                class="font-medium">- บาท</span></div>
                                         <div class="flex justify-between border-b pb-2">
                                             <span class="text-gray-500">สถานะการชำระเงิน</span>
-                                            <span id="s-payStatus" class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-xs font-bold">-</span>
+                                            <span id="s-payStatus"
+                                                class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-xs font-bold">-</span>
                                         </div>
-                                        <div class="flex justify-between"><span class="text-gray-500">วันที่ชำระเงิน</span><span id="s-payDate">-</span></div>
+                                        <div class="flex justify-between"><span
+                                                class="text-gray-500">วันที่ชำระเงิน</span><span id="s-payDate">-</span>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div class="bg-white rounded-lg shadow p-6 border border-gray-100">
                                     <h3 class="font-bold mb-4">ที่อยู่จัดส่ง</h3>
                                     <div class="space-y-3 text-sm">
-                                        <div class="flex"><span class="text-gray-500 w-24">ชื่อผู้รับ:</span><span class="font-medium" id="addr-name">-</span></div>
-                                        <div class="flex"><span class="text-gray-500 w-24">เบอร์โทร:</span><span id="addr-phone">-</span></div>
-                                        <div class="flex"><span class="text-gray-500 w-24">ที่อยู่:</span><span class="flex-1" id="addr-detail">-</span></div>
+                                        <div class="flex"><span class="text-gray-500 w-24">ชื่อผู้รับ:</span><span
+                                                class="font-medium" id="addr-name">-</span></div>
+                                        <div class="flex"><span class="text-gray-500 w-24">เบอร์โทร:</span><span
+                                                id="addr-phone">-</span></div>
+                                        <div class="flex"><span class="text-gray-500 w-24">ที่อยู่:</span><span
+                                                class="flex-1" id="addr-detail">-</span></div>
                                     </div>
                                 </div>
                             </div>
@@ -225,11 +294,14 @@
                         </div>
 
                         <div class="space-y-6">
-                            
+
                             <div class="bg-white rounded-lg shadow p-6 text-center border-t-4 border-brand">
-                                <h4 class="font-bold text-brand mb-2 flex items-center justify-center gap-2"><i class="fas fa-bullhorn"></i> ไม่พลาดทุกการอัปเดต</h4>
-                                <p class="text-xs text-gray-500 mb-4">ติดตามสถานะสินค้า<br>ผ่าน LINE Official Account</p>
-                                <button id="btn-line-add" class="bg-[#00B900] text-white w-full py-2 rounded-md text-sm font-medium hover:bg-green-600 flex items-center justify-center gap-2 transition">
+                                <h4 class="font-bold text-brand mb-2 flex items-center justify-center gap-2"><i
+                                        class="fas fa-bullhorn"></i> ไม่พลาดทุกการอัปเดต</h4>
+                                <p class="text-xs text-gray-500 mb-4">ติดตามสถานะสินค้า<br>ผ่าน LINE Official Account
+                                </p>
+                                <button id="btn-line-add"
+                                    class="bg-[#00B900] text-white w-full py-2 rounded-md text-sm font-medium hover:bg-green-600 flex items-center justify-center gap-2 transition">
                                     <i class="fab fa-line text-lg"></i> เพิ่มเพื่อน
                                 </button>
                             </div>
@@ -237,11 +309,17 @@
                             <div class="bg-white rounded-lg shadow p-6 border border-gray-100">
                                 <h4 class="font-bold text-brand mb-4">บริการของเรา</h4>
                                 <ul class="space-y-4 text-sm">
-                                    <li class="flex items-center gap-3"><i class="fas fa-ship text-gray-400 w-5"></i> นำเข้าสินค้าจากจีน</li>
-                                    <li class="flex items-center gap-3"><i class="fas fa-search-dollar text-gray-400 w-5"></i> รับสั่งซื้อสินค้าจากจีน</li>
-                                    <li class="flex items-center gap-3"><i class="fas fa-truck-moving text-gray-400 w-5"></i> ขนส่งจีน-ไทย</li>
-                                    <li class="flex items-center gap-3"><i class="fas fa-box-open text-gray-400 w-5"></i> แพ็กสินค้าและตรวจสอบ</li>
-                                    <li class="flex items-center gap-3"><i class="fas fa-warehouse text-gray-400 w-5"></i> บริการสต็อกสินค้า</li>
+                                    <li class="flex items-center gap-3"><i class="fas fa-ship text-gray-400 w-5"></i>
+                                        นำเข้าสินค้าจากจีน</li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-search-dollar text-gray-400 w-5"></i> รับสั่งซื้อสินค้าจากจีน
+                                    </li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-truck-moving text-gray-400 w-5"></i> ขนส่งจีน-ไทย</li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-box-open text-gray-400 w-5"></i> แพ็กสินค้าและตรวจสอบ</li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-warehouse text-gray-400 w-5"></i> บริการสต็อกสินค้า</li>
                                 </ul>
                             </div>
 
@@ -249,8 +327,12 @@
                                 <h4 class="font-bold text-brand mb-2">ต้องการความช่วยเหลือ?</h4>
                                 <p class="text-xs text-gray-500 mb-4">ติดต่อทีมงานของเราได้ตลอด 24 ชม.</p>
                                 <div class="space-y-3 mb-4">
-                                    <div class="flex items-center gap-3 text-sm"><i class="fas fa-phone-alt text-gray-700 w-5"></i> <span id="text-phone">02-114-8008</span></div>
-                                    <div class="flex items-center gap-3 text-sm"><i class="fab fa-line text-[#00B900] text-lg w-5"></i> <span id="text-line">@sucharcargo</span></div>
+                                    <div class="flex items-center gap-3 text-sm"><i
+                                            class="fas fa-phone-alt text-gray-700 w-5"></i> <span
+                                            id="text-phone">02-114-8008</span></div>
+                                    <div class="flex items-center gap-3 text-sm"><i
+                                            class="fab fa-line text-[#00B900] text-lg w-5"></i> <span
+                                            id="text-line">@sucharcargo</span></div>
                                 </div>
                             </div>
                         </div>
@@ -276,7 +358,7 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             const sessionData = localStorage.getItem('userSession');
-            
+
             if (sessionData) {
                 try {
                     const user = JSON.parse(sessionData);
@@ -301,14 +383,13 @@
             }
 
             // ดึง ID จาก URL แบบ Google Apps Script
-            google.script.url.getLocation(function(location) {
+            google.script.url.getLocation(function (location) {
                 const orderId = location.parameter.id || "";
-                
+
                 if (orderId) {
                     document.getElementById('searchOrderInput').value = orderId;
                     fetchData(orderId);
                 } else {
-                    // ซ่อนโหลดดิ้ง ถ้ายืนยันยังไม่มีการค้นหา
                     document.getElementById('loadingOverlay').classList.add('hidden');
                 }
             });
@@ -326,7 +407,7 @@
         function fetchData(orderId) {
             document.getElementById('loadingOverlay').classList.remove('hidden');
             document.getElementById('contentSection').classList.add('opacity-0');
-            
+
             google.script.run
                 .withSuccessHandler(function (response) {
                     document.getElementById('loadingOverlay').classList.add('hidden');
@@ -357,7 +438,7 @@
             document.getElementById('s-weight').innerText = res.summary.weight + ' KG';
             document.getElementById('s-cbm').innerText = res.summary.cbm + ' CBM';
             document.getElementById('s-total').innerText = res.summary.netTotal + ' บาท';
-            
+
             // เปลี่ยนสีป้ายสถานะชำระเงิน
             const payStatusEl = document.getElementById('s-payStatus');
             payStatusEl.innerText = res.summary.paymentStatus;
@@ -368,7 +449,7 @@
             } else {
                 payStatusEl.className = "bg-red-100 text-red-700 px-2 py-0.5 rounded text-xs font-bold";
             }
-            
+
             document.getElementById('s-payDate').innerText = res.summary.paymentDate;
 
             // 3. ที่อยู่จัดส่ง
@@ -390,11 +471,11 @@
 
             // หา step ล่าสุดและคำนวณแถบ Progress Bar
             let currentStep = 0;
-            if(res.tracking.timeline.step5) currentStep = 5;
-            else if(res.tracking.timeline.step4) currentStep = 4;
-            else if(res.tracking.timeline.step3) currentStep = 3;
-            else if(res.tracking.timeline.step2) currentStep = 2;
-            else if(res.tracking.timeline.step1) currentStep = 1;
+            if (res.tracking.timeline.step5) currentStep = 5;
+            else if (res.tracking.timeline.step4) currentStep = 4;
+            else if (res.tracking.timeline.step3) currentStep = 3;
+            else if (res.tracking.timeline.step2) currentStep = 2;
+            else if (res.tracking.timeline.step1) currentStep = 1;
 
             const progressPct = currentStep === 0 ? 0 : (currentStep - 1) * 25;
             setTimeout(() => {
@@ -402,8 +483,8 @@
             }, 100);
 
             // อัปเดตเวลาล่าสุดตรงมุมขวาบน
-            if(currentStep > 0) {
-                const latestDateObj = res.tracking.timeline['step'+currentStep];
+            if (currentStep > 0) {
+                const latestDateObj = res.tracking.timeline['step' + currentStep];
                 document.getElementById('t-latestTime').innerText = "อัปเดตล่าสุด: " + latestDateObj.dateStr + " " + latestDateObj.timeStr + " น.";
             } else {
                 document.getElementById('t-latestTime').innerText = "ยังไม่มีการอัปเดตสถานะ";
@@ -453,4 +534,5 @@
         }   
     </script>
 </body>
+
 </html>
