@@ -102,15 +102,12 @@
             <div class="flex items-center justify-end shrink-0">
                 <div onclick="window.top.location.href='<?= getScriptUrl() ?>?page=user_profile'" target="_top"
                     class="flex items-center gap-2 md:gap-3 bg-gray-50 px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-gray-100 cursor-pointer hover:bg-gray-100 transition">
-
                     <img id="headerAvatar" src="https://ui-avatars.com/api/?name=User&background=c51c24&color=fff"
                         class="w-7 h-7 md:w-8 md:h-8 rounded-full shadow-sm">
-
                     <span id="headerUsername"
                         class="text-xs md:text-sm font-medium text-gray-700 pr-1 md:pr-2 hidden sm:block whitespace-nowrap">
                         กำลังโหลด...
                     </span>
-
                 </div>
             </div>
         </header>
@@ -124,13 +121,11 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
                     <div class="lg:col-span-2 space-y-6">
-
+                        
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i
-                                    class="fas fa-check-square text-brand mr-2"></i> 1. เลือกพัสดุที่ต้องการรวมบิล</h2>
-
+                            <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i 
+                                class="fas fa-check-square text-brand mr-2"></i> 1. เลือกพัสดุที่ต้องการรวมบิล</h2>
                             <div class="space-y-3" id="parcel-list">
                                 <div class="text-center py-6 text-gray-500">
                                     <i class="fas fa-spinner fa-spin text-3xl text-brand mb-3"></i>
@@ -139,51 +134,27 @@
                             </div>
                         </div>
 
+                        <!-- ส่วนที่ 2 ปรับมาดึงจาก อัตราค่าขนส่ง -->
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i
-                                    class="fas fa-truck-fast text-brand mr-2"></i> 2. เลือกประเภทขนส่ง (จีน-ไทย)</h2>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <label id="label-car" onclick="selectShipping('car')"
-                                    class="border-2 border-brand bg-red-50 rounded-xl p-4 cursor-pointer relative transition">
-                                    <input type="radio" name="shipping" id="radio-car" value="car" checked
-                                        class="absolute top-4 right-4 text-brand focus:ring-brand">
-                                    <i class="fas fa-truck text-2xl text-brand mb-2"></i>
-                                    <h3 class="font-bold text-gray-800">ทางรถ (EK)</h3>
-                                    <p class="text-xs text-gray-500 mt-1" id="car-desc">กำลังโหลด...</p>
-                                </label>
-                                <label id="label-boat" onclick="selectShipping('boat')"
-                                    class="border-2 border-gray-200 hover:border-gray-300 rounded-xl p-4 cursor-pointer relative opacity-60 transition">
-                                    <input type="radio" name="shipping" id="radio-boat" value="boat"
-                                        class="absolute top-4 right-4 text-brand focus:ring-brand">
-                                    <i class="fas fa-ship text-2xl text-blue-600 mb-2"></i>
-                                    <h3 class="font-bold text-gray-700">ทางเรือ (SEA)</h3>
-                                    <p class="text-xs text-gray-500 mt-1" id="boat-desc">กำลังโหลด...</p>
-                                </label>
+                            <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i class="fas fa-truck-fast text-brand mr-2"></i> 2. เลือกประเภทขนส่งและประเภทสินค้า</h2>
+                            <div id="rates-container" class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                <div class="text-center py-6 col-span-full text-gray-500">
+                                    <i class="fas fa-spinner fa-spin text-3xl text-brand mb-3"></i>
+                                    <p>กำลังโหลดข้อมูลอัตราค่าขนส่ง...</p>
+                                </div>
                             </div>
                         </div>
 
                     </div>
 
                     <div class="space-y-6">
-
                         <div class="bg-gray-900 text-white p-6 rounded-xl shadow-sm">
-                            <h3 class="font-bold text-lg mb-4 pb-2 border-b border-gray-700 text-brand">สรุปยอดชำระเงิน
-                            </h3>
+                            <h3 class="font-bold text-lg mb-4 pb-2 border-b border-gray-700 text-brand">สรุปยอดชำระเงิน</h3>
                             <div class="space-y-2">
-                                <div class="flex justify-between text-sm"><span
-                                        class="text-gray-400">จำนวนพัสดุ</span><span id="summary-count">0 กล่อง</span>
-                                </div>
-                                <div class="flex justify-between text-sm"><span
-                                        class="text-gray-400">น้ำหนักรวม</span><span id="summary-weight">0.00 KG</span>
-                                </div>
-                                <div class="flex justify-between text-sm"><span
-                                        class="text-gray-400">ค่าบริการ</span><span id="summary-base-fee">0.00 ฿</span>
-                                </div>
-
-                                <div class="flex justify-between text-sm"><span class="text-gray-400"
-                                        id="summary-rate-label">คิดตามเรท (ทางรถ)</span><span id="summary-rate-val">0 ฿
-                                        / KG</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-gray-400">จำนวนพัสดุ</span><span id="summary-count">0 กล่อง</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-gray-400">น้ำหนัก / CBM</span><span id="summary-weight">0.00 KG / 0.00 CBM</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-gray-400">ค่าบริการ</span><span id="summary-base-fee">0.00 ฿</span></div>
+                                <div class="flex justify-between text-sm mt-2 border-t border-gray-700 pt-2"><span class="text-gray-400" id="summary-rate-label">เรทการจัดส่ง</span></div>
                             </div>
                             <hr class="border-gray-700 my-4">
                             <div class="flex justify-between items-center">
@@ -193,32 +164,22 @@
                         </div>
 
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i
-                                    class="fas fa-qrcode text-brand mr-2"></i> 3. ชำระเงินและแจ้งโอน</h2>
-
+                            <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i class="fas fa-qrcode text-brand mr-2"></i> 3. ชำระเงินและแจ้งโอน</h2>
                             <div class="flex flex-col space-y-6">
-                                <div
-                                    class="bg-gray-50 p-4 rounded-xl flex flex-col items-center justify-center border border-gray-100">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg"
-                                        alt="QR Code" class="w-32 h-32 mb-2 opacity-80">
-                                    <p class="text-xs text-center text-gray-500 font-medium">
-                                        สแกนเพื่อชำระเงิน<br>PromptPay</p>
+                                <div class="bg-gray-50 p-4 rounded-xl flex flex-col items-center justify-center border border-gray-100">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" alt="QR Code" class="w-32 h-32 mb-2 opacity-80">
+                                    <p class="text-xs text-center text-gray-500 font-medium">สแกนเพื่อชำระเงิน<br>PromptPay</p>
                                 </div>
-
                                 <div class="w-full space-y-4">
                                     <div class="p-4 bg-blue-50 border border-blue-100 rounded-lg text-center">
                                         <p class="font-bold text-blue-800 text-sm" id="bank-name">กำลังโหลด...</p>
-                                        <p class="text-blue-600 text-xl tracking-wider font-bold my-1" id="bank-acc">
-                                            กำลังโหลด...</p>
+                                        <p class="text-blue-600 text-xl tracking-wider font-bold my-1" id="bank-acc">กำลังโหลด...</p>
                                         <p class="text-blue-600 text-xs mt-1" id="bank-acc-name">กำลังโหลด...</p>
                                     </div>
-
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">แนบสลิปโอนเงิน <span
-                                                class="text-red-500">*</span></label>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">แนบสลิปโอนเงิน <span class="text-red-500">*</span></label>
                                         <input type="file" id="slipInput" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
-                                        <label for="slipInput"
-                                            class="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 hover:border-brand cursor-pointer transition">
+                                        <label for="slipInput" class="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 hover:border-brand cursor-pointer transition">
                                             <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
                                             <span class="text-sm text-gray-500 text-center" id="file-name-display">คลิกเพื่ออัปโหลดสลิป</span>
                                         </label>
@@ -227,13 +188,9 @@
                             </div>
                         </div>
 
-                        <button
-    id="submitPaymentBtn"
-    onclick="submitPayment()"
-    class="w-full bg-brand text-white text-lg font-bold py-4 rounded-xl shadow-md transition flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400 hover:bg-red-700">
-    ยืนยันการทำรายการ <i class="fas fa-check-circle"></i>
-</button>
-
+                        <button id="submitPaymentBtn" onclick="submitPayment()" class="w-full bg-brand text-white text-lg font-bold py-4 rounded-xl shadow-md transition flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400 hover:bg-red-700">
+                            ยืนยันการทำรายการ <i class="fas fa-check-circle"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -242,29 +199,25 @@
 
     <script>
         // Global State
-        let currentSettings = { carRateText: "", carRateNum: 0, boatRateText: "", boatRateNum: 0, baseFee: "" };
+        let currentSettings = { bankName: "", bankAcc: "", bankAccName: "", baseFee: "0" };
+        let currentRates = [];
         let currentParcels = [];
-        let selectedRateType = 'car';
+        let selectedRateIndex = 0; // ค่าเริ่มต้นเลือกเรทแรก
         let memberId = "";
 
-        // ตัวแปรเก็บยอดสรุปก่อนส่งเข้า Backend
         let globalFinalTotal = 0;
         let globalTotalTransportFee = 0;
-
-        // ตัวแปรเก็บภาพสลิป
         let slipBase64 = "";
         let slipMimeType = "";
         let slipFileName = "";
 
         document.addEventListener('DOMContentLoaded', function () {
             const sessionData = localStorage.getItem('userSession');
-
             if (sessionData) {
                 try {
                     const user = JSON.parse(sessionData);
                     const fullname = user.fullname || user.name || "ไม่ระบุชื่อ";
                     memberId = user.memberId || user.customer_id || user.id || user.member_id || "";
-
                     const usernameElement = document.getElementById('headerUsername');
                     if (usernameElement) usernameElement.innerText = fullname;
                 } catch (e) {
@@ -287,13 +240,13 @@
             document.getElementById('loadingOverlay').classList.remove('flex');
         }
 
-        // ======================= โหลดข้อมูลตั้งต้น =======================
         function loadPaymentPageData(memberId) {
             google.script.run
                 .withSuccessHandler(function (response) {
                     hideLoading();
                     if (response.success) {
                         currentSettings = response.settings;
+                        currentRates = response.rates;
                         currentParcels = response.parcels;
                         updateUI();
                     } else {
@@ -307,16 +260,50 @@
                 .getPaymentPageData(memberId);
         }
 
-        // ======================= จัดการหน้า UI =======================
         function updateUI() {
-            document.getElementById('car-desc').innerText = `${currentSettings.carDays} • ${currentSettings.carRateText}`;
-            document.getElementById('boat-desc').innerText = `${currentSettings.boatDays} • ${currentSettings.boatRateText}`;
-
             document.getElementById('bank-name').innerText = currentSettings.bankName;
             document.getElementById('bank-acc').innerText = currentSettings.bankAcc;
             document.getElementById('bank-acc-name').innerText = currentSettings.bankAccName;
 
+            renderRates();
             renderParcels();
+        }
+
+        function renderRates() {
+            const container = document.getElementById('rates-container');
+            container.innerHTML = '';
+
+            if (!currentRates || currentRates.length === 0) {
+                container.innerHTML = '<p class="text-red-500 text-sm py-4 col-span-full">ไม่พบข้อมูลอัตราค่าขนส่งในระบบ</p>';
+                return;
+            }
+
+            currentRates.forEach((rate, index) => {
+                let isSelected = index === selectedRateIndex;
+                let borderClass = isSelected ? 'border-brand bg-red-50 opacity-100' : 'border-gray-200 hover:border-gray-300 opacity-60';
+                let iconClass = rate.transportType.toUpperCase().includes('SEA') ? 'fa-ship text-blue-600' : 'fa-truck text-brand';
+                
+                let html = `
+                    <label onclick="selectShippingRate(${index})" class="border-2 rounded-xl p-4 cursor-pointer relative transition ${borderClass} flex flex-col h-full shadow-sm">
+                        <input type="radio" name="shippingRate" value="${index}" ${isSelected ? 'checked' : ''} class="absolute top-4 right-4 text-brand focus:ring-brand">
+                        <i class="fas ${iconClass} text-2xl mb-2"></i>
+                        <h3 class="font-bold text-gray-800 text-sm leading-tight">${rate.transportType}</h3>
+                        <p class="text-[11px] font-semibold text-brand mt-1 bg-red-100 inline-block px-2 py-0.5 rounded-full self-start">${rate.productType}</p>
+                        <div class="mt-4 space-y-1.5 border-t border-gray-200 pt-3">
+                            <p class="text-xs text-gray-600 flex justify-between"><span>เวลา:</span> <span class="font-medium">${rate.days} วัน</span></p>
+                            <p class="text-xs text-gray-600 flex justify-between"><span>ราคา(KG):</span> <span class="font-medium">${rate.priceKg} ฿</span></p>
+                            <p class="text-xs text-gray-600 flex justify-between"><span>ราคา(CBM):</span> <span class="font-medium">${rate.priceCbm} ฿</span></p>
+                        </div>
+                    </label>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        function selectShippingRate(index) {
+            selectedRateIndex = index;
+            renderRates();
+            calculateTotal();
         }
 
         function renderParcels() {
@@ -331,16 +318,23 @@
 
             currentParcels.forEach((p, index) => {
                 let label = document.createElement('label');
-                label.className = "border border-gray-200 rounded-lg p-4 flex items-center gap-4 hover:border-brand cursor-pointer transition bg-gray-50";
+                label.className = "border border-gray-200 rounded-lg p-4 flex flex-col sm:flex-row sm:items-center gap-4 hover:border-brand cursor-pointer transition bg-gray-50";
                 label.innerHTML = `
-                    <input type="checkbox" class="w-5 h-5 text-brand rounded focus:ring-brand checkbox-brand parcel-checkbox" 
-                        data-index="${index}" data-weight="${p.weight}" checked onchange="calculateTotal()">
-                    <div class="flex-1">
-                        <div class="flex justify-between">
-                            <span class="font-bold text-gray-800">${p.tracking}</span>
-                            <span class="font-bold text-brand" id="item-price-${index}">0.00 ฿</span>
+                    <div class="flex items-start sm:items-center gap-4 w-full">
+                        <input type="checkbox" class="w-5 h-5 text-brand rounded focus:ring-brand checkbox-brand parcel-checkbox mt-1 sm:mt-0" 
+                            data-index="${index}" checked onchange="calculateTotal()">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start sm:items-center">
+                                <span class="font-bold text-gray-800">${p.tracking}</span>
+                                <span class="font-bold text-brand text-lg" id="item-price-${index}">0.00 ฿</span>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1 flex flex-wrap gap-2">
+                                <span>น้ำหนัก: ${p.weight.toFixed(2)} KG</span> | 
+                                <span>ปริมาตร: ${p.cbm.toFixed(3)} CBM</span> | 
+                                <span>Order: ${p.orderNum}</span>
+                            </div>
+                            <div class="text-[11px] text-blue-600 mt-1 font-medium bg-blue-50 px-2 py-0.5 rounded inline-block" id="item-calc-${index}"></div>
                         </div>
-                        <div class="text-xs text-gray-500 mt-1">น้ำหนัก: ${p.weight.toFixed(2)} KG | Order: ${p.orderNum}</div>
                     </div>
                 `;
                 listDiv.appendChild(label);
@@ -349,91 +343,72 @@
             calculateTotal();
         }
 
-        function selectShipping(type) {
-            selectedRateType = type;
-
-            const carLabel = document.getElementById('label-car');
-            const boatLabel = document.getElementById('label-boat');
-            const carInput = document.getElementById('radio-car');
-            const boatInput = document.getElementById('radio-boat');
-
-            if (type === 'car') {
-                carInput.checked = true;
-                carLabel.className = "border-2 border-brand bg-red-50 rounded-xl p-4 cursor-pointer relative transition opacity-100";
-                boatLabel.className = "border-2 border-gray-200 hover:border-gray-300 rounded-xl p-4 cursor-pointer relative opacity-60 transition";
-            } else {
-                boatInput.checked = true;
-                boatLabel.className = "border-2 border-blue-500 bg-blue-50 rounded-xl p-4 cursor-pointer relative transition opacity-100";
-                carLabel.className = "border-2 border-gray-200 hover:border-gray-300 rounded-xl p-4 cursor-pointer relative opacity-60 transition";
-            }
-
-            calculateTotal();
-        }
-
         function calculateTotal() {
-            let rateNum = selectedRateType === 'car' ? currentSettings.carRateNum : currentSettings.boatRateNum;
+            if (!currentRates || currentRates.length === 0) return;
 
+            let selectedRate = currentRates[selectedRateIndex];
             let rawBaseFee = currentSettings.baseFee || "0";
             let baseFeeMatch = rawBaseFee.toString().match(/\d+(\.\d+)?/);
             let baseFee = baseFeeMatch ? parseFloat(baseFeeMatch[0]) : 0;
 
-            let totalWeight = 0;
+            let totalTransportCost = 0;
             let count = 0;
+            let totalW = 0, totalC = 0;
             let checkboxes = document.querySelectorAll('.parcel-checkbox');
 
             checkboxes.forEach((cb) => {
                 let index = cb.dataset.index;
-                let weight = parseFloat(cb.dataset.weight) || 0;
-                let itemPrice = weight * rateNum;
-
+                let p = currentParcels[index];
+                
+                // คำนวณราคาทั้ง 2 แบบ
+                let costKg = p.weight * selectedRate.priceKg;
+                let costCbm = p.cbm * selectedRate.priceCbm;
+                
+                // ใช้ราคาที่สูงกว่าในการคิดค่าขนส่ง
+                let itemPrice = Math.max(costKg, costCbm);
                 document.getElementById(`item-price-${index}`).innerText = itemPrice.toFixed(2) + ' ฿';
+                
+                // แสดงหมายเหตุว่าคิดราคาจากเงื่อนไขใด
+                let calcText = costKg >= costCbm ? `คิดจากน้ำหนัก (${p.weight} KG x ${selectedRate.priceKg}฿)` : `คิดจากปริมาตร (${p.cbm} CBM x ${selectedRate.priceCbm}฿)`;
+                document.getElementById(`item-calc-${index}`).innerText = calcText;
 
                 if (cb.checked) {
-                    totalWeight += weight;
+                    totalTransportCost += itemPrice;
+                    totalW += p.weight;
+                    totalC += p.cbm;
                     count++;
                 }
             });
 
             let activeBaseFee = count > 0 ? baseFee : 0;
             
-            // เก็บตัวแปร Global ไว้ใช้ตอนกดบันทึก
-            globalTotalTransportFee = (totalWeight * rateNum);
-            globalFinalTotal = globalTotalTransportFee + activeBaseFee;
+            globalTotalTransportFee = totalTransportCost;
+            globalFinalTotal = totalTransportCost + activeBaseFee;
 
             document.getElementById('summary-count').innerText = count + ' กล่อง';
-            document.getElementById('summary-weight').innerText = totalWeight.toFixed(2) + ' KG';
+            document.getElementById('summary-weight').innerText = `${totalW.toFixed(2)} KG / ${totalC.toFixed(3)} CBM`;
             
             let baseFeeElem = document.getElementById('summary-base-fee');
             if(baseFeeElem) baseFeeElem.innerText = activeBaseFee.toFixed(2) + ' ฿';
 
-            document.getElementById('summary-rate-label').innerText = `คิดตามเรท (${selectedRateType === 'car' ? 'ทางรถ' : 'ทางเรือ'})`;
-            document.getElementById('summary-rate-val').innerText = rateNum + ' ฿ / KG';
+            document.getElementById('summary-rate-label').innerText = `${selectedRate.transportType} | ${selectedRate.productType}`;
             document.getElementById('summary-total').innerText = globalFinalTotal.toFixed(2) + ' ฿';
 
-            // ----------------------------------------------------
-            // เพิ่มโค้ดเช็คปุ่ม Disable ตรงนี้ (ล่างสุดของฟังก์ชัน)
-            // ----------------------------------------------------
             let submitBtn = document.getElementById('submitPaymentBtn');
             if (submitBtn) {
-                if (count === 0) {
-                    submitBtn.disabled = true; // ไม่มีพัสดุให้กดปุ่มไม่ได้
-                } else {
-                    submitBtn.disabled = false; // มีพัสดุ 1 ชิ้นขึ้นไป กดปุ่มได้ปกติ
-                }
+                submitBtn.disabled = count === 0;
             }
         }
 
-        // ======================= จัดการไฟล์รูปภาพ (สลิป) =======================
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (file) {
                 slipFileName = file.name;
                 slipMimeType = file.type;
                 
-                // แปลงไฟล์เป็น Base64
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    slipBase64 = e.target.result.split(',')[1]; // ตัดเอาเฉพาะข้อมูล Base64
+                    slipBase64 = e.target.result.split(',')[1];
                     document.getElementById('file-name-display').innerText = "แนบไฟล์แล้ว: " + slipFileName;
                     document.getElementById('file-name-display').classList.add('text-brand', 'font-bold');
                 };
@@ -441,33 +416,35 @@
             }
         }
 
-        // ======================= บันทึกข้อมูล (Submit) =======================
         function submitPayment() {
-            // 1. ตรวจสอบว่าเลือกพัสดุหรือไม่
             const checkboxes = document.querySelectorAll('.parcel-checkbox:checked');
             if (checkboxes.length === 0) {
                 alert("กรุณาเลือกพัสดุอย่างน้อย 1 รายการเพื่อชำระเงิน");
                 return;
             }
-
-            // 2. ตรวจสอบว่าแนบสลิปหรือยัง
             if (!slipBase64) {
                 alert("กรุณาแนบภาพสลิปโอนเงินก่อนยืนยันการทำรายการ");
                 return;
             }
 
-            // 3. รวบรวม OrderNumber ของพัสดุที่ถูกเลือก
             const selectedOrderNums = [];
             checkboxes.forEach((cb) => {
                 let idx = cb.dataset.index;
                 selectedOrderNums.push(currentParcels[idx].orderNum);
             });
 
-            // 4. สร้าง Payload ส่งไป Backend
+            const selectedRate = currentRates[selectedRateIndex];
+            
+            // Format ข้อความให้เข้ากับ Data (ตัดเอาแค่ EK หรือ SEA หากจำเป็น)
+            let dbTransportType = selectedRate.transportType;
+            if (dbTransportType.toUpperCase().includes("EK")) dbTransportType = "EK";
+            else if (dbTransportType.toUpperCase().includes("SEA")) dbTransportType = "SEA";
+
             const payload = {
                 memberId: memberId,
                 orderList: selectedOrderNums,
-                shippingType: selectedRateType === 'car' ? 'EK' : 'SEA',
+                shippingType: dbTransportType,
+                productType: selectedRate.productType, // แนบประเภทสินค้าไปด้วย
                 totalTransportFee: globalTotalTransportFee,
                 finalTotal: globalFinalTotal,
                 slipBase64: slipBase64,
@@ -481,7 +458,6 @@
                 .withSuccessHandler(function (response) {
                     hideLoading();
                     if (response.success) {
-                        // เปลี่ยนจาก alert() เป็นการเปิด Modal
                         document.getElementById('successModalMsg').innerText = response.message || "บันทึกข้อมูลและแจ้งโอนเรียบร้อยแล้ว";
                         document.getElementById('successModalOverlay').classList.remove('hidden');
                     } else {
@@ -495,12 +471,10 @@
                 .submitPaymentData(payload);
         }
 
-        // ======================= โยนหน้าไปยัง Dashboard จาก Modal =======================
         function goToDashboardFromModal() {
             window.location.href = '<?= getScriptUrl() ?>?page=user_dashboard';
         }
 
-        // ======================= เมนู / ออกจากระบบ =======================
         function toggleMobileSidebar() {
             document.getElementById('sidebar').classList.toggle('-translate-x-full');
             document.getElementById('sidebarBackdrop').classList.toggle('hidden');
@@ -513,5 +487,4 @@
         }    
     </script>
 </body>
-
 </html>
