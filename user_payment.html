@@ -127,7 +127,6 @@
                             </div>
                         </div>
 
-                        <!-- ส่วนที่ 2 ปรับมาดึงจาก อัตราค่าขนส่ง -->
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                             <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i class="fas fa-truck-fast text-brand mr-2"></i> 2. เลือกประเภทขนส่งและประเภทสินค้า</h2>
                             <div id="rates-container" class="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -160,7 +159,8 @@
                             <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i class="fas fa-qrcode text-brand mr-2"></i> 3. ชำระเงินและแจ้งโอน</h2>
                             <div class="flex flex-col space-y-6">
                                 <div class="bg-gray-50 p-4 rounded-xl flex flex-col items-center justify-center border border-gray-100">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" alt="QR Code" class="w-32 h-32 mb-2 opacity-80">
+                                    <!-- ใส่ referrerpolicy="no-referrer" เพื่อป้องกัน Google Drive บล็อกภาพข้ามโดเมน -->
+                                    <img id="qr-code-img" src="" alt="QR Code" class="w-48 h-48 object-contain mb-2 hidden" referrerpolicy="no-referrer">
                                     <p class="text-xs text-center text-gray-500 font-medium">สแกนเพื่อชำระเงิน<br>PromptPay</p>
                                 </div>
                                 <div class="w-full space-y-4">
@@ -192,10 +192,10 @@
 
     <script>
         // Global State
-        let currentSettings = { bankName: "", bankAcc: "", bankAccName: "", baseFee: "0" };
+        let currentSettings = { bankName: "", bankAcc: "", bankAccName: "", baseFee: "0", qrCodeUrl: "" };
         let currentRates = [];
         let currentParcels = [];
-        let selectedRateIndex = 0; // ค่าเริ่มต้นเลือกเรทแรก
+        let selectedRateIndex = 0; 
         let memberId = "";
 
         let globalFinalTotal = 0;
@@ -257,6 +257,17 @@
             document.getElementById('bank-name').innerText = currentSettings.bankName;
             document.getElementById('bank-acc').innerText = currentSettings.bankAcc;
             document.getElementById('bank-acc-name').innerText = currentSettings.bankAccName;
+
+            // แสดง QR Code
+            const qrImg = document.getElementById('qr-code-img');
+            if (currentSettings.qrCodeUrl) {
+                qrImg.src = currentSettings.qrCodeUrl;
+                qrImg.classList.remove('hidden');
+            } else {
+                qrImg.src = "https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg";
+                qrImg.classList.remove('hidden');
+                qrImg.classList.add('opacity-50');
+            }
 
             renderRates();
             renderParcels();
@@ -361,7 +372,6 @@
                 let itemPrice = Math.max(costKg, costCbm);
                 document.getElementById(`item-price-${index}`).innerText = itemPrice.toFixed(2) + ' ฿';
                 
-                // แสดงหมายเหตุว่าคิดราคาจากเงื่อนไขใด
                 let calcText = costKg >= costCbm ? `คิดจากน้ำหนัก (${p.weight} KG x ${selectedRate.priceKg}฿)` : `คิดจากปริมาตร (${p.cbm} CBM x ${selectedRate.priceCbm}฿)`;
                 document.getElementById(`item-calc-${index}`).innerText = calcText;
 
@@ -428,7 +438,6 @@
 
             const selectedRate = currentRates[selectedRateIndex];
             
-            // Format ข้อความให้เข้ากับ Data (ตัดเอาแค่ EK หรือ SEA หากจำเป็น)
             let dbTransportType = selectedRate.transportType;
             if (dbTransportType.toUpperCase().includes("EK")) dbTransportType = "EK";
             else if (dbTransportType.toUpperCase().includes("SEA")) dbTransportType = "SEA";
@@ -437,7 +446,7 @@
                 memberId: memberId,
                 orderList: selectedOrderNums,
                 shippingType: dbTransportType,
-                productType: selectedRate.productType, // แนบประเภทสินค้าไปด้วย
+                productType: selectedRate.productType, 
                 totalTransportFee: globalTotalTransportFee,
                 finalTotal: globalFinalTotal,
                 slipBase64: slipBase64,
@@ -477,7 +486,7 @@
             localStorage.removeItem('userSession');
             localStorage.clear();
             window.top.location.href = '<?= getScriptUrl() ?>?page=index';
-        }    
+        }   
     </script>
 </body>
 </html>

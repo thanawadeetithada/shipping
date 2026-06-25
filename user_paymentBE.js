@@ -31,16 +31,33 @@ function getPaymentPageData(memberId) {
       throw new Error("ไม่พบชีตฐานข้อมูล");
     }
 
-    // 1. ดึงข้อมูลการตั้งค่า (ค่าบริการพื้นฐาน และ ธนาคาร)
+    // 1. ดึงข้อมูลการตั้งค่า (ค่าบริการพื้นฐาน และ ธนาคาร และ QR Code)
     var settingsData = settingSheet.getDataRange().getValues();
-    var settings = { baseFee: "", bankName: "", bankAcc: "", bankAccName: "" };
+    var settings = { baseFee: "", bankName: "", bankAcc: "", bankAccName: "", qrCodeUrl: "" };
 
     if (settingsData.length > 1) {
+      // ดึงลิงก์จาก คอลัมน์ I (Index 8)
+      var rawQrUrl = settingsData[1][8] ? settingsData[1][8].toString().trim() : "";
+      var formattedQrUrl = rawQrUrl;
+      
+      // แปลงลิงก์ Google Drive
+      if (rawQrUrl.indexOf("drive.google.com") !== -1) {
+        // หา File ID ไม่ว่าจะเป็น format .../file/d/ID... หรือ ...?id=ID...
+        var match = rawQrUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if (!match) match = rawQrUrl.match(/id=([a-zA-Z0-9_-]+)/);
+        
+        if (match && match[1]) {
+          // ใช้ API ของ lh3.googleusercontent.com ข้ามปัญหา cookie restrictions ของ google drive
+          formattedQrUrl = "https://lh3.googleusercontent.com/d/" + match[1];
+        }
+      }
+
       settings = {
         baseFee: settingsData[1][0] || "",             
         bankName: settingsData[1][5] || "",            
         bankAcc: settingsData[1][6] || "",             
-        bankAccName: settingsData[1][7] || ""          
+        bankAccName: settingsData[1][7] || "",
+        qrCodeUrl: formattedQrUrl
       };
     }
 
@@ -66,7 +83,7 @@ function getPaymentPageData(memberId) {
 
     for (var i = 1; i < transportData.length; i++) {
       var rowMemberId = transportData[i][1] ? transportData[i][1].toString().trim().toLowerCase() : "";
-      var rowBillId = transportData[i][18] ? transportData[i][18].toString().trim() : ""; // คอลัมน์ S (Index 18): Bill_ID
+      var rowBillId = transportData[i][17] ? transportData[i][17].toString().trim() : ""; // คอลัมน์ R (Index 17): Bill_ID
       
       // ดึงเฉพาะของ member นี้ และ ต้องยังไม่มีบิลชำระเงิน
       if (rowMemberId === targetMemberId && rowBillId === "") { 
@@ -143,7 +160,7 @@ function submitPaymentData(payload) {
       if (targetOrders.indexOf(rowOrderNum) !== -1) {
         importSheet.getRange(i + 1, 5).setValue(payload.shippingType);  // คอลัมน์ E (5): ประเภทขนส่ง (EK / SEA)
         importSheet.getRange(i + 1, 6).setValue(payload.productType);   // คอลัมน์ F (6): ประเภทสินค้า
-        importSheet.getRange(i + 1, 19).setValue(billId);               // คอลัมน์ S (19): Bill_ID
+        importSheet.getRange(i + 1, 18).setValue(billId);               // คอลัมน์ R (18): Bill_ID
       }
     }
 
