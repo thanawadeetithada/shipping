@@ -56,7 +56,7 @@
             <button class="absolute top-6 right-4 text-white md:hidden hover:text-red-200"
                 onclick="toggleMobileSidebar()"><i class="fas fa-times text-xl"></i></button>
         </div>
-         <nav class="flex-grow p-4 space-y-1.5 overflow-y-auto text-sm">
+        <nav class="flex-grow p-4 space-y-1.5 overflow-y-auto text-sm">
             <a href="<?= getScriptUrl() ?>?page=user_dashboard" target="_top"
                 class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200">
                 <i class="fas fa-home w-5 text-center"></i> แดชบอร์ดของฉัน
@@ -82,7 +82,7 @@
     </aside>
 
     <main class="flex-1 flex flex-col h-screen overflow-hidden">
-         <header
+        <header
             class="bg-white shadow-sm py-3 px-4 md:py-4 md:px-6 flex items-center justify-between z-30 relative min-h-[64px] md:min-h-[72px]">
             <div class="flex items-center gap-4 shrink-0">
                 <button class="text-gray-600 hover:text-brand md:hidden p-1 transition" onclick="toggleMobileSidebar()">
@@ -96,7 +96,7 @@
                 <a href="<?= getScriptUrl() ?>?page=user_pricing" target="_top"
                     class="text-gray-600 hover:text-brand transition whitespace-nowrap">อัตราค่าขนส่ง</a>
             </div>
-             <div class="flex items-center justify-end shrink-0">
+            <div class="flex items-center justify-end shrink-0">
                 <div onclick="window.top.location.href='<?= getScriptUrl() ?>?page=user_profile'" target="_top"
                     class="flex items-center gap-2 md:gap-3 bg-gray-50 px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-gray-100 cursor-pointer hover:bg-gray-100 transition">
 
@@ -152,9 +152,9 @@
                             </div>
                         </div>
                         <div class="mt-4 flex justify-end gap-2">
-                            <button id="cancelEditBtn" onclick="cancelEdit()"
-                                class="hidden px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 text-sm font-medium transition">
-                                ยกเลิกการแก้ไข
+                            <button id="calculateBtn" onclick="calculateBtn()"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm font-medium transition shadow-sm flex items-center gap-2">
+                                <i class="fas fa-calculator"></i> คำนวณค่าขนส่ง
                             </button>
                             <button onclick="addOrUpdateItem()" id="submitBtn"
                                 class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 shadow-sm text-sm font-medium flex items-center gap-2 transition">
@@ -184,7 +184,7 @@
                                 </thead>
                                 <tbody id="itemTableBody" class="divide-y divide-gray-200 bg-white">
                                     <tr>
-                                       <td colspan="6" class="px-4 py-12 text-center">
+                                        <td colspan="6" class="px-4 py-12 text-center">
                                             <i class="fas fa-circle-notch fa-spin text-4xl text-brand mb-3"></i>
                                             <p class="text-gray-500 font-medium">กำลังโหลดข้อมูลรายการพัสดุ...</p>
                                         </td>
@@ -458,7 +458,7 @@
             const weight = document.getElementById('editWeightInput').value.trim();
             const cbm = document.getElementById('editCbmInput').value.trim();
 
-             if (!tracking) {
+            if (!tracking) {
                 alert('กรุณากรอกเลข Tracking'); return;
             }
 
