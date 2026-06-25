@@ -30,19 +30,20 @@
 
 <body>
 
-    <nav class="bg-white shadow-sm py-3 px-4 md:py-4 md:px-6 flex items-center justify-between relative min-h-[64px] md:min-h-[72px]">
+    <nav
+        class="bg-white shadow-sm py-3 px-4 md:py-4 md:px-6 flex items-center justify-between relative min-h-[64px] md:min-h-[72px]">
         <div class="text-xl md:text-2xl font-bold text-brand flex flex-col leading-none shrink-0">
             <span>SUCHAR</span>
             <span class="text-xs md:text-sm text-black">CARGO</span>
         </div>
-        
+
         <div class="flex space-x-3 md:space-x-6 text-xs sm:text-sm font-medium md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
             <a href="<?= getScriptUrl() ?>?page=index" target="_top" class="text-brand whitespace-nowrap">หน้าหลัก</a>
             <a href="<?= getScriptUrl() ?>?page=pricing" target="_top"
                 class="text-gray-600 hover:text-brand whitespace-nowrap">อัตราค่าขนส่ง</a>
         </div>
 
-        <div id="navActionContainer" class="shrink-0">
+         <div id="navActionContainer" class="shrink-0">
             <? var url = getScriptUrl(); ?>
             <button id="loginNavBtn" onclick="window.top.location.href='<?= url ?>?page=login'"
                 class="bg-brand text-white px-3 py-1.5 md:px-4 md:py-2 rounded-md text-xs md:text-sm font-medium hover:bg-red-700 transition whitespace-nowrap">
@@ -59,14 +60,16 @@
             <h2 class="text-xl md:text-3xl mb-8 drop-shadow-md">เช็คสถานะสินค้าได้ตลอด 24 ชั่วโมง</h2>
 
             <div class="bg-white p-2 rounded-lg flex flex-col md:flex-row shadow-lg max-w-2xl mx-auto">
-                <input type="text" placeholder="กรอกรหัสลูกค้า หรือ Tracking Number"
+                <input type="text" id="mainSearchInput" placeholder="กรอกเลขออเดอร์ เพื่อเช็คสถานะ"
+                    onkeypress="if(event.key === 'Enter') triggerMainSearch()"
                     class="flex-grow px-4 py-3 text-gray-700 outline-none rounded-t-lg md:rounded-l-lg md:rounded-t-none">
-                <button onclick="window.top.location.href='<?= getScriptUrl() ?>?page=trackin_info'"
+                
+                <button onclick="triggerMainSearch()"
                     class="bg-brand text-white px-8 py-3 rounded-md font-medium hover:bg-red-700 transition flex items-center justify-center gap-2 mt-2 md:mt-0">
                     <i class="fas fa-search"></i> เช็คสถานะ
                 </button>
             </div>
-            <p class="mt-4 text-sm text-gray-200">ตัวอย่างรหัส: SC250621001</p>
+            <p class="mt-4 text-sm text-gray-200">ตัวอย่างเลขออเดอร์: SC00001</p>
         </div>
     </section>
 
@@ -115,7 +118,8 @@
                 </div>
                 <div
                     class="w-20 h-20 rounded-full border-2 border-red-100 text-brand flex items-center justify-center text-3xl mb-4 bg-white">
-                    <i class="fas fa-clipboard-list"></i></div>
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
                 <h4 class="font-bold text-sm">สั่งซื้อสินค้า</h4>
                 <p class="text-xs text-gray-500 max-w-[120px]">ลูกค้าสั่งซื้อสินค้าจากจีน<br>หรือสั่งผ่านแอดมิน</p>
             </div>
@@ -124,7 +128,8 @@
                 </div>
                 <div
                     class="w-20 h-20 rounded-full border-2 border-red-100 text-brand flex items-center justify-center text-3xl mb-4 bg-white">
-                    <i class="fas fa-money-bill-wave"></i></div>
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
                 <h4 class="font-bold text-sm">ชำระค่าสินค้า</h4>
                 <p class="text-xs text-gray-500 max-w-[120px]">ชำระค่าสินค้าให้กับร้านค้า<br>หรือโรงงานในจีน</p>
             </div>
@@ -133,7 +138,8 @@
                 </div>
                 <div
                     class="w-20 h-20 rounded-full border-2 border-red-100 text-brand flex items-center justify-center text-3xl mb-4 bg-white">
-                    <i class="fas fa-box"></i></div>
+                    <i class="fas fa-box"></i>
+                </div>
                 <h4 class="font-bold text-sm">ส่งสินค้าเข้าโกดังจีน</h4>
                 <p class="text-xs text-gray-500 max-w-[120px]">ร้านค้าจัดส่งสินค้ามาให้<br>ที่โกดังจีนของเรา</p>
             </div>
@@ -142,7 +148,8 @@
                 </div>
                 <div
                     class="w-20 h-20 rounded-full border-2 border-red-100 text-brand flex items-center justify-center text-3xl mb-4 bg-white">
-                    <i class="fas fa-truck"></i></div>
+                    <i class="fas fa-truck"></i>
+                </div>
                 <h4 class="font-bold text-sm">ขนส่งจากจีนมาไทย</h4>
                 <p class="text-xs text-gray-500 max-w-[120px]">สินค้าจะถูกจัดส่งจากจีน<br>มายังโกดังไทย</p>
             </div>
@@ -151,7 +158,8 @@
                 </div>
                 <div
                     class="w-20 h-20 rounded-full border-2 border-red-100 text-brand flex items-center justify-center text-3xl mb-4 bg-white">
-                    <i class="fas fa-home"></i></div>
+                    <i class="fas fa-home"></i>
+                </div>
                 <h4 class="font-bold text-sm">จัดส่งถึงมือลูกค้า</h4>
                 <p class="text-xs text-gray-500 max-w-[120px]">ส่งสินค้าให้ลูกค้า<br>ถึงบ้านปลอดภัย</p>
             </div>
@@ -179,76 +187,81 @@
         </div>
     </section>
 
-  <footer class="bg-gray-900 text-white py-8 px-4">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-        
-        <div class="text-xl font-bold flex flex-col leading-none text-center md:text-left">
-            <span class="text-brand">SUCHAR</span>
-            <span class="text-sm text-gray-300">CARGO</span>
-        </div>
+    <footer class="bg-gray-900 text-white py-8 px-4">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
 
-        <div
+            <div class="text-xl font-bold flex flex-col leading-none text-center md:text-left">
+                <span class="text-brand">SUCHAR</span>
+                <span class="text-sm text-gray-300">CARGO</span>
+            </div>
+
+            <div
                 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-3 text-sm text-center md:text-left">
                 <div class="flex items-center justify-center md:justify-start">
-                    <i class="fas fa-phone-alt mr-2 text-brand"></i> 
+                    <i class="fas fa-phone-alt mr-2 text-brand"></i>
                     <span id="footer-phone">กำลังโหลด...</span>
                 </div>
                 <div class="flex items-center justify-center md:justify-start">
-                    <i class="fab fa-line text-green-400 mr-2 text-lg"></i> 
+                    <i class="fab fa-line text-green-400 mr-2 text-lg"></i>
                     <a href="#" id="footer-line-link" target="_blank" class="hover:text-green-400 transition">
                         <span id="footer-line">กำลังโหลด...</span>
                     </a>
                 </div>
                 <div class="flex items-center justify-center md:justify-start sm:col-span-2 lg:col-span-1">
-                    <i class="fas fa-envelope mr-2 text-brand"></i> 
+                    <i class="fas fa-envelope mr-2 text-brand"></i>
                     <span id="footer-email">กำลังโหลด...</span>
                 </div>
             </div>
-        
-    </div>
-</footer>
+
+        </div>
+    </footer>
 
     <script>
-        <? var scriptUrl = getScriptUrl(); ?>
-        const GLOBAL_SCRIPT_URL = "<?= scriptUrl ?>";
-
         document.addEventListener('DOMContentLoaded', function () {
-            // เช็คว่าเคย Login ไว้หรือไม่ ถ้ามีให้เปลี่ยนปุ่มเป็น "ไปที่แดชบอร์ด"
-            const sessionData = localStorage.getItem('userSession');
-            if (sessionData) {
-                const loginBtn = document.getElementById('loginNavBtn');
-                if (loginBtn) {
-                    loginBtn.innerText = "แดชบอร์ดของฉัน";
-                    loginBtn.onclick = function() { window.top.location.href = GLOBAL_SCRIPT_URL + '?page=user_dashboard'; };
-                }
-            }
-
-            // เรียกดึงข้อมูล Footer
             fetchContactFooter();
         });
 
+        function triggerMainSearch() {
+            const val = document.getElementById('mainSearchInput').value.trim();
+            if (val) {
+                goToTrackingInfo(val);
+            } else {
+                alert("กรุณากรอกเลขออเดอร์");
+            }
+        }
+
+        function goToTrackingInfo(id) {
+          const targetUrl = '<?= getScriptUrl() ?>?page=tracking_info&id=' + encodeURIComponent(id);
+          window.top.location.href = targetUrl;
+        }
+
         function fetchContactFooter() {
-            google.script.run
-                .withSuccessHandler(function (res) {
-                    if (res.success) {
-                        document.getElementById('footer-phone').innerText = res.phone;
-                        document.getElementById('footer-line').innerText = res.line;
-                        document.getElementById('footer-line-link').href = res.lineLink;
-                        document.getElementById('footer-email').innerText = res.email;
-                    }
-                })
-                .withFailureHandler(function (err) {
-                    console.error("Error fetching contact data:", err);
-                    document.getElementById('footer-phone').innerText = "02-114-8008";
-                    document.getElementById('footer-line').innerText = "@sucharcargo";
-                    document.getElementById('footer-email').innerText = "support@sucharcargo.com";
-                })
-                .getContactData();
+            if(typeof google !== 'undefined' && google.script) {
+                google.script.run
+                    .withSuccessHandler(function (res) {
+                        if (res.success) {
+                            document.getElementById('footer-phone').innerText = res.phone;
+                            document.getElementById('footer-line').innerText = res.line;
+                            document.getElementById('footer-line-link').href = res.lineLink;
+                            document.getElementById('footer-email').innerText = res.email;
+                        }
+                    })
+                    .withFailureHandler(function (err) {
+                        console.error("Error fetching contact data:", err);
+                        setDefaultFooter();
+                    })
+                    .getContactData();
+            } else {
+                setDefaultFooter();
+            }
+        }
+
+        function setDefaultFooter() {
+            document.getElementById('footer-phone').innerText = "02-114-8008";
+            document.getElementById('footer-line').innerText = "@sucharcargo";
+            document.getElementById('footer-email').innerText = "support@sucharcargo.com";
         }
     </script>
-
-    <?!= include('auth'); ?>
-
 </body>
 
 </html>
