@@ -216,6 +216,19 @@
         </div>
     </footer>
 
+    <div id="alertModalOverlay" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all text-center p-8 border-t-4 border-brand">
+            <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
+                <i class="fas fa-exclamation-circle text-4xl text-brand"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">แจ้งเตือน</h3>
+            <p id="alertModalMsg" class="text-gray-600 mb-6 text-sm"></p>
+            <button onclick="closeAlertModal()" class="w-full bg-brand text-white font-bold py-3 px-4 rounded-xl hover:bg-brand-dark transition-colors shadow-md hover:shadow-lg flex justify-center items-center gap-2">
+                <span>ตกลง</span>
+            </button>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             fetchContactFooter();
@@ -226,7 +239,7 @@
             if (val) {
                 goToTrackingInfo(val);
             } else {
-                alert("กรุณากรอกเลขออเดอร์");
+                showAlertModal("กรุณากรอกเลขออเดอร์");
             }
         }
 
@@ -260,6 +273,16 @@
             document.getElementById('footer-phone').innerText = "02-114-8008";
             document.getElementById('footer-line').innerText = "@sucharcargo";
             document.getElementById('footer-email').innerText = "support@sucharcargo.com";
+        }
+
+        // ฟังก์ชันควบคุม Modal
+        function showAlertModal(msg) {
+            document.getElementById('alertModalMsg').innerText = msg;
+            document.getElementById('alertModalOverlay').classList.remove('hidden');
+        }
+
+        function closeAlertModal() {
+            document.getElementById('alertModalOverlay').classList.add('hidden');
         }
     </script>
 </body>

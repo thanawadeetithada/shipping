@@ -80,7 +80,7 @@
                 <div class="bg-white p-2 rounded-lg shadow-md flex mb-6 mx-auto mt-6 border border-gray-100">
                     <input type="text" id="searchOrderInput"
                         class="flex-grow px-4 py-2 outline-none text-gray-700 bg-transparent"
-                        placeholder="Tracking Number หรือ เลขออเดอร์">
+                        placeholder="กรอกเลขออเดอร์ (ตัวอย่าง: SC00001)">
                     <button onclick="triggerSearch()"
                         class="bg-brand text-white px-6 py-2 rounded-md hover:bg-red-700 flex items-center gap-2 transition">
                         <i class="fas fa-search"></i> ค้นหา
@@ -228,6 +228,19 @@
         </div>
     </main>
 
+    <div id="alertModalOverlay" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all text-center p-8 border-t-4 border-brand">
+            <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
+                <i class="fas fa-exclamation-circle text-4xl text-brand"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">แจ้งเตือน</h3>
+            <p id="alertModalMsg" class="text-gray-600 mb-6 text-sm"></p>
+            <button onclick="closeAlertModal()" class="w-full bg-brand text-white font-bold py-3 px-4 rounded-xl hover:bg-brand-dark transition-colors shadow-md hover:shadow-lg flex justify-center items-center gap-2">
+                <span>ตกลง</span>
+            </button>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // รองรับการกด Enter ที่ช่องค้นหา
@@ -260,6 +273,8 @@
             const val = document.getElementById('searchOrderInput').value.trim();
             if (val) {
                 fetchData(val);
+            } else {
+                showAlertModal("กรุณากรอกเลขออเดอร์");
             }
         }
 
@@ -275,12 +290,12 @@
                         renderUI(response);
                         document.getElementById('contentSection').classList.remove('opacity-0');
                     } else {
-                        alert(response.message);
+                        showAlertModal(response.message);
                     }
                 })
                 .withFailureHandler(function (err) {
                     document.getElementById('loadingOverlay').classList.add('hidden');
-                    alert("เกิดข้อผิดพลาดในการเชื่อมต่อ: " + err.message);
+                    showAlertModal("เกิดข้อผิดพลาดในการเชื่อมต่อ: " + err.message);
                 })
                 .getTrackingInfoData_Public(orderId); 
         }
@@ -365,6 +380,16 @@
         function copyToClipboard(id) {
             const text = document.getElementById(id).innerText;
             navigator.clipboard.writeText(text);
+        }
+
+        // ฟังก์ชันควบคุม Modal
+        function showAlertModal(msg) {
+            document.getElementById('alertModalMsg').innerText = msg;
+            document.getElementById('alertModalOverlay').classList.remove('hidden');
+        }
+
+        function closeAlertModal() {
+            document.getElementById('alertModalOverlay').classList.add('hidden');
         }
     </script>
 </body>

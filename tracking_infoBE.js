@@ -1,10 +1,16 @@
+/**
+ * ดึงข้อมูลพัสดุสำหรับหน้าสาธารณะ (ไม่เช็ค Session/Auth ใดๆ ทั้งสิ้น)
+ * ค้นหาได้ทั้ง เลขออเดอร์ หรือ Tracking จีน
+ */
 function getTrackingInfoData_Public(orderId) {
   try {
+    // 1. เช็คแค่ว่ามีการพิมพ์เลขค้นหามาหรือไม่
     if (!orderId || String(orderId).trim() === "") {
-      throw new Error("กรุณาระบุเลขออเดอร์");
+      throw new Error("กรุณาระบุเลขออเดอร์ หรือ Tracking Number");
     }
 
     var ss = SpreadsheetApp.getActiveSpreadsheet();
+    // ทำความสะอาดและแปลงตัวอักษรเป็นพิมพ์ใหญ่เพื่อป้องกันปัญหาพิมพ์ผิด (Case Insensitive)
     var orderQuery = String(orderId).trim().toUpperCase();
 
     // 2. ดึงข้อมูลการติดต่อ (ชีต "ติดต่อเรา")
@@ -17,15 +23,18 @@ function getTrackingInfoData_Public(orderId) {
       contact.lineLink = contactData[1][2] || "#"; 
     }
 
+    // 3. ค้นหาข้อมูลพัสดุ (ชีต "ข้อมูลขนส่ง") 
     var importSheet = ss.getSheetByName("ข้อมูลขนส่ง");
     var importData = importSheet.getDataRange().getValues();
     var orderRow = null;
     var actualMemberId = ""; 
     
     for (var i = 1; i < importData.length; i++) {
+      // ค้นหาจากเลขออเดอร์ (คอลัมน์ A) หรือ Tracking จีน (คอลัมน์ C)
       var cellOrder = String(importData[i][0] || "").trim().toUpperCase();
+      var cellTracking = String(importData[i][2] || "").trim().toUpperCase();
 
-      if (cellOrder === orderQuery) {
+      if (cellOrder === orderQuery || cellTracking === orderQuery) {
         orderRow = importData[i];
         actualMemberId = importData[i][1] ? String(importData[i][1]).trim() : ""; 
         break;
@@ -33,7 +42,7 @@ function getTrackingInfoData_Public(orderId) {
     }
 
     if (!orderRow) {
-      throw new Error("ไม่พบข้อมูลพัสดุนี้ในระบบ กรุณาตรวจสอบเลขออเดอร์อีกครั้ง");
+      throw new Error("ไม่พบข้อมูลพัสดุนี้ในระบบ กรุณาตรวจสอบรหัสอีกครั้ง");
     }
 
     // 4. ดึงข้อมูลสมาชิก (ชีต "สมาชิก") เพื่อเอาที่อยู่จัดส่ง
