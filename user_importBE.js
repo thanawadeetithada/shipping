@@ -2,6 +2,39 @@
  * ชื่อชีตที่ใช้เก็บข้อมูล
  */
 const IMPORT_SHEET_NAME = "ข้อมูลขนส่ง";
+const RATE_SHEET_NAME = "อัตราค่าขนส่ง";
+
+/**
+ * โหลดข้อมูลอัตราค่าขนส่งทั้งหมด (ใช้ทำ Dropdown และคำนวณ)
+ */
+function getShippingRatesList() {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(RATE_SHEET_NAME);
+    if (!sheet) return { success: false, message: "ไม่พบชีต 'อัตราค่าขนส่ง'" };
+
+    var data = sheet.getDataRange().getValues();
+    var rates = [];
+    
+    // เริ่มอ่านจากแถวที่ 2 (index 1) เพื่อข้าม Header
+    for (var i = 1; i < data.length; i++) {
+      if (!data[i][0]) continue; // ข้ามแถวที่คอลัมน์ A (การขนส่ง) เป็นค่าว่าง
+      
+
+      var rawKg = data[i][3] ? data[i][3].toString().replace(/,/g, '').trim() : "0";
+      var rawCbm = data[i][4] ? data[i][4].toString().replace(/,/g, '').trim() : "0";
+
+      rates.push({
+        transport: data[i][0].toString().trim(),      // คอลัมน์ A
+        productType: data[i][1].toString().trim(),    // คอลัมน์ B
+        rateKg: parseFloat(rawKg) || 0,               // คอลัมน์ C (ราคา/kg) ที่ลบลูกน้ำแล้ว
+        rateCbm: parseFloat(rawCbm) || 0              // คอลัมน์ D (ราคา/Q) ที่ลบลูกน้ำแล้ว
+      });
+    }
+    return { success: true, data: rates };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+}
 
 /**
  * โหลดรายการแจ้งนำเข้าของสมาชิก (ใช้แสดงในตาราง)

@@ -138,21 +138,9 @@
                                     class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand"
                                     placeholder="เช่น เสื้อกันหนาว 3 ตัว">
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">น้ำหนัก (KG)</label>
-                                <input type="number" step="any" id="weightInput"
-                                    class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand"
-                                    placeholder="เช่น 1.5">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">ปริมาตร (CBM)</label>
-                                <input type="number" step="any" id="cbmInput"
-                                    class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand"
-                                    placeholder="เช่น 0.045">
-                            </div>
                         </div>
                         <div class="mt-4 flex justify-end gap-2">
-                            <button id="calculateBtn" onclick="calculateBtn()"
+                            <button id="calculateBtn" onclick="openCalcModal()"
                                 class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm font-medium transition shadow-sm flex items-center gap-2">
                                 <i class="fas fa-calculator"></i> คำนวณค่าขนส่ง
                             </button>
@@ -197,6 +185,64 @@
             </div>
         </div>
     </main>
+
+    <div id="calcModalOverlay"
+        class="fixed inset-0 bg-black bg-opacity-50 z-[70] hidden flex items-center justify-center p-4 transition-opacity">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden transform transition-all relative">
+            <div class="border-b border-gray-100 px-6 py-4 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">คำนวณค่าขนส่ง</h3>
+                <button onclick="closeModal('calcModalOverlay')" class="text-gray-400 hover:text-gray-600"><i
+                        class="fas fa-times text-lg"></i></button>
+            </div>
+            <div class="p-6 space-y-5">
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">การขนส่ง</label>
+                    <select id="calcTransport" class="w-full border border-gray-300 rounded-md p-2 outline-none focus:border-gray-400" onchange="updateProductTypeOptions()">
+                        <option value="">กำลังโหลดข้อมูล...</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">ประเภทสินค้า</label>
+                    <select id="calcType" class="w-full border border-gray-300 rounded-md p-2 outline-none focus:border-gray-400" onchange="doCalculate()">
+                         <option value="">กรุณาเลือกการขนส่งก่อน</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">ขนาด (cm)</label>
+                    <div class="flex items-center gap-2">
+                        <input type="number" id="calcW" placeholder="กว้าง" class="w-full border border-gray-300 rounded-md p-2 text-center outline-none focus:border-gray-400" oninput="doCalculate()">
+                        <span class="text-gray-500 text-sm">x</span>
+                        <input type="number" id="calcL" placeholder="ยาว" class="w-full border border-gray-300 rounded-md p-2 text-center outline-none focus:border-gray-400" oninput="doCalculate()">
+                        <span class="text-gray-500 text-sm">x</span>
+                        <input type="number" id="calcH" placeholder="สูง" class="w-full border border-gray-300 rounded-md p-2 text-center outline-none focus:border-gray-400" oninput="doCalculate()">
+                        <span class="text-gray-500 text-sm">=</span>
+                        <input type="text" id="calcCbm" placeholder="0" class="w-full border border-gray-300 bg-gray-50 rounded-md p-2 text-center text-gray-500 outline-none" readonly>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">น้ำหนัก (KG)</label>
+                    <input type="number" id="calcWeight" placeholder="0.00" class="w-[48%] border border-gray-300 rounded-md p-2 outline-none focus:border-gray-400" oninput="doCalculate()">
+                </div>
+
+                <div class="border-t border-gray-200 pt-5 mt-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">คิดราคาจาก</label>
+                    <div id="calcBaseResult" class="w-full bg-[#91dec8] text-[#1c5c4c] font-medium rounded-md p-2 mb-4 text-center min-h-[40px] flex items-center justify-center">
+                        -
+                    </div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1">ประมาณการ ค่าขนส่ง (฿)</label>
+                    <div id="calcTotalResult" class="w-full bg-[#46413e] text-white text-xl font-medium rounded-md p-3 text-center min-h-[52px] flex items-center justify-center">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div id="alertModal"
         class="fixed inset-0 bg-black bg-opacity-50 z-[70] hidden flex items-center justify-center p-4 transition-opacity">
@@ -246,29 +292,21 @@
             </div>
             <div class="p-6">
                 <input type="hidden" id="editOrderNum">
+                <input type="hidden" id="editWeightInput">
+                <input type="hidden" id="editCbmInput">
+
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">เลข Tracking ของจีน <span
                             class="text-red-500">*</span></label>
                     <input type="text" id="editTrackingInput"
                         class="w-full border border-gray-300 rounded-md p-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
                 </div>
-                <div class="mb-4">
+                <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-1">รายละเอียดสินค้า</label>
                     <input type="text" id="editDetailInput"
                         class="w-full border border-gray-300 rounded-md p-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
                 </div>
-                <div class="grid grid-cols-2 gap-3 mb-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">น้ำหนัก (KG)</label>
-                        <input type="number" step="any" id="editWeightInput"
-                            class="w-full border border-gray-300 rounded-md p-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">ปริมาตร (CBM)</label>
-                        <input type="number" step="any" id="editCbmInput"
-                            class="w-full border border-gray-300 rounded-md p-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                    </div>
-                </div>
+                
                 <div class="flex gap-3">
                     <button onclick="closeModal('editModalOverlay')"
                         class="flex-1 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded hover:bg-gray-50 transition">ยกเลิก</button>
@@ -281,8 +319,9 @@
 
     <script>
         let currentMemberId = "";
-        let currentItems = []; // ตัวแปรเก็บข้อมูลตารางไว้ในเครื่อง (Local State)
+        let currentItems = []; 
         let deleteTargetId = "";
+        let shippingRatesData = []; // เก็บข้อมูลเรทราคาที่ดึงจากชีต
 
         document.addEventListener('DOMContentLoaded', function () {
             const sessionData = localStorage.getItem('userSession');
@@ -290,7 +329,6 @@
                 try {
                     const user = JSON.parse(sessionData);
                     const fullname = user.fullname || user.name || "ไม่ระบุชื่อ";
-                    // ดึงรหัสสมาชิกให้ครอบคลุม
                     currentMemberId = user.memberId || user.customer_id || user.id || user.member_id || "";
 
                     const usernameElement = document.getElementById('headerUsername');
@@ -302,7 +340,68 @@
                 }
             }
             loadTableData();
+            loadShippingRates(); // สั่งดึงเรทราคาจาก Backend ทันทีที่โหลดหน้าเว็บ
         });
+
+        // ================= ดึงข้อมูลเรทขนส่งจาก Sheet (Dynamic 100%) =================
+        function loadShippingRates() {
+            google.script.run
+                .withSuccessHandler(function (res) {
+                    if (res.success) {
+                        shippingRatesData = res.data;
+                        populateTransportOptions(); // สร้าง Dropdown แรก
+                    } else {
+                        console.error("โหลดเรทราคาไม่สำเร็จ:", res.message);
+                    }
+                })
+                .getShippingRatesList();
+        }
+
+        function populateTransportOptions() {
+            const transportSelect = document.getElementById('calcTransport');
+            transportSelect.innerHTML = ''; // ล้างตัวเลือกเก่า
+            
+            // กรองเอาเฉพาะชื่อขนส่งที่ไม่ซ้ำกัน
+            const uniqueTransports = [...new Set(shippingRatesData.map(item => item.transport))];
+            
+            if (uniqueTransports.length === 0) {
+                transportSelect.innerHTML = '<option value="">ไม่มีข้อมูลขนส่งในระบบ</option>';
+                return;
+            }
+
+            uniqueTransports.forEach(t => {
+                const option = document.createElement('option');
+                option.value = t;
+                option.textContent = t;
+                transportSelect.appendChild(option);
+            });
+            
+            // เมื่อสร้างตัวเลือกขนส่งเสร็จ ให้สั่งสร้างตัวเลือกประเภทสินค้าให้สัมพันธ์กันทันที
+            updateProductTypeOptions();
+        }
+
+        function updateProductTypeOptions() {
+            const selectedTransport = document.getElementById('calcTransport').value;
+            const typeSelect = document.getElementById('calcType');
+            typeSelect.innerHTML = '';
+            
+            // หาข้อมูลประเภทสินค้า ที่ตรงกับขนส่งที่เลือก
+            const availableTypes = shippingRatesData.filter(item => item.transport === selectedTransport);
+            
+            if (availableTypes.length === 0) {
+                typeSelect.innerHTML = '<option value="">ไม่พบประเภทสินค้า</option>';
+            } else {
+                availableTypes.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.productType;
+                    option.textContent = item.productType;
+                    typeSelect.appendChild(option);
+                });
+            }
+
+            // คำนวณราคาทันทีเผื่อมีตัวเลขกรอกค้างไว้
+            doCalculate(); 
+        }
 
         // ================= ดึงข้อมูลเริ่มต้น =================
         function loadTableData() {
@@ -311,7 +410,6 @@
                 return;
             }
 
-            // แสดง Spinner ในตารางระหว่างรอข้อมูล
             document.getElementById('itemTableBody').innerHTML = `
                 <tr>
                     <td colspan="6" class="px-4 py-12 text-center">
@@ -323,7 +421,7 @@
 
             google.script.run
                 .withSuccessHandler(function (data) {
-                    currentItems = data; // เก็บข้อมูลลง Local State
+                    currentItems = data; 
                     renderTable();
                 })
                 .withFailureHandler(function (error) {
@@ -333,7 +431,6 @@
                 .loadImportItems(currentMemberId);
         }
 
-        // ================= วาดตาราง =================
         function renderTable() {
             const tbody = document.getElementById('itemTableBody');
             document.getElementById('itemCount').innerText = currentItems.length;
@@ -368,17 +465,15 @@
             });
         }
 
-        // ================= เพิ่มรายการ =================
         function addOrUpdateItem() {
             const trackingInput = document.getElementById('trackingInput');
             const detailInput = document.getElementById('detailInput');
-            const weightInput = document.getElementById('weightInput');
-            const cbmInput = document.getElementById('cbmInput');
 
             const tracking = trackingInput.value.trim();
             const detail = detailInput.value.trim();
-            const weight = weightInput.value.trim();
-            const cbm = cbmInput.value.trim();
+            
+            const weight = "";
+            const cbm = "";
 
             if (!tracking) {
                 showAlert('แจ้งเตือน', 'กรุณากรอกเลข Tracking ของจีน', 'red');
@@ -392,10 +487,7 @@
                     if (response.success) {
                         trackingInput.value = '';
                         detailInput.value = '';
-                        weightInput.value = '';
-                        cbmInput.value = '';
 
-                        // เอาข้อมูลใหม่ใส่ด้านบนสุดของตาราง (Optimistic Update)
                         currentItems.unshift(response.data);
                         renderTable();
 
@@ -411,7 +503,6 @@
                 .addItemToSheet(currentMemberId, tracking, detail, weight, cbm);
         }
 
-        // ================= ลบรายการ =================
         function openDeleteModal(orderNum, tracking) {
             deleteTargetId = orderNum;
             document.getElementById('deleteTrackingText').innerText = "Tracking: " + tracking;
@@ -426,7 +517,6 @@
                 .withSuccessHandler(function (response) {
                     hideLoading();
                     if (response.success) {
-                        // ลบออกจาก Local State ทันที
                         currentItems = currentItems.filter(item => item.orderNum !== deleteTargetId);
                         renderTable();
                         showAlert('ลบสำเร็จ!', response.message, 'green');
@@ -441,13 +531,13 @@
                 .deleteItemFromSheet(deleteTargetId);
         });
 
-        // ================= แก้ไขรายการ =================
         function openEditModal(orderNum, tracking, detail, weight, cbm) {
             document.getElementById('editOrderNum').value = orderNum;
             document.getElementById('editTrackingInput').value = tracking;
             document.getElementById('editDetailInput').value = detail;
             document.getElementById('editWeightInput').value = weight;
             document.getElementById('editCbmInput').value = cbm;
+            
             document.getElementById('editModalOverlay').classList.remove('hidden');
         }
 
@@ -455,8 +545,8 @@
             const orderNum = document.getElementById('editOrderNum').value;
             const tracking = document.getElementById('editTrackingInput').value.trim();
             const detail = document.getElementById('editDetailInput').value.trim();
-            const weight = document.getElementById('editWeightInput').value.trim();
-            const cbm = document.getElementById('editCbmInput').value.trim();
+            const weight = document.getElementById('editWeightInput').value;
+            const cbm = document.getElementById('editCbmInput').value;
 
             if (!tracking) {
                 alert('กรุณากรอกเลข Tracking'); return;
@@ -469,7 +559,6 @@
                 .withSuccessHandler(function (response) {
                     hideLoading();
                     if (response.success) {
-                        // อัปเดตข้อมูลใน Local State ทันที
                         const itemIndex = currentItems.findIndex(item => item.orderNum === orderNum);
                         if (itemIndex > -1) {
                             currentItems[itemIndex].tracking = tracking;
@@ -488,6 +577,72 @@
                     showAlert('ผิดพลาด', err.message, 'red');
                 })
                 .updateItemInSheet(orderNum, tracking, detail, weight, cbm);
+        }
+
+        // ================= ฟังก์ชันคำนวณค่าขนส่ง =================
+        function openCalcModal() {
+            document.getElementById('calcW').value = '';
+            document.getElementById('calcL').value = '';
+            document.getElementById('calcH').value = '';
+            document.getElementById('calcCbm').value = '';
+            document.getElementById('calcWeight').value = '';
+            document.getElementById('calcBaseResult').innerText = '-';
+            document.getElementById('calcTotalResult').innerText = '';
+            
+            if (shippingRatesData.length === 0) {
+                loadShippingRates(); // โหลดข้อมูลสำรองหากยังไม่มีข้อมูล
+            }
+            
+            document.getElementById('calcModalOverlay').classList.remove('hidden');
+        }
+
+        function doCalculate() {
+            const w = parseFloat(document.getElementById('calcW').value) || 0;
+            const l = parseFloat(document.getElementById('calcL').value) || 0;
+            const h = parseFloat(document.getElementById('calcH').value) || 0;
+            const weight = parseFloat(document.getElementById('calcWeight').value) || 0;
+            
+            const selectedTransport = document.getElementById('calcTransport').value;
+            const selectedType = document.getElementById('calcType').value;
+            
+            // คำนวณ CBM
+            const cbm = (w * l * h) / 1000000;
+            document.getElementById('calcCbm').value = cbm > 0 ? cbm.toFixed(4) : '';
+
+            // ค้นหาเรทราคาจาก Object Array ที่โหลดมาจากชีต
+            let pricePerKg = 0;
+            let pricePerCbm = 0;
+            
+            const rateObj = shippingRatesData.find(r => r.transport === selectedTransport && r.productType === selectedType);
+            if (rateObj) {
+                pricePerKg = rateObj.rateKg;
+                pricePerCbm = rateObj.rateCbm;
+            }
+
+            let priceByWeight = weight * pricePerKg;
+            let priceByCbm = cbm * pricePerCbm;
+            
+            let finalPrice = 0;
+            let baseText = "-";
+
+            if (weight > 0 || cbm > 0) {
+                if (pricePerKg === 0 && pricePerCbm === 0) {
+                    baseText = "ไม่พบเรทราคาในระบบ";
+                } else if (priceByWeight >= priceByCbm) {
+                    finalPrice = priceByWeight;
+                    baseText = `น้ำหนัก (เรท ${pricePerKg} ฿/KG)`;
+                } else {
+                    finalPrice = priceByCbm;
+                    baseText = `ปริมาตร (เรท ${pricePerCbm} ฿/Q)`;
+                }
+            }
+
+            document.getElementById('calcBaseResult').innerText = baseText;
+            if(finalPrice > 0){
+                document.getElementById('calcTotalResult').innerText = finalPrice.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ฿';
+            } else {
+                document.getElementById('calcTotalResult').innerText = '';
+            }
         }
 
         // ================= UI Helpers =================
