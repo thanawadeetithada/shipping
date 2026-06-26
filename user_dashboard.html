@@ -9,55 +9,109 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Kanit', sans-serif; background-color: #f8f9fa; }
-        .bg-brand { background-color: #c51c24; }
-        .text-brand { color: #c51c24; }
-        .bg-brand-dark { background-color: #8b1319; }
-        .checkbox-brand:checked { background-color: #c51c24; border-color: #c51c24; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        .fa-spin { animation-duration: 0.8s !important; }
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .bg-brand {
+            background-color: #c51c24;
+        }
+
+        .text-brand {
+            color: #c51c24;
+        }
+
+        .bg-brand-dark {
+            background-color: #8b1319;
+        }
+
+        .checkbox-brand:checked {
+            background-color: #c51c24;
+            border-color: #c51c24;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .fa-spin {
+            animation-duration: 0.8s !important;
+        }
+
         /* สไตล์สำหรับให้แท็บทำงานเนียนขึ้น */
-        .tab-content { animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .tab-content {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
     <script>
-       if (!localStorage.getItem('userSession')) {
-          window.location.replace('<?= getScriptUrl() ?>?page=index');
+        if (!localStorage.getItem('userSession')) {
+            window.location.replace('<?= getScriptUrl() ?>?page=index');
         }
     </script>
 </head>
 
 <body class="flex h-screen overflow-hidden text-gray-800 relative">
 
-    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-[80] flex flex-col items-center justify-center text-white transition-opacity">
+    <div id="loadingOverlay"
+        class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-[80] flex flex-col items-center justify-center text-white transition-opacity">
         <i class="fas fa-circle-notch fa-spin text-6xl mb-4"></i>
         <h2 id="loadingText" class="text-xl font-medium tracking-wide">กำลังโหลดข้อมูล...</h2>
     </div>
 
-    <div id="successModalOverlay" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-[90] hidden flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all text-center p-8 border-t-4 border-green-500">
+    <div id="successModalOverlay"
+        class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-[90] hidden flex items-center justify-center p-4 transition-opacity duration-300">
+        <div
+            class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all text-center p-8 border-t-4 border-green-500">
             <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
                 <i class="fas fa-check text-4xl text-green-500"></i>
             </div>
             <h3 class="text-2xl font-bold text-gray-800 mb-2" id="successModalTitle">สำเร็จ!</h3>
             <p id="successModalMsg" class="text-gray-600 mb-6 text-sm"></p>
-            <button onclick="closeSuccessModal()" class="w-full bg-brand text-white font-bold py-3 px-4 rounded-xl hover:bg-red-700 transition-colors shadow-md hover:shadow-lg flex justify-center items-center gap-2">
+            <button onclick="closeSuccessModal()"
+                class="w-full bg-brand text-white font-bold py-3 px-4 rounded-xl hover:bg-red-700 transition-colors shadow-md hover:shadow-lg flex justify-center items-center gap-2">
                 <span>ตกลง</span>
             </button>
         </div>
     </div>
 
-    <div id="alertModalOverlay" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-[90] hidden flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all text-center p-8 border-t-4 border-red-500">
+    <div id="alertModalOverlay"
+        class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-[90] hidden flex items-center justify-center p-4 transition-opacity duration-300">
+        <div
+            class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all text-center p-8 border-t-4 border-red-500">
             <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
                 <i class="fas fa-exclamation text-4xl text-red-500"></i>
             </div>
             <h3 class="text-2xl font-bold text-gray-800 mb-2">แจ้งเตือน</h3>
             <p id="alertModalMsg" class="text-gray-600 mb-6 text-sm"></p>
-            <button onclick="closeAlertModal()" class="w-full bg-gray-800 text-white font-bold py-3 px-4 rounded-xl hover:bg-gray-900 transition-colors shadow-md hover:shadow-lg flex justify-center items-center gap-2">
+            <button onclick="closeAlertModal()"
+                class="w-full bg-gray-800 text-white font-bold py-3 px-4 rounded-xl hover:bg-gray-900 transition-colors shadow-md hover:shadow-lg flex justify-center items-center gap-2">
                 <span>ตกลง</span>
             </button>
         </div>
@@ -70,43 +124,53 @@
         class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex flex-col z-50 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:flex shadow-xl">
         <div class="py-6 px-6 bg-brand-dark flex flex-col items-center justify-center relative border-b border-red-900">
             <div class="text-2xl font-bold leading-none mb-1 tracking-wide">SUCHAR</div>
-            <div class="text-[10px] tracking-widest text-red-200 bg-black/20 px-2 py-0.5 rounded-full mt-1">CUSTOMER PORTAL</div>
+            <div class="text-[10px] tracking-widest text-red-200 bg-black/20 px-2 py-0.5 rounded-full mt-1">CUSTOMER
+                PORTAL</div>
             <button class="absolute top-6 right-4 text-white md:hidden hover:text-red-200"
                 onclick="toggleMobileSidebar()"><i class="fas fa-times text-xl"></i></button>
         </div>
 
         <nav class="flex-grow p-4 space-y-1.5 overflow-y-auto text-sm" id="sidebarNav">
-            <a href="#" onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-link flex items-center gap-3 bg-brand text-white px-4 py-3 rounded-md font-medium shadow-md transition duration-200 whitespace-nowrap">
+            <a href="#" onclick="switchTab('dashboard')" id="nav-dashboard"
+                class="nav-link flex items-center gap-3 bg-brand text-white px-4 py-3 rounded-md font-medium shadow-md transition duration-200 whitespace-nowrap">
                 <i class="fas fa-home w-5 text-center"></i> แดชบอร์ดของฉัน
             </a>
-            <a href="#" onclick="switchTab('import')" id="nav-import" class="nav-link flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200 whitespace-nowrap">
+            <a href="#" onclick="switchTab('import')" id="nav-import"
+                class="nav-link flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200 whitespace-nowrap">
                 <i class="fas fa-box-open w-5 text-center"></i> แจ้งเลขแทรคกิ้งลูกค้าสั่งเอง
             </a>
-            <a href="#" onclick="switchTab('payment')" id="nav-payment" class="nav-link flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200 whitespace-nowrap">
+            <a href="#" onclick="switchTab('payment')" id="nav-payment"
+                class="nav-link flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200 whitespace-nowrap">
                 <i class="fas fa-file-invoice-dollar w-5 text-center"></i> จัดส่งสินค้า
             </a>
-            <a href="#" onclick="switchTab('tracking')" id="nav-tracking" class="nav-link flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200 whitespace-nowrap">
+            <a href="#" onclick="switchTab('tracking')" id="nav-tracking"
+                class="nav-link flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200 whitespace-nowrap">
                 <i class="fas fa-search-location w-5 text-center"></i> สถานะพัสดุทั้งหมด
             </a>
         </nav>
         <div class="p-4">
-            <button onclick="logoutuser()" class="flex items-center justify-center gap-2 text-gray-400 hover:text-white hover:bg-red-600/80 w-full px-4 py-2.5 rounded-md border border-gray-800 transition text-sm font-medium">
+            <button onclick="logoutuser()"
+                class="flex items-center justify-center gap-2 text-gray-400 hover:text-white hover:bg-red-600/80 w-full px-4 py-2.5 rounded-md border border-gray-800 transition text-sm font-medium">
                 <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
             </button>
         </div>
     </aside>
 
     <main class="flex-1 flex flex-col h-screen overflow-hidden bg-gray-50">
-        <header class="bg-white shadow-sm py-3 px-4 md:py-4 md:px-6 flex items-center justify-between z-30 relative min-h-[64px] md:min-h-[72px]">
+        <header
+            class="bg-white shadow-sm py-3 px-4 md:py-4 md:px-6 flex items-center justify-between z-30 relative min-h-[64px] md:min-h-[72px]">
             <div class="flex items-center gap-4 shrink-0">
                 <button class="text-gray-600 hover:text-brand md:hidden p-1 transition" onclick="toggleMobileSidebar()">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
             <div class="flex items-center justify-end shrink-0">
-                <div class="flex items-center gap-2 md:gap-3 bg-gray-50 px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-gray-100 transition cursor-default">
-                    <img id="headerAvatar" src="https://ui-avatars.com/api/?name=User&background=c51c24&color=fff" class="w-7 h-7 md:w-8 md:h-8 rounded-full shadow-sm">
-                    <span id="headerUsername" class="text-xs md:text-sm font-medium text-gray-700 pr-1 md:pr-2 hidden sm:block whitespace-nowrap">
+                <div onclick="goToProfile()"
+                    class="flex items-center gap-2 md:gap-3 bg-gray-50 px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-gray-100 transition cursor-pointer hover:bg-gray-200">
+                    <img id="headerAvatar" src="https://ui-avatars.com/api/?name=User&background=c51c24&color=fff"
+                        class="w-7 h-7 md:w-8 md:h-8 rounded-full shadow-sm">
+                    <span id="headerUsername"
+                        class="text-xs md:text-sm font-medium text-gray-700 pr-1 md:pr-2 hidden sm:block whitespace-nowrap">
                         กำลังโหลด...
                     </span>
                 </div>
@@ -115,52 +179,72 @@
 
         <div class="flex-1 overflow-y-auto p-4 md:p-8">
             <div class="max-w-6xl mx-auto">
-                
+
                 <div id="tab-dashboard" class="tab-content block space-y-6">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-200 pb-4">
+                    <div
+                        class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-200 pb-4">
                         <div>
                             <h1 id="welcomeText" class="text-2xl font-bold text-gray-800">ยินดีต้อนรับ</h1>
-                            <p class="text-sm text-gray-500 mt-1">รหัสลูกค้า: <span id="welcomeId" class="font-bold text-brand">-</span> | จัดการรายการสินค้าและติดตามสถานะ</p>
+                            <p class="text-sm text-gray-500 mt-1">รหัสลูกค้า: <span id="welcomeId"
+                                    class="font-bold text-brand">-</span> | จัดการรายการสินค้าและติดตามสถานะ</p>
                         </div>
-                        <button onclick="switchTab('import')" class="bg-brand text-white px-6 py-2.5 rounded-md font-medium hover:bg-brand-dark transition shadow-sm flex items-center gap-2">
+                        <button onclick="switchTab('import')"
+                            class="bg-brand text-white px-6 py-2.5 rounded-md font-medium hover:bg-brand-dark transition shadow-sm flex items-center gap-2">
                             <i class="fas fa-plus-circle"></i> นำเข้าสินค้าชิ้นใหม่
                         </button>
                     </div>
 
-                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 shadow-sm flex flex-col md:flex-row items-start md:items-center gap-4">
-                        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl shrink-0">
+                    <div
+                        class="bg-blue-50 border border-blue-200 rounded-xl p-5 shadow-sm flex flex-col md:flex-row items-start md:items-center gap-4">
+                        <div
+                            class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl shrink-0">
                             <i class="fas fa-map-marker-alt"></i>
                         </div>
                         <div class="flex-1">
                             <h3 class="font-bold text-blue-800 mb-1">ที่อยู่สำหรับจัดส่งเข้าโกดังจีน</h3>
-                            <p id="chinaAddressText" class="text-sm text-gray-700 leading-relaxed bg-white px-3 py-2 rounded border border-blue-100 mt-2 whitespace-pre-line">กำลังโหลดข้อมูลที่อยู่...</p>
+                            <p id="chinaAddressText"
+                                class="text-sm text-gray-700 leading-relaxed bg-white px-3 py-2 rounded border border-blue-100 mt-2 whitespace-pre-line">
+                                กำลังโหลดข้อมูลที่อยู่...</p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex items-center gap-4">
-                            <div class="w-12 h-12 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center text-xl"><i class="fas fa-warehouse"></i></div>
+                            <div
+                                class="w-12 h-12 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center text-xl">
+                                <i class="fas fa-warehouse"></i>
+                            </div>
                             <div>
                                 <div class="text-xs text-gray-500 font-medium">รอเข้าโกดังจีน</div>
                                 <div id="countWaitChina" class="text-2xl font-bold text-gray-800">0</div>
                             </div>
                         </div>
                         <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex items-center gap-4">
-                            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-xl"><i class="fas fa-truck-moving"></i></div>
+                            <div
+                                class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-xl">
+                                <i class="fas fa-truck-moving"></i>
+                            </div>
                             <div>
                                 <div class="text-xs text-gray-500 font-medium">กำลังมาไทย</div>
                                 <div id="countComingThai" class="text-2xl font-bold text-gray-800">0</div>
                             </div>
                         </div>
-                        <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex items-center gap-4 cursor-pointer hover:border-brand transition" onclick="switchTab('payment')">
-                            <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center text-xl"><i class="fas fa-file-invoice-dollar"></i></div>
+                        <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex items-center gap-4 cursor-pointer hover:border-brand transition"
+                            onclick="switchTab('payment')">
+                            <div
+                                class="w-12 h-12 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center text-xl">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                            </div>
                             <div>
                                 <div class="text-xs text-gray-500 font-medium">รอตรวจสอบยอด</div>
                                 <div id="countWaitPay" class="text-2xl font-bold text-brand">0</div>
                             </div>
                         </div>
                         <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex items-center gap-4">
-                            <div class="w-12 h-12 bg-green-50 text-green-600 rounded-full flex items-center justify-center text-xl"><i class="fas fa-check-circle"></i></div>
+                            <div
+                                class="w-12 h-12 bg-green-50 text-green-600 rounded-full flex items-center justify-center text-xl">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
                             <div>
                                 <div class="text-xs text-gray-500 font-medium">จัดส่งสำเร็จ (เดือนนี้)</div>
                                 <div id="countSuccess" class="text-2xl font-bold text-gray-800">0</div>
@@ -171,22 +255,28 @@
                     <div class="lg:col-span-2 space-y-8">
                         <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
                             <div class="bg-red-50 border-b-2 border-brand px-6 py-4 flex justify-between items-center">
-                                <h3 class="font-bold text-brand flex items-center gap-2"><i class="fas fa-warehouse"></i> สินค้าในโกดังจีน (รอรวมบิล)</h3>
-                                <span id="chinaItemsCountBadge" class="bg-white text-xs px-2 py-1 rounded-md border text-gray-600 font-medium shadow-sm">0 รายการ</span>
+                                <h3 class="font-bold text-brand flex items-center gap-2"><i
+                                        class="fas fa-warehouse"></i> สินค้าในโกดังจีน (รอรวมบิล)</h3>
+                                <span id="chinaItemsCountBadge"
+                                    class="bg-white text-xs px-2 py-1 rounded-md border text-gray-600 font-medium shadow-sm">0
+                                    รายการ</span>
                             </div>
                             <div class="p-6">
-                                <p class="text-sm text-gray-600 mb-4">ไปที่เมนู <b>"จัดส่งสินค้า"</b> เพื่อรวมบิลพัสดุ</p>
-                                <div id="chinaItemsContainer" class="space-y-3 max-h-[400px] overflow-y-auto pr-2"></div>
+                                <p class="text-sm text-gray-600 mb-4">ไปที่เมนู <b>"จัดส่งสินค้า"</b> เพื่อรวมบิลพัสดุ
+                                </p>
+                                <div id="chinaItemsContainer" class="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                     <div class="lg:col-span-2 space-y-8">
+                    <div class="lg:col-span-2 space-y-8">
                         <div>
                             <h3 class="font-bold text-xl text-gray-800 mb-4 flex items-center gap-2">
                                 <i class="fas fa-truck-fast text-brand"></i> รายการจัดส่งของฉัน (พัสดุไทย)
                             </h3>
-                            <div id="activeShipmentsContainer" class="space-y-4 max-h-[500px] overflow-y-auto pr-2"></div>
+                            <div id="activeShipmentsContainer" class="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -195,7 +285,8 @@
                 <div id="tab-import" class="tab-content hidden space-y-6">
                     <div class="border-b border-gray-200 pb-4">
                         <h1 class="text-2xl font-bold text-gray-800 whitespace-nowrap">แจ้งเลขแทรคกิ้งลูกค้าสั่งเอง</h1>
-                        <p class="text-sm text-gray-500 mt-1">กรอกเลข Tracking ที่ได้จากร้านจีน และเพิ่มลงในรายการเพื่อให้โกดังจีนทราบข้อมูลพัสดุของคุณ</p>
+                        <p class="text-sm text-gray-500 mt-1">กรอกเลข Tracking ที่ได้จากร้านจีน
+                            และเพิ่มลงในรายการเพื่อให้โกดังจีนทราบข้อมูลพัสดุของคุณ</p>
                     </div>
 
                     <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
@@ -203,19 +294,27 @@
                             <h3 class="text-md font-semibold text-gray-700 mb-3">เพิ่มรายการสินค้า</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">เลข Tracking ของจีน <span class="text-brand">*</span></label>
-                                    <input type="text" id="trackingInput" class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand" placeholder="เช่น YT123456789">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">เลข Tracking ของจีน
+                                        <span class="text-brand">*</span></label>
+                                    <input type="text" id="trackingInput"
+                                        class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+                                        placeholder="เช่น YT123456789">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อสินค้า / รายละเอียดเบื้องต้น</label>
-                                    <input type="text" id="detailInput" class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand" placeholder="เช่น เสื้อกันหนาว 3 ตัว">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อสินค้า /
+                                        รายละเอียดเบื้องต้น</label>
+                                    <input type="text" id="detailInput"
+                                        class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+                                        placeholder="เช่น เสื้อกันหนาว 3 ตัว">
                                 </div>
                             </div>
                             <div class="mt-4 flex justify-end gap-2">
-                                <button onclick="openCalcModal()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm font-medium transition shadow-sm flex items-center gap-2">
+                                <button onclick="openCalcModal()"
+                                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm font-medium transition shadow-sm flex items-center gap-2">
                                     <i class="fas fa-calculator"></i> คำนวณค่าขนส่ง
                                 </button>
-                                <button onclick="addImportItem()" class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 shadow-sm text-sm font-medium flex items-center gap-2 transition">
+                                <button onclick="addImportItem()"
+                                    class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 shadow-sm text-sm font-medium flex items-center gap-2 transition">
                                     <i class="fas fa-plus"></i> เพิ่มลงตาราง
                                 </button>
                             </div>
@@ -223,23 +322,29 @@
 
                         <div>
                             <div class="flex justify-between items-center mb-3">
-                                <h3 class="text-lg font-bold text-gray-800"><i class="fas fa-list-ul mr-2 text-brand"></i>รายการพัสดุที่จะแจ้งนำเข้า</h3>
-                                <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-md">รวม <span id="importItemCount" class="font-bold text-brand">0</span> รายการ</span>
+                                <h3 class="text-lg font-bold text-gray-800"><i
+                                        class="fas fa-list-ul mr-2 text-brand"></i>รายการพัสดุที่จะแจ้งนำเข้า</h3>
+                                <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-md">รวม <span
+                                        id="importItemCount" class="font-bold text-brand">0</span> รายการ</span>
                             </div>
                             <div class="overflow-x-auto border border-gray-200 rounded-lg">
                                 <table class="min-w-full divide-y divide-gray-200 text-sm text-left">
                                     <thead class="bg-gray-100">
                                         <tr>
-                                            <th class="px-4 py-3 font-semibold text-gray-700 w-16 text-center">ลำดับ</th>
+                                            <th class="px-4 py-3 font-semibold text-gray-700 w-16 text-center">ลำดับ
+                                            </th>
                                             <th class="px-4 py-3 font-semibold text-gray-700">เลข Tracking</th>
                                             <th class="px-4 py-3 font-semibold text-gray-700">รายละเอียดสินค้า</th>
-                                            <th class="px-4 py-3 font-semibold text-gray-700 text-center">น้ำหนัก (KG)</th>
-                                            <th class="px-4 py-3 font-semibold text-gray-700 text-center">ปริมาตร (CBM)</th>
-                                            <th class="px-4 py-3 font-semibold text-gray-700 w-28 text-center">จัดการ</th>
+                                            <th class="px-4 py-3 font-semibold text-gray-700 text-center">น้ำหนัก (KG)
+                                            </th>
+                                            <th class="px-4 py-3 font-semibold text-gray-700 text-center">ปริมาตร (CBM)
+                                            </th>
+                                            <th class="px-4 py-3 font-semibold text-gray-700 w-28 text-center">จัดการ
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody id="importTableBody" class="divide-y divide-gray-200 bg-white">
-                                        </tbody>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -249,33 +354,45 @@
                 <div id="tab-payment" class="tab-content hidden space-y-6">
                     <div class="border-b border-gray-200 pb-4">
                         <h1 class="text-2xl font-bold text-gray-800">ชำระเงินและเลือกจัดส่ง</h1>
-                        <p class="text-sm text-gray-500 mt-1">เลือกพัสดุที่ต้องการรวมบิลชำระค่าขนส่ง (จีน-ไทย) และแนบสลิปเพื่อแจ้งโอน</p>
+                        <p class="text-sm text-gray-500 mt-1">เลือกพัสดุที่ต้องการรวมบิลชำระค่าขนส่ง (จีน-ไทย)
+                            และแนบสลิปเพื่อแจ้งโอน</p>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div class="lg:col-span-2 space-y-6">
-                            
+
                             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                                <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i class="fas fa-check-square text-brand mr-2"></i> 1. เลือกพัสดุที่ต้องการรวมบิล</h2>
+                                <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i
+                                        class="fas fa-check-square text-brand mr-2"></i> 1. เลือกพัสดุที่ต้องการรวมบิล
+                                </h2>
                                 <div class="space-y-3 max-h-[400px] overflow-y-auto pr-2" id="paymentParcelList">
-                                    </div>
+                                </div>
                             </div>
 
                             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                                <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i class="fas fa-truck-fast text-brand mr-2"></i> 2. เลือกประเภทขนส่งและประเภทสินค้า</h2>
+                                <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i
+                                        class="fas fa-truck-fast text-brand mr-2"></i> 2.
+                                    เลือกประเภทขนส่งและประเภทสินค้า</h2>
                                 <div id="paymentRatesContainer" class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="space-y-6">
                             <div class="bg-gray-900 text-white p-6 rounded-xl shadow-sm">
-                                <h3 class="font-bold text-lg mb-4 pb-2 border-b border-gray-700 text-brand">สรุปยอดชำระเงิน</h3>
+                                <h3 class="font-bold text-lg mb-4 pb-2 border-b border-gray-700 text-brand">
+                                    สรุปยอดชำระเงิน</h3>
                                 <div class="space-y-2">
-                                    <div class="flex justify-between text-sm"><span class="text-gray-400">จำนวนพัสดุ</span><span id="paymentCount">0 กล่อง</span></div>
-                                    <div class="flex justify-between text-sm"><span class="text-gray-400">น้ำหนัก / CBM</span><span id="paymentWeight">0.00 KG / 0.00 CBM</span></div>
-                                    <div class="flex justify-between text-sm"><span class="text-gray-400">ค่าบริการ</span><span id="paymentBaseFee">0.00 ฿</span></div>
-                                    <div class="flex justify-between text-sm mt-2 border-t border-gray-700 pt-2"><span class="text-gray-400" id="paymentRateLabel">-</span></div>
+                                    <div class="flex justify-between text-sm"><span
+                                            class="text-gray-400">จำนวนพัสดุ</span><span id="paymentCount">0
+                                            กล่อง</span></div>
+                                    <div class="flex justify-between text-sm"><span class="text-gray-400">น้ำหนัก /
+                                            CBM</span><span id="paymentWeight">0.00 KG / 0.00 CBM</span></div>
+                                    <div class="flex justify-between text-sm"><span
+                                            class="text-gray-400">ค่าบริการ</span><span id="paymentBaseFee">0.00
+                                            ฿</span></div>
+                                    <div class="flex justify-between text-sm mt-2 border-t border-gray-700 pt-2"><span
+                                            class="text-gray-400" id="paymentRateLabel">-</span></div>
                                 </div>
                                 <hr class="border-gray-700 my-4">
                                 <div class="flex justify-between items-center">
@@ -285,30 +402,40 @@
                             </div>
 
                             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                                <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i class="fas fa-qrcode text-brand mr-2"></i> 3. ชำระเงินและแจ้งโอน</h2>
+                                <h2 class="font-bold text-lg mb-4 pb-2 border-b"><i
+                                        class="fas fa-qrcode text-brand mr-2"></i> 3. ชำระเงินและแจ้งโอน</h2>
                                 <div class="flex flex-col space-y-6">
-                                    <div class="bg-gray-50 p-4 rounded-xl flex flex-col items-center justify-center border border-gray-100">
-                                        <img id="qr-code-img" src="" alt="QR Code" class="w-48 h-48 object-contain mb-2 hidden" referrerpolicy="no-referrer">
-                                        <p class="text-xs text-center text-gray-500 font-medium">สแกนเพื่อชำระเงิน<br>PromptPay</p>
+                                    <div
+                                        class="bg-gray-50 p-4 rounded-xl flex flex-col items-center justify-center border border-gray-100">
+                                        <img id="qr-code-img" src="" alt="QR Code"
+                                            class="w-48 h-48 object-contain mb-2 hidden" referrerpolicy="no-referrer">
+                                        <p class="text-xs text-center text-gray-500 font-medium">
+                                            สแกนเพื่อชำระเงิน<br>PromptPay</p>
                                     </div>
                                     <div class="w-full space-y-4">
                                         <div class="p-4 bg-blue-50 border border-blue-100 rounded-lg text-center">
                                             <p class="font-bold text-blue-800 text-sm" id="bank-name">-</p>
-                                            <p class="text-blue-600 text-xl tracking-wider font-bold my-1" id="bank-acc">-</p>
+                                            <p class="text-blue-600 text-xl tracking-wider font-bold my-1"
+                                                id="bank-acc">-</p>
                                             <p class="text-blue-600 text-xs mt-1" id="bank-acc-name">-</p>
                                         </div>
                                         <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">แนบสลิปโอนเงิน <span class="text-red-500">*</span></label>
-                                            <input type="file" id="slipInput" accept="image/*" class="hidden" onchange="handleSlipSelect(event)">
-                                            <label for="slipInput" class="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 hover:border-brand cursor-pointer transition">
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">แนบสลิปโอนเงิน
+                                                <span class="text-red-500">*</span></label>
+                                            <input type="file" id="slipInput" accept="image/*" class="hidden"
+                                                onchange="handleSlipSelect(event)">
+                                            <label for="slipInput"
+                                                class="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 hover:border-brand cursor-pointer transition">
                                                 <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
-                                                <span class="text-sm text-gray-500 text-center" id="slipNameDisplay">คลิกเพื่ออัปโหลดสลิป</span>
+                                                <span class="text-sm text-gray-500 text-center"
+                                                    id="slipNameDisplay">คลิกเพื่ออัปโหลดสลิป</span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <button id="submitPaymentBtn" onclick="processPayment()" class="w-full bg-brand text-white text-lg font-bold py-4 rounded-xl shadow-md transition flex items-center justify-center gap-2 disabled:bg-gray-400 hover:bg-red-700">
+                            <button id="submitPaymentBtn" onclick="processPayment()"
+                                class="w-full bg-brand text-white text-lg font-bold py-4 rounded-xl shadow-md transition flex items-center justify-center gap-2 disabled:bg-gray-400 hover:bg-red-700">
                                 ยืนยันการทำรายการ <i class="fas fa-check-circle"></i>
                             </button>
                         </div>
@@ -316,13 +443,15 @@
                 </div>
 
                 <div id="tab-tracking" class="tab-content hidden space-y-6">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-200 pb-4">
+                    <div
+                        class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-200 pb-4">
                         <div>
                             <h1 class="text-2xl font-bold text-gray-800">สถานะพัสดุของคุณทั้งหมด</h1>
                             <p class="text-sm text-gray-500 mt-1">แสดงรายการสินค้าทั้งหมดตั้งแต่เข้าโกดังจีนจนถึงไทย</p>
                         </div>
                         <div class="relative w-full md:w-72">
-                            <input type="text" id="searchInput" placeholder="ค้นหาออเดอร์ / Tracking / วิธีส่ง..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand">
+                            <input type="text" id="searchInput" placeholder="ค้นหาออเดอร์ / Tracking / วิธีส่ง..."
+                                class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand">
                             <i class="fas fa-search absolute left-3 top-3 text-gray-400 text-sm"></i>
                         </div>
                     </div>
@@ -334,14 +463,14 @@
                                     <tr>
                                         <th class="p-4">เลขออเดอร์ / Tracking จีน</th>
                                         <th class="p-4">วิธีขนส่ง</th>
-                                        <th class="p-4">รายละเอียดสินค้า</th> 
+                                        <th class="p-4">รายละเอียดสินค้า</th>
                                         <th class="p-4 text-center">น.น. / CBM</th>
                                         <th class="p-4">วันที่อัปเดต</th>
                                         <th class="p-4 text-center">สถานะ</th>
                                     </tr>
                                 </thead>
                                 <tbody id="fullTrackingTableBody" class="divide-y divide-gray-100">
-                                    </tbody>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -351,87 +480,118 @@
         </div>
     </main>
 
-    <div id="calcModalOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-[70] hidden flex items-center justify-center p-4 transition-opacity">
+    <div id="calcModalOverlay"
+        class="fixed inset-0 bg-black bg-opacity-50 z-[70] hidden flex items-center justify-center p-4 transition-opacity">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden transform transition-all relative">
             <div class="border-b border-gray-100 px-6 py-4 flex justify-between items-center">
                 <h3 class="text-lg font-bold text-gray-800">คำนวณค่าขนส่ง</h3>
-                <button onclick="closeModal('calcModalOverlay')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-lg"></i></button>
+                <button onclick="closeModal('calcModalOverlay')" class="text-gray-400 hover:text-gray-600"><i
+                        class="fas fa-times text-lg"></i></button>
             </div>
             <div class="p-6 space-y-5">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">การขนส่ง</label>
-                    <select id="calcTransport" class="w-full border border-gray-300 rounded-md p-2 outline-none" onchange="updateProductTypeOptions()">
+                    <select id="calcTransport" class="w-full border border-gray-300 rounded-md p-2 outline-none"
+                        onchange="updateProductTypeOptions()">
                         <option value="">กำลังโหลดข้อมูล...</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">ประเภทสินค้า</label>
-                    <select id="calcType" class="w-full border border-gray-300 rounded-md p-2 outline-none" onchange="doCalculate()">
-                         <option value="">กรุณาเลือกการขนส่งก่อน</option>
+                    <select id="calcType" class="w-full border border-gray-300 rounded-md p-2 outline-none"
+                        onchange="doCalculate()">
+                        <option value="">กรุณาเลือกการขนส่งก่อน</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">ขนาด (cm)</label>
                     <div class="flex items-center gap-2">
-                        <input type="number" id="calcW" placeholder="กว้าง" class="w-full border border-gray-300 rounded-md p-2 text-center outline-none" oninput="doCalculate()">
+                        <input type="number" id="calcW" placeholder="กว้าง"
+                            class="w-full border border-gray-300 rounded-md p-2 text-center outline-none"
+                            oninput="doCalculate()">
                         <span class="text-gray-500 text-sm">x</span>
-                        <input type="number" id="calcL" placeholder="ยาว" class="w-full border border-gray-300 rounded-md p-2 text-center outline-none" oninput="doCalculate()">
+                        <input type="number" id="calcL" placeholder="ยาว"
+                            class="w-full border border-gray-300 rounded-md p-2 text-center outline-none"
+                            oninput="doCalculate()">
                         <span class="text-gray-500 text-sm">x</span>
-                        <input type="number" id="calcH" placeholder="สูง" class="w-full border border-gray-300 rounded-md p-2 text-center outline-none" oninput="doCalculate()">
+                        <input type="number" id="calcH" placeholder="สูง"
+                            class="w-full border border-gray-300 rounded-md p-2 text-center outline-none"
+                            oninput="doCalculate()">
                         <span class="text-gray-500 text-sm">=</span>
-                        <input type="text" id="calcCbm" placeholder="0" class="w-full border border-gray-300 bg-gray-50 rounded-md p-2 text-center text-gray-500 outline-none" readonly>
+                        <input type="text" id="calcCbm" placeholder="0"
+                            class="w-full border border-gray-300 bg-gray-50 rounded-md p-2 text-center text-gray-500 outline-none"
+                            readonly>
                     </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">น้ำหนัก (KG)</label>
-                    <input type="number" id="calcWeight" placeholder="0.00" class="w-[48%] border border-gray-300 rounded-md p-2 outline-none" oninput="doCalculate()">
+                    <input type="number" id="calcWeight" placeholder="0.00"
+                        class="w-[48%] border border-gray-300 rounded-md p-2 outline-none" oninput="doCalculate()">
                 </div>
                 <div class="border-t border-gray-200 pt-5 mt-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">คิดราคาจาก</label>
-                    <div id="calcBaseResult" class="w-full bg-[#91dec8] text-[#1c5c4c] font-medium rounded-md p-2 mb-4 text-center min-h-[40px] flex items-center justify-center">-</div>
+                    <div id="calcBaseResult"
+                        class="w-full bg-[#91dec8] text-[#1c5c4c] font-medium rounded-md p-2 mb-4 text-center min-h-[40px] flex items-center justify-center">
+                        -</div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">ประมาณการ ค่าขนส่ง (฿)</label>
-                    <div id="calcTotalResult" class="w-full bg-[#46413e] text-white text-xl font-medium rounded-md p-3 text-center min-h-[52px] flex items-center justify-center"></div>
+                    <div id="calcTotalResult"
+                        class="w-full bg-[#46413e] text-white text-xl font-medium rounded-md p-3 text-center min-h-[52px] flex items-center justify-center">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="deleteModalOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-[70] hidden flex items-center justify-center p-4 transition-opacity">
+    <div id="deleteModalOverlay"
+        class="fixed inset-0 bg-black bg-opacity-50 z-[70] hidden flex items-center justify-center p-4 transition-opacity">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden transform transition-all">
             <div class="p-6 text-center">
-                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600"><i class="fas fa-exclamation-triangle text-3xl"></i></div>
+                <div
+                    class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600">
+                    <i class="fas fa-exclamation-triangle text-3xl"></i>
+                </div>
                 <h3 class="text-lg font-bold text-gray-900 mb-2">ยืนยันการลบรายการ</h3>
                 <p class="text-sm text-gray-600 mb-1">คุณต้องการลบรายการแจ้งนำเข้านี้ใช่หรือไม่?</p>
                 <p class="text-sm font-semibold text-brand mb-6" id="deleteTrackingText">Tracking: -</p>
                 <div class="flex gap-3">
-                    <button onclick="closeModal('deleteModalOverlay')" class="flex-1 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded hover:bg-gray-50 transition">ยกเลิก</button>
-                    <button id="confirmDeleteBtn" class="flex-1 bg-red-600 text-white font-medium py-2 px-4 rounded hover:bg-red-700 transition">ยืนยันการลบ</button>
+                    <button onclick="closeModal('deleteModalOverlay')"
+                        class="flex-1 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded hover:bg-gray-50 transition">ยกเลิก</button>
+                    <button id="confirmDeleteBtn"
+                        class="flex-1 bg-red-600 text-white font-medium py-2 px-4 rounded hover:bg-red-700 transition">ยืนยันการลบ</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="editModalOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-[70] hidden flex items-center justify-center p-4 transition-opacity">
+    <div id="editModalOverlay"
+        class="fixed inset-0 bg-black bg-opacity-50 z-[70] hidden flex items-center justify-center p-4 transition-opacity">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden transform transition-all">
             <div class="border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-gray-800"><i class="fas fa-edit text-blue-500 mr-2"></i>แก้ไขรายการสินค้า</h3>
-                <button onclick="closeModal('editModalOverlay')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-lg"></i></button>
+                <h3 class="text-lg font-bold text-gray-800"><i
+                        class="fas fa-edit text-blue-500 mr-2"></i>แก้ไขรายการสินค้า</h3>
+                <button onclick="closeModal('editModalOverlay')" class="text-gray-400 hover:text-gray-600"><i
+                        class="fas fa-times text-lg"></i></button>
             </div>
             <div class="p-6">
                 <input type="hidden" id="editOrderNum">
                 <input type="hidden" id="editWeightInput">
                 <input type="hidden" id="editCbmInput">
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">เลข Tracking ของจีน <span class="text-red-500">*</span></label>
-                    <input type="text" id="editTrackingInput" class="w-full border border-gray-300 rounded-md p-2.5 text-sm outline-none">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">เลข Tracking ของจีน <span
+                            class="text-red-500">*</span></label>
+                    <input type="text" id="editTrackingInput"
+                        class="w-full border border-gray-300 rounded-md p-2.5 text-sm outline-none">
                 </div>
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-1">รายละเอียดสินค้า</label>
-                    <input type="text" id="editDetailInput" class="w-full border border-gray-300 rounded-md p-2.5 text-sm outline-none">
+                    <input type="text" id="editDetailInput"
+                        class="w-full border border-gray-300 rounded-md p-2.5 text-sm outline-none">
                 </div>
                 <div class="flex gap-3">
-                    <button onclick="closeModal('editModalOverlay')" class="flex-1 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded hover:bg-gray-50 transition">ยกเลิก</button>
-                    <button onclick="submitEditItem()" class="flex-1 bg-blue-600 text-white font-medium py-2 px-4 rounded hover:bg-blue-700 transition">บันทึกการแก้ไข</button>
+                    <button onclick="closeModal('editModalOverlay')"
+                        class="flex-1 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded hover:bg-gray-50 transition">ยกเลิก</button>
+                    <button onclick="submitEditItem()"
+                        class="flex-1 bg-blue-600 text-white font-medium py-2 px-4 rounded hover:bg-blue-700 transition">บันทึกการแก้ไข</button>
                 </div>
             </div>
         </div>
@@ -440,14 +600,14 @@
     <script>
         // Global Variables
         let memberId = "";
-        
+
         // Data States
         let isImportLoaded = false;
         let isPaymentLoaded = false;
         let isTrackingLoaded = false;
 
         // Import Tab Variables
-        let importItems = []; 
+        let importItems = [];
         let deleteTargetId = "";
         let shippingRatesData = [];
 
@@ -475,22 +635,22 @@
                     if (usernameElement) usernameElement.innerText = fullname;
                     const avatarElement = document.getElementById('headerAvatar');
                     if (avatarElement) avatarElement.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(fullname) + "&background=c51c24&color=fff";
-                    
+
                     const welcomeText = document.getElementById('welcomeText');
                     const welcomeId = document.getElementById('welcomeId');
-                    if(welcomeText) welcomeText.innerText = "ยินดีต้อนรับ, " + fullname;
-                    if(welcomeId) welcomeId.innerText = memberId;
+                    if (welcomeText) welcomeText.innerText = "ยินดีต้อนรับ, " + fullname;
+                    if (welcomeId) welcomeId.innerText = memberId;
 
                 } catch (e) {
                     console.error("Session Error:", e);
                 }
             }
-            
+
             // เริ่มต้นเปิดที่หน้าแดชบอร์ด
             switchTab('dashboard');
 
             // ติดตั้งระบบค้นหาสำหรับหน้า Tracking
-            document.getElementById('searchInput').addEventListener('input', function(e) {
+            document.getElementById('searchInput').addEventListener('input', function (e) {
                 const term = e.target.value.toLowerCase();
                 const filtered = trackingData.filter(item => {
                     const orderNum = (item.orderNum || "").toLowerCase();
@@ -511,7 +671,7 @@
             // ซ่อนทุกแท็บ
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden', 'block'));
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('block'));
-            
+
             // แสดงแท็บเป้าหมาย
             document.getElementById('tab-' + tabName).classList.add('block');
             document.getElementById('tab-' + tabName).classList.remove('hidden');
@@ -586,7 +746,11 @@
         }
         // Redirect ไปหน้ารายละเอียดสถานะพัสดุ (อันนี้ต้องเปลี่ยนหน้า เพราะเป็นหน้ารายละเอียดแยก)
         function goToTrackingInfo(id) {
-          window.top.location.href = '<?= getScriptUrl() ?>?page=user_tracking_info&id=' + encodeURIComponent(id);
+            window.top.location.href = '<?= getScriptUrl() ?>?page=user_tracking_info&id=' + encodeURIComponent(id);
+        }
+
+        function goToProfile() {
+            window.top.location.href = '<?= getScriptUrl() ?>?page=user_profile';
         }
 
         // ================= 1. TAB: DASHBOARD =================
@@ -603,7 +767,7 @@
                         document.getElementById('countSuccess').innerText = res.summary.successMonth;
 
                         // ที่อยู่โกดังจีน
-                        if(document.getElementById('chinaAddressText')) {
+                        if (document.getElementById('chinaAddressText')) {
                             document.getElementById('chinaAddressText').innerText = res.chinaAddress || "ไม่มีข้อมูลที่อยู่";
                         }
 
@@ -633,14 +797,14 @@
                         } else {
                             shipContainer.innerHTML = res.shipments.map(ship => {
                                 let borderColor = "border-gray-200", badgeBg = "bg-gray-50", badgeText = "text-gray-600 border-gray-200", icon = "fa-box", noteHTML = `<div class="absolute top-0 left-0 w-1 h-full bg-gray-400"></div>`;
-                                
+
                                 if (ship.status === "รอชำระเงิน") { borderColor = "border-orange-200"; badgeBg = "bg-orange-50"; badgeText = "text-orange-600 border-orange-200"; icon = "fa-money-bill-wave"; noteHTML = `<div class="absolute top-0 left-0 w-1 h-full bg-orange-400"></div>`; }
                                 else if (ship.status === "รอตรวจสอบยอด" || ship.status === "รอแอดมินตรวจสอบสลิป") { badgeBg = "bg-yellow-50"; badgeText = "text-yellow-700 border-yellow-200"; icon = "fa-clock"; noteHTML = `<div class="absolute top-0 left-0 w-1 h-full bg-yellow-400"></div>`; }
                                 else if (ship.status === "กำลังขนส่งมาไทย") { badgeBg = "bg-blue-50"; badgeText = "text-blue-600 border-blue-200"; icon = "fa-truck-moving"; noteHTML = `<div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>`; }
                                 else if (ship.status === "ถึงโกดังไทย" || ship.status === "ชำระแล้ว") { borderColor = "border-green-500 border-2 shadow-md"; badgeBg = "bg-green-50"; badgeText = "text-green-700 border-green-200"; icon = "fa-check-circle"; noteHTML = `<div class="absolute top-0 left-0 w-1 h-full bg-green-500"></div>`; }
 
                                 let bottomText = `<p>ยอดชำระ: <span class="font-bold text-gray-800 text-lg">${ship.totalDisplay}</span></p>`;
-                                if(ship.status === "ชำระแล้ว") bottomText = `<p>ยอดชำระ: <span class="text-green-600 font-medium text-xs"><i class="fas fa-check"></i> ชำระแล้ว (${ship.totalDisplay})</span></p>`;
+                                if (ship.status === "ชำระแล้ว") bottomText = `<p>ยอดชำระ: <span class="text-green-600 font-medium text-xs"><i class="fas fa-check"></i> ชำระแล้ว (${ship.totalDisplay})</span></p>`;
                                 else if (ship.status === "ถึงโกดังไทย") bottomText = `<p class="mb-1">ของถึงไทยพร้อมจัดส่ง</p><p class="text-xs text-red-500 font-medium">*กรุณาตรวจสอบยอดชำระที่เมนูจัดส่งสินค้า</p>`;
 
                                 return `
@@ -679,7 +843,7 @@
             document.getElementById('importTableBody').innerHTML = `<tr><td colspan="6" class="px-4 py-12 text-center"><i class="fas fa-circle-notch fa-spin text-4xl text-brand mb-3"></i><p class="text-gray-500">กำลังโหลดรายการพัสดุ...</p></td></tr>`;
             google.script.run
                 .withSuccessHandler(function (data) {
-                    importItems = data; 
+                    importItems = data;
                     isImportLoaded = true;
                     renderImportTable();
                 })
@@ -751,7 +915,7 @@
             google.script.run
                 .withSuccessHandler(res => {
                     hideLoading();
-                    if(res.success) {
+                    if (res.success) {
                         importItems = importItems.filter(i => i.orderNum !== deleteTargetId);
                         renderImportTable();
                         showSuccessModal("ลบรายการสำเร็จ");
@@ -786,7 +950,7 @@
                     hideLoading();
                     if (res.success) {
                         const idx = importItems.findIndex(i => i.orderNum === orderNum);
-                        if(idx > -1) {
+                        if (idx > -1) {
                             importItems[idx].tracking = tracking; importItems[idx].detail = detail;
                             importItems[idx].weight = weight; importItems[idx].cbm = cbm;
                             renderImportTable();
@@ -801,12 +965,12 @@
         // เครื่องคิดเลข
         function loadShippingRatesForCalc() {
             google.script.run.withSuccessHandler(res => {
-                if(res.success) {
+                if (res.success) {
                     shippingRatesData = res.data;
                     const select = document.getElementById('calcTransport');
                     select.innerHTML = '';
                     const uniques = [...new Set(shippingRatesData.map(i => i.transport))];
-                    if(uniques.length===0) select.innerHTML = '<option value="">ไม่มีข้อมูล</option>';
+                    if (uniques.length === 0) select.innerHTML = '<option value="">ไม่มีข้อมูล</option>';
                     uniques.forEach(t => select.innerHTML += `<option value="${t}">${t}</option>`);
                     updateProductTypeOptions();
                 }
@@ -824,7 +988,7 @@
             document.getElementById('calcW').value = ''; document.getElementById('calcL').value = ''; document.getElementById('calcH').value = '';
             document.getElementById('calcCbm').value = ''; document.getElementById('calcWeight').value = '';
             document.getElementById('calcBaseResult').innerText = '-'; document.getElementById('calcTotalResult').innerText = '';
-            if(shippingRatesData.length === 0) loadShippingRatesForCalc();
+            if (shippingRatesData.length === 0) loadShippingRatesForCalc();
             document.getElementById('calcModalOverlay').classList.remove('hidden');
         }
         function doCalculate() {
@@ -832,7 +996,7 @@
             const l = parseFloat(document.getElementById('calcL').value) || 0;
             const h = parseFloat(document.getElementById('calcH').value) || 0;
             const weight = parseFloat(document.getElementById('calcWeight').value) || 0;
-            
+
             const trans = document.getElementById('calcTransport').value;
             const type = document.getElementById('calcType').value;
             const cbm = (w * l * h) / 1000000;
@@ -840,17 +1004,17 @@
 
             let pkg = 0, pcbm = 0;
             const rateObj = shippingRatesData.find(r => r.transport === trans && r.productType === type);
-            if(rateObj) { pkg = rateObj.rateKg; pcbm = rateObj.rateCbm; }
+            if (rateObj) { pkg = rateObj.rateKg; pcbm = rateObj.rateCbm; }
 
             let priceW = weight * pkg; let priceC = cbm * pcbm;
             let finalPrice = 0, baseText = "-";
-            if(weight > 0 || cbm > 0) {
-                if(pkg===0 && pcbm===0) { baseText = "ไม่พบเรทราคาในระบบ"; }
-                else if(priceW >= priceC) { finalPrice = priceW; baseText = `น้ำหนัก (เรท ${pkg} ฿/KG)`; }
+            if (weight > 0 || cbm > 0) {
+                if (pkg === 0 && pcbm === 0) { baseText = "ไม่พบเรทราคาในระบบ"; }
+                else if (priceW >= priceC) { finalPrice = priceW; baseText = `น้ำหนัก (เรท ${pkg} ฿/KG)`; }
                 else { finalPrice = priceC; baseText = `ปริมาตร (เรท ${pcbm} ฿/Q)`; }
             }
             document.getElementById('calcBaseResult').innerText = baseText;
-            document.getElementById('calcTotalResult').innerText = finalPrice > 0 ? finalPrice.toLocaleString('th-TH', {minimumFractionDigits: 2}) + ' ฿' : '';
+            document.getElementById('calcTotalResult').innerText = finalPrice > 0 ? finalPrice.toLocaleString('th-TH', { minimumFractionDigits: 2 }) + ' ฿' : '';
         }
 
         // ================= 3. TAB: PAYMENT =================
@@ -859,7 +1023,7 @@
             google.script.run
                 .withSuccessHandler(res => {
                     isPaymentLoaded = true;
-                    if(res.success) {
+                    if (res.success) {
                         paySettings = res.settings; payRates = res.rates; payParcels = res.parcels;
                         updatePaymentUI();
                     } else { showAlertModal(res.message); }
@@ -959,7 +1123,7 @@
                 let price = Math.max(costKg, costCbm);
                 document.getElementById(`pay-price-${i}`).innerText = price.toFixed(2) + ' ฿';
                 document.getElementById(`pay-calc-${i}`).innerText = costKg >= costCbm ? `คิดจากน้ำหนัก (${p.weight} x ${rate.priceKg})` : `คิดจากปริมาตร (${p.cbm} x ${rate.priceCbm})`;
-                if(cb.checked) { tc += price; tw += p.weight; tcb += p.cbm; count++; }
+                if (cb.checked) { tc += price; tw += p.weight; tcb += p.cbm; count++; }
             });
 
             let bf = count > 0 ? baseFee : 0;
@@ -975,7 +1139,7 @@
 
         function handleSlipSelect(e) {
             const f = e.target.files[0];
-            if(f) {
+            if (f) {
                 slipFileName = f.name; slipMimeType = f.type;
                 const r = new FileReader();
                 r.onload = e => {
@@ -989,12 +1153,12 @@
 
         function processPayment() {
             const cbs = document.querySelectorAll('.parcel-checkbox:checked');
-            if(cbs.length === 0) { showAlertModal("กรุณาเลือกพัสดุ"); return; }
-            if(!slipBase64) { showAlertModal("กรุณาแนบสลิป"); return; }
+            if (cbs.length === 0) { showAlertModal("กรุณาเลือกพัสดุ"); return; }
+            if (!slipBase64) { showAlertModal("กรุณาแนบสลิป"); return; }
 
             let orders = []; cbs.forEach(cb => orders.push(payParcels[cb.dataset.index].orderNum));
             let ttype = payRates[paySelectedRateIdx].transportType;
-            if(ttype.toUpperCase().includes("EK")) ttype = "EK"; else if(ttype.toUpperCase().includes("SEA")) ttype = "SEA";
+            if (ttype.toUpperCase().includes("EK")) ttype = "EK"; else if (ttype.toUpperCase().includes("SEA")) ttype = "SEA";
 
             const payload = {
                 memberId: memberId, orderList: orders, shippingType: ttype, productType: payRates[paySelectedRateIdx].productType,
@@ -1005,7 +1169,7 @@
             google.script.run
                 .withSuccessHandler(res => {
                     hideLoading();
-                    if(res.success) {
+                    if (res.success) {
                         showSuccessModal("บันทึกและแจ้งโอนสำเร็จ! กรุณารอแอดมินตรวจสอบ");
                         // Reset forms
                         slipBase64 = ""; document.getElementById('slipNameDisplay').innerText = "คลิกเพื่ออัปโหลดสลิป";
@@ -1026,7 +1190,7 @@
             google.script.run
                 .withSuccessHandler(res => {
                     isTrackingLoaded = true;
-                    if(res.success) {
+                    if (res.success) {
                         trackingData = res.data;
                         renderTrackingTable(trackingData);
                     } else { document.getElementById('fullTrackingTableBody').innerHTML = `<tr><td colspan="6" class="p-8 text-center text-red-500">${res.message}</td></tr>`; }
@@ -1040,16 +1204,16 @@
         function renderTrackingTable(data) {
             const tbody = document.getElementById('fullTrackingTableBody');
             tbody.innerHTML = '';
-            if(data.length === 0) {
+            if (data.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500"><i class="fas fa-box-open text-3xl mb-2 text-gray-300"></i><br>ไม่พบข้อมูล</td></tr>`; return;
             }
             data.forEach(item => {
                 let badge = ''; const s = item.status || 'รอเข้าโกดังจีน';
-                if(s === 'รอเข้าโกดังจีน') badge = '<span class="bg-gray-100 text-gray-600 border border-gray-200 px-3 py-1 rounded-full text-xs font-bold">รอเข้าโกดังจีน</span>';
-                else if(s === 'ถึงโกดังจีน') badge = '<span class="bg-orange-50 text-orange-600 border border-orange-200 px-3 py-1 rounded-full text-xs font-bold">ถึงโกดังจีน</span>';
-                else if(s === 'กำลังมาไทย') badge = '<span class="bg-blue-50 text-blue-600 border border-blue-200 px-3 py-1 rounded-full text-xs font-bold">กำลังมาไทย</span>';
-                else if(s === 'ถึงโกดังไทย') badge = '<span class="bg-purple-50 text-purple-600 border border-purple-200 px-3 py-1 rounded-full text-xs font-bold">ถึงโกดังไทย</span>';
-                else if(s === 'จัดส่งสำเร็จ') badge = '<span class="bg-green-50 text-green-600 border border-green-200 px-3 py-1 rounded-full text-xs font-bold">จัดส่งสำเร็จ</span>';
+                if (s === 'รอเข้าโกดังจีน') badge = '<span class="bg-gray-100 text-gray-600 border border-gray-200 px-3 py-1 rounded-full text-xs font-bold">รอเข้าโกดังจีน</span>';
+                else if (s === 'ถึงโกดังจีน') badge = '<span class="bg-orange-50 text-orange-600 border border-orange-200 px-3 py-1 rounded-full text-xs font-bold">ถึงโกดังจีน</span>';
+                else if (s === 'กำลังมาไทย') badge = '<span class="bg-blue-50 text-blue-600 border border-blue-200 px-3 py-1 rounded-full text-xs font-bold">กำลังมาไทย</span>';
+                else if (s === 'ถึงโกดังไทย') badge = '<span class="bg-purple-50 text-purple-600 border border-purple-200 px-3 py-1 rounded-full text-xs font-bold">ถึงโกดังไทย</span>';
+                else if (s === 'จัดส่งสำเร็จ') badge = '<span class="bg-green-50 text-green-600 border border-green-200 px-3 py-1 rounded-full text-xs font-bold">จัดส่งสำเร็จ</span>';
                 else badge = `<span class="bg-gray-50 text-gray-600 border border-gray-200 px-3 py-1 rounded-full text-xs font-bold">${s}</span>`;
 
                 let stype = item.shippingType === 'EK' ? '<span class="bg-gray-100 px-2 py-1 rounded text-xs font-medium">รถ (EK)</span>' : (item.shippingType === 'SEA' ? '<span class="bg-gray-100 px-2 py-1 rounded text-xs font-medium">เรือ (SEA)</span>' : `<span class="bg-gray-100 px-2 py-1 rounded text-xs font-medium">${item.shippingType || '-'}</span>`);

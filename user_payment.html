@@ -93,8 +93,8 @@
             </div>
 
             <div class="flex items-center justify-end shrink-0">
-                <div onclick="window.top.location.href='<?= getScriptUrl() ?>?page=user_profile'" target="_top"
-                    class="flex items-center gap-2 md:gap-3 bg-gray-50 px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-gray-100 cursor-pointer hover:bg-gray-100 transition">
+                <div onclick="goToProfile()"
+                    class="flex items-center gap-2 md:gap-3 bg-gray-50 px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-gray-100 transition cursor-pointer hover:bg-gray-200">
                     <img id="headerAvatar" src="https://ui-avatars.com/api/?name=User&background=c51c24&color=fff"
                         class="w-7 h-7 md:w-8 md:h-8 rounded-full shadow-sm">
                     <span id="headerUsername"
@@ -487,6 +487,10 @@
             localStorage.clear();
             window.top.location.href = '<?= getScriptUrl() ?>?page=index';
         }   
+
+        function goToProfile() {
+            window.top.location.href = '<?= getScriptUrl() ?>?page=user_profile';
+        }
     </script>
 </body>
 </html>
