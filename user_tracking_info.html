@@ -352,7 +352,6 @@
     <script>
         let memberId = "";
 
-        // ฟังก์ชันควบคุม Modal แจ้งเตือนข้อผิดพลาด
         function showAlertModal(msg) {
             document.getElementById('alertModalMsg').innerText = msg;
             document.getElementById('alertModalOverlay').classList.remove('hidden');
@@ -362,7 +361,6 @@
             document.getElementById('alertModalOverlay').classList.add('hidden');
         }
 
-        // ฟังก์ชันควบคุม Modal แจ้งเตือนสำเร็จ
         function showSuccessModal(msg) {
             document.getElementById('successModalMsg').innerText = msg;
             document.getElementById('successModalOverlay').classList.remove('hidden');
@@ -388,7 +386,6 @@
                 }
             }
 
-            // รองรับการกด Enter ที่ช่องค้นหา
             const searchInput = document.getElementById('searchOrderInput');
             if (searchInput) {
                 searchInput.addEventListener('keypress', function (e) {
@@ -398,7 +395,6 @@
                 });
             }
 
-            // ดึง ID จาก URL แบบ Google Apps Script
             google.script.url.getLocation(function (location) {
                 const orderId = location.parameter.id || "";
 
@@ -442,20 +438,17 @@
         }
 
         function renderUI(res) {
-            // 1. ส่วนหัว
             document.getElementById('t-orderNum').innerText = res.tracking.orderNum;
             document.getElementById('t-tracking').innerText = res.tracking.trackingId;
             document.getElementById('t-customerName').innerText = res.member.name;
             document.getElementById('t-customerPhone').innerText = res.member.phone;
             document.getElementById('t-latestStatus').innerText = res.tracking.statusText;
 
-            // 2. ข้อมูลบิลชำระเงิน
             document.getElementById('s-items').innerText = res.summary.items + ' ชิ้น';
             document.getElementById('s-weight').innerText = res.summary.weight + ' KG';
             document.getElementById('s-cbm').innerText = res.summary.cbm + ' CBM';
             document.getElementById('s-total').innerText = res.summary.netTotal + ' บาท';
 
-            // เปลี่ยนสีป้ายสถานะชำระเงิน
             const payStatusEl = document.getElementById('s-payStatus');
             payStatusEl.innerText = res.summary.paymentStatus;
             if (res.summary.paymentStatus === "ชำระแล้ว") {
@@ -468,24 +461,20 @@
 
             document.getElementById('s-payDate').innerText = res.summary.paymentDate;
 
-            // 3. ที่อยู่จัดส่ง
             document.getElementById('addr-name').innerText = res.member.name;
             document.getElementById('addr-phone').innerText = res.member.phone;
             document.getElementById('addr-detail').innerText = res.member.address;
 
-            // 4. ติดต่อเรา
             document.getElementById('text-phone').innerText = res.contact.phone;
             document.getElementById('text-line').innerText = res.contact.line;
             document.getElementById('btn-line-add').onclick = () => { window.open(res.contact.lineLink, '_blank'); };
 
-            // 5. อัปเดต Timeline (ความคืบหน้า)
             updateTimelineStep(1, res.tracking.timeline.step1);
             updateTimelineStep(2, res.tracking.timeline.step2);
             updateTimelineStep(3, res.tracking.timeline.step3);
             updateTimelineStep(4, res.tracking.timeline.step4);
             updateTimelineStep(5, res.tracking.timeline.step5);
 
-            // หา step ล่าสุดและคำนวณแถบ Progress Bar
             let currentStep = 0;
             if (res.tracking.timeline.step5) currentStep = 5;
             else if (res.tracking.timeline.step4) currentStep = 4;
@@ -498,7 +487,6 @@
                 document.getElementById('progress-bar').style.width = progressPct + '%';
             }, 100);
 
-            // อัปเดตเวลาล่าสุดตรงมุมขวาบน
             if (currentStep > 0) {
                 const latestDateObj = res.tracking.timeline['step' + currentStep];
                 document.getElementById('t-latestTime').innerText = "อัปเดตล่าสุด: " + latestDateObj.dateStr + " " + latestDateObj.timeStr + " น.";
@@ -514,13 +502,11 @@
             const time = document.getElementById('step' + stepNum + '-time');
 
             if (dataObj) {
-                // สถานะนี้ผ่านมาแล้ว
                 container.classList.remove('opacity-40');
                 icon.className = "w-10 h-10 rounded-full flex items-center justify-center mb-2 text-white bg-brand shadow-[0_0_10px_rgba(197,28,36,0.5)]";
                 title.classList.add('font-bold', 'text-brand');
                 time.innerHTML = dataObj.dateStr + "<br>" + dataObj.timeStr + " น.";
             } else {
-                // ยังมาไม่ถึง
                 container.classList.add('opacity-40');
                 icon.className = "w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mb-2";
                 title.classList.remove('font-bold', 'text-brand');
@@ -528,7 +514,6 @@
             }
         }
 
-        // คัดลอกเลข แล้วแสดง Success Modal แทน alert เดิม
         function copyToClipboard(id) {
             const text = document.getElementById(id).innerText;
             navigator.clipboard.writeText(text).then(() => {

@@ -191,7 +191,6 @@
     </main>
 
     <script>
-        // Global State
         let currentSettings = { bankName: "", bankAcc: "", bankAccName: "", baseFee: "0", qrCodeUrl: "" };
         let currentRates = [];
         let currentParcels = [];
@@ -258,7 +257,6 @@
             document.getElementById('bank-acc').innerText = currentSettings.bankAcc;
             document.getElementById('bank-acc-name').innerText = currentSettings.bankAccName;
 
-            // แสดง QR Code
             const qrImg = document.getElementById('qr-code-img');
             if (currentSettings.qrCodeUrl) {
                 qrImg.src = currentSettings.qrCodeUrl;
@@ -364,11 +362,9 @@
                 let index = cb.dataset.index;
                 let p = currentParcels[index];
                 
-                // คำนวณราคาทั้ง 2 แบบ
                 let costKg = p.weight * selectedRate.priceKg;
                 let costCbm = p.cbm * selectedRate.priceCbm;
                 
-                // ใช้ราคาที่สูงกว่าในการคิดค่าขนส่ง
                 let itemPrice = Math.max(costKg, costCbm);
                 document.getElementById(`item-price-${index}`).innerText = itemPrice.toFixed(2) + ' ฿';
                 

@@ -598,20 +598,13 @@
     </div>
 
     <script>
-        // Global Variables
         let memberId = "";
-
-        // Data States
         let isImportLoaded = false;
         let isPaymentLoaded = false;
         let isTrackingLoaded = false;
-
-        // Import Tab Variables
         let importItems = [];
         let deleteTargetId = "";
         let shippingRatesData = [];
-
-        // Payment Tab Variables
         let paySettings = {};
         let payRates = [];
         let payParcels = [];
@@ -619,8 +612,6 @@
         let payTotalFee = 0;
         let payFinalTotal = 0;
         let slipBase64 = "", slipMimeType = "", slipFileName = "";
-
-        // Tracking Tab Variables
         let trackingData = [];
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -646,10 +637,8 @@
                 }
             }
 
-            // เริ่มต้นเปิดที่หน้าแดชบอร์ด
             switchTab('dashboard');
 
-            // ติดตั้งระบบค้นหาสำหรับหน้า Tracking
             document.getElementById('searchInput').addEventListener('input', function (e) {
                 const term = e.target.value.toLowerCase();
                 const filtered = trackingData.filter(item => {
@@ -666,17 +655,11 @@
             });
         });
 
-        // ================= SPA TAB SWITCHER =================
         function switchTab(tabName) {
-            // ซ่อนทุกแท็บ
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden', 'block'));
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('block'));
-
-            // แสดงแท็บเป้าหมาย
             document.getElementById('tab-' + tabName).classList.add('block');
             document.getElementById('tab-' + tabName).classList.remove('hidden');
-
-            // อัปเดต CSS เมนูซ้าย
             document.querySelectorAll('.nav-link').forEach(el => {
                 el.className = "nav-link flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-md font-medium transition duration-200 whitespace-nowrap";
             });
@@ -685,7 +668,6 @@
                 activeNav.className = "nav-link flex items-center gap-3 bg-brand text-white px-4 py-3 rounded-md font-medium shadow-md transition duration-200 whitespace-nowrap";
             }
 
-            // โหลดข้อมูลแบบ Lazy Loading (โหลดเมื่อเปิดแท็บนั้นๆ)
             if (tabName === 'dashboard') {
                 loadDashboardData();
             } else if (tabName === 'import') {
@@ -694,44 +676,47 @@
                     loadShippingRatesForCalc();
                 }
             } else if (tabName === 'payment') {
-                // หน้าชำระเงิน ควรอัปเดตใหม่ทุกครั้งที่กดเข้า เพื่อกันข้อมูลพัสดุไม่อัปเดต
                 loadPaymentData();
             } else if (tabName === 'tracking') {
                 if (!isTrackingLoaded) loadTrackingData();
             }
 
-            // ปิดเมนูบนมือถือถ้าเปิดอยู่
             const sidebar = document.getElementById('sidebar');
             if (!sidebar.classList.contains('-translate-x-full') && window.innerWidth < 768) {
                 toggleMobileSidebar();
             }
         }
 
-        // ================= GLOBAL HELPERS =================
         function showLoading(msg = "กำลังโหลดข้อมูล...") {
             document.getElementById('loadingText').innerText = msg;
             document.getElementById('loadingOverlay').classList.remove('hidden');
             document.getElementById('loadingOverlay').classList.add('flex');
         }
+
         function hideLoading() {
             document.getElementById('loadingOverlay').classList.add('hidden');
             document.getElementById('loadingOverlay').classList.remove('flex');
         }
+
         function showAlertModal(msg) {
             document.getElementById('alertModalMsg').innerText = msg;
             document.getElementById('alertModalOverlay').classList.remove('hidden');
         }
+
         function closeAlertModal() {
             document.getElementById('alertModalOverlay').classList.add('hidden');
         }
+
         function showSuccessModal(msg, customTitle = "สำเร็จ!") {
             document.getElementById('successModalTitle').innerText = customTitle;
             document.getElementById('successModalMsg').innerText = msg;
             document.getElementById('successModalOverlay').classList.remove('hidden');
         }
+
         function closeSuccessModal() {
             document.getElementById('successModalOverlay').classList.add('hidden');
         }
+
         function closeModal(id) {
             document.getElementById(id).classList.add('hidden');
         }
@@ -739,12 +724,13 @@
             document.getElementById('sidebar').classList.toggle('-translate-x-full');
             document.getElementById('sidebarBackdrop').classList.toggle('hidden');
         }
+
         function logoutuser() {
             localStorage.removeItem('userSession');
             localStorage.clear();
             window.top.location.href = '<?= getScriptUrl() ?>?page=index';
         }
-        // Redirect ไปหน้ารายละเอียดสถานะพัสดุ (อันนี้ต้องเปลี่ยนหน้า เพราะเป็นหน้ารายละเอียดแยก)
+
         function goToTrackingInfo(id) {
             window.top.location.href = '<?= getScriptUrl() ?>?page=user_tracking_info&id=' + encodeURIComponent(id);
         }
@@ -753,25 +739,21 @@
             window.top.location.href = '<?= getScriptUrl() ?>?page=user_profile';
         }
 
-        // ================= 1. TAB: DASHBOARD =================
         function loadDashboardData() {
             showLoading("กำลังโหลดแดชบอร์ด...");
             google.script.run
                 .withSuccessHandler(function (res) {
                     hideLoading();
                     if (res.success) {
-                        // 4 กล่อง
                         document.getElementById('countWaitChina').innerText = res.summary.waitChina;
                         document.getElementById('countComingThai').innerText = res.summary.comingThai;
                         document.getElementById('countWaitPay').innerText = res.summary.waitPay;
                         document.getElementById('countSuccess').innerText = res.summary.successMonth;
 
-                        // ที่อยู่โกดังจีน
                         if (document.getElementById('chinaAddressText')) {
                             document.getElementById('chinaAddressText').innerText = res.chinaAddress || "ไม่มีข้อมูลที่อยู่";
                         }
 
-                        // === แก้ไขรายการโกดังจีน (รอรวมบิล) ตามเงื่อนไขพัสดุที่ยังไม่มีรหัสบิล ===
                         const chinaContainer = document.getElementById('chinaItemsContainer');
                         document.getElementById('chinaItemsCountBadge').innerText = res.chinaItems.length + " รายการ";
                         if (res.chinaItems.length === 0) {
@@ -790,7 +772,6 @@
                                 </div>`).join('');
                         }
 
-                        // รายการพัสดุไทย (Shipments)
                         const shipContainer = document.getElementById('activeShipmentsContainer');
                         if (res.shipments.length === 0) {
                             shipContainer.innerHTML = `<div class="bg-white p-8 rounded-xl border border-gray-100 text-center shadow-sm text-gray-500 text-sm"><i class="fas fa-clipboard-list text-3xl text-gray-300 mb-3 block"></i>ไม่มีรายการจัดส่งที่กำลังดำเนินการ</div>`;
@@ -838,7 +819,6 @@
                 .getDashboardData(memberId);
         }
 
-        // ================= 2. TAB: IMPORT =================
         function loadImportData() {
             document.getElementById('importTableBody').innerHTML = `<tr><td colspan="6" class="px-4 py-12 text-center"><i class="fas fa-circle-notch fa-spin text-4xl text-brand mb-3"></i><p class="text-gray-500">กำลังโหลดรายการพัสดุ...</p></td></tr>`;
             google.script.run
@@ -962,7 +942,6 @@
                 .updateItemInSheet(orderNum, tracking, detail, weight, cbm);
         }
 
-        // เครื่องคิดเลข
         function loadShippingRatesForCalc() {
             google.script.run.withSuccessHandler(res => {
                 if (res.success) {
@@ -1017,7 +996,6 @@
             document.getElementById('calcTotalResult').innerText = finalPrice > 0 ? finalPrice.toLocaleString('th-TH', { minimumFractionDigits: 2 }) + ' ฿' : '';
         }
 
-        // ================= 3. TAB: PAYMENT =================
         function loadPaymentData() {
             document.getElementById('paymentParcelList').innerHTML = `<div class="text-center py-6 text-gray-500"><i class="fas fa-spinner fa-spin text-3xl mb-3 text-brand"></i><p>กำลังโหลดข้อมูลพัสดุและบิล...</p></div>`;
             google.script.run
@@ -1171,20 +1149,17 @@
                     hideLoading();
                     if (res.success) {
                         showSuccessModal("บันทึกและแจ้งโอนสำเร็จ! กรุณารอแอดมินตรวจสอบ");
-                        // Reset forms
                         slipBase64 = ""; document.getElementById('slipNameDisplay').innerText = "คลิกเพื่ออัปโหลดสลิป";
                         document.getElementById('slipNameDisplay').classList.remove('text-brand', 'font-bold');
                         document.getElementById('slipInput').value = "";
-                        // รีเฟรชข้อมูล
                         loadPaymentData();
-                        loadDashboardData(); // อัปเดตแดชบอร์ดรอไว้
+                        loadDashboardData();
                     } else { showAlertModal(res.message); }
                 })
                 .withFailureHandler(err => { hideLoading(); showAlertModal(err.message); })
                 .submitPaymentData(payload);
         }
 
-        // ================= 4. TAB: TRACKING ALL =================
         function loadTrackingData() {
             document.getElementById('fullTrackingTableBody').innerHTML = `<tr><td colspan="6" class="p-12 text-center text-gray-500"><i class="fas fa-circle-notch fa-spin text-4xl text-brand mb-3"></i><p>กำลังดึงข้อมูลพัสดุของคุณ...</p></td></tr>`;
             google.script.run

@@ -1,19 +1,11 @@
-/**
- * ดึงข้อมูลพัสดุสำหรับหน้าสาธารณะ (ไม่เช็ค Session/Auth ใดๆ ทั้งสิ้น)
- * ค้นหาได้ทั้ง เลขออเดอร์ หรือ Tracking จีน
- */
 function getTrackingInfoData_Public(orderId) {
   try {
-    // 1. เช็คแค่ว่ามีการพิมพ์เลขค้นหามาหรือไม่
     if (!orderId || String(orderId).trim() === "") {
       throw new Error("กรุณาระบุเลขออเดอร์ หรือ Tracking Number");
     }
 
     var ss = SpreadsheetApp.getActiveSpreadsheet();
-    // ทำความสะอาดและแปลงตัวอักษรเป็นพิมพ์ใหญ่เพื่อป้องกันปัญหาพิมพ์ผิด (Case Insensitive)
     var orderQuery = String(orderId).trim().toUpperCase();
-
-    // 2. ดึงข้อมูลการติดต่อ (ชีต "ติดต่อเรา")
     var contactSheet = ss.getSheetByName("ติดต่อเรา");
     var contactData = contactSheet.getDataRange().getValues();
     var contact = { phone: "-", line: "-", lineLink: "#" };
@@ -23,14 +15,12 @@ function getTrackingInfoData_Public(orderId) {
       contact.lineLink = contactData[1][2] || "#"; 
     }
 
-    // 3. ค้นหาข้อมูลพัสดุ (ชีต "ข้อมูลขนส่ง") 
     var importSheet = ss.getSheetByName("ข้อมูลขนส่ง");
     var importData = importSheet.getDataRange().getValues();
     var orderRow = null;
     var actualMemberId = ""; 
     
     for (var i = 1; i < importData.length; i++) {
-      // ค้นหาจากเลขออเดอร์ (คอลัมน์ A) หรือ Tracking จีน (คอลัมน์ C)
       var cellOrder = String(importData[i][0] || "").trim().toUpperCase();
       var cellTracking = String(importData[i][2] || "").trim().toUpperCase();
 
@@ -45,7 +35,6 @@ function getTrackingInfoData_Public(orderId) {
       throw new Error("ไม่พบข้อมูลพัสดุนี้ในระบบ กรุณาตรวจสอบรหัสอีกครั้ง");
     }
 
-    // 4. ดึงข้อมูลสมาชิก (ชีต "สมาชิก") เพื่อเอาที่อยู่จัดส่ง
     var memberSheet = ss.getSheetByName("สมาชิก");
     var memberData = memberSheet.getDataRange().getValues();
     var member = { name: "ไม่ระบุ", phone: "-", address: "ไม่มีข้อมูลที่อยู่" };
@@ -61,7 +50,6 @@ function getTrackingInfoData_Public(orderId) {
       }
     }
 
-    // 5. คำนวณจำนวนชิ้น/น้ำหนัก/ปริมาตร รวมใน 1 บิล
     var billId = orderRow[17] ? String(orderRow[17]).trim() : ""; 
     var totalItems = 0;
     var totalWeight = 0;
@@ -72,8 +60,8 @@ function getTrackingInfoData_Public(orderId) {
       for (var j = 1; j < importData.length; j++) {
         if (importData[j][17] && String(importData[j][17]).trim() === billId) {
           totalItems++; 
-          totalWeight += parseFloat(importData[j][6]) || 0; // น้ำหนักอยู่คอลัมน์ G (Index 6)
-          totalCbm += parseFloat(importData[j][7]) || 0;    // CBM อยู่คอลัมน์ H (Index 7)
+          totalWeight += parseFloat(importData[j][6]) || 0; 
+          totalCbm += parseFloat(importData[j][7]) || 0;    
         }
       }
     } else {
@@ -83,7 +71,6 @@ function getTrackingInfoData_Public(orderId) {
       totalPrice = (parseFloat(orderRow[8]) || 0) + (parseFloat(orderRow[9]) || 0); 
     }
 
-    // 6. ดึงข้อมูลบิลชำระเงิน (ถ้ามีบิลแล้ว)
     var bill = { netTotal: totalPrice.toFixed(2), status: "ยังไม่ชำระเงิน", date: "-" };
     if (billId !== "") {
       var billSheet = ss.getSheetByName("บิลชำระเงิน");
@@ -109,7 +96,6 @@ function getTrackingInfoData_Public(orderId) {
       }
     }
 
-    // 7. แปลงวันที่สำหรับ Timeline
     var formatTimelineDate = function(d) {
       if (!d) return null;
       var date = new Date(d);
@@ -123,7 +109,6 @@ function getTrackingInfoData_Public(orderId) {
 
     var latestStatus = orderRow[11] ? String(orderRow[11]).trim() : "แจ้งนำเข้าแล้ว";
 
-    // 8. ส่งออกข้อมูล
     return {
       success: true,
       contact: contact,

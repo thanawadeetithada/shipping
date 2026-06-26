@@ -259,7 +259,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // รองรับการกด Enter ที่ช่องค้นหา
             const searchInput = document.getElementById('searchOrderInput');
             if (searchInput) {
                 searchInput.addEventListener('keypress', function (e) {
@@ -269,7 +268,6 @@
                 });
             }
 
-            // ดึง ID จาก URL และค้นหาอัตโนมัติ
             if(typeof google !== 'undefined' && google.script && google.script.url) {
                 google.script.url.getLocation(function (location) {
                     const orderId = location.parameter.id || "";
@@ -298,7 +296,6 @@
             document.getElementById('loadingOverlay').classList.remove('hidden');
             document.getElementById('contentSection').classList.add('opacity-0');
 
-            // เรียกใช้ฟังก์ชันใหม่ที่ไม่มีเช็ค Session แบบ 100%
             google.script.run
                 .withSuccessHandler(function (response) {
                     document.getElementById('loadingOverlay').classList.add('hidden');
@@ -400,7 +397,6 @@
             });
         }
 
-        // ฟังก์ชันควบคุม Modal
         function showAlertModal(msg) {
             document.getElementById('alertModalMsg').innerText = msg;
             document.getElementById('alertModalOverlay').classList.remove('hidden');

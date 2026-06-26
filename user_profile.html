@@ -210,7 +210,6 @@
             }
         });
 
-        // ฟังก์ชันควบคุม Spinner
         function toggleSpinner(show, message = "กำลังบันทึกข้อมูล...") {
             const overlay = document.getElementById('loadingOverlay');
             const loadingText = document.getElementById('loadingText');
@@ -218,7 +217,7 @@
             if (show) {
                 loadingText.innerText = message;
                 overlay.classList.remove('hidden');
-                overlay.classList.add('flex'); // ทำให้ flex ทำงานจัดกึ่งกลาง
+                overlay.classList.add('flex'); 
             } else {
                 overlay.classList.add('hidden');
                 overlay.classList.remove('flex');
@@ -237,7 +236,6 @@
             
             const statusMsg = document.getElementById('statusMsg');
             
-            // ซ่อนข้อความแจ้งเตือนเดิมก่อน
             statusMsg.classList.add('hidden');
             
             if (password || confirmPassword) {
@@ -247,7 +245,6 @@
                 }
             }
             
-            // แสดงหน้าจอ Loading แบบเต็มจอ
             toggleSpinner(true, "กำลังตรวจสอบและบันทึกข้อมูล...");
             
             const userData = {
@@ -260,13 +257,11 @@
             
             google.script.run
                 .withSuccessHandler(function(response) {
-                    // ปิดหน้าจอ Loading
                     toggleSpinner(false);
                     
                     if (response.success) {
                         showStatus(response.message, true);
                         
-                        // อัปเดต localStorage เฉพาะเมื่อสำเร็จ
                         const currentSession = JSON.parse(localStorage.getItem('userSession'));
                         currentSession.fullname = fullname;
                         currentSession.phone = phone;
@@ -283,7 +278,6 @@
                     }
                 })
                 .withFailureHandler(function(error) {
-                    // ปิดหน้าจอ Loading และแสดงข้อความ Error
                     toggleSpinner(false);
                     showStatus("เกิดข้อผิดพลาดจากระบบเซิร์ฟเวอร์: " + error.message, false);
                 })

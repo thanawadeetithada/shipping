@@ -14,19 +14,17 @@ function getPricingData() {
     var pricingMap = {};
     var result = [];
 
-    // เริ่มวนลูปจากแถวที่ 2 (index 1) โดยข้ามหัวตาราง
     for (var i = 1; i < data.length; i++) {
       var row = data[i];
-      var transportType = row[0] ? row[0].toString().trim() : ""; // คอลัมน์ A
+      var transportType = row[0] ? row[0].toString().trim() : ""; 
       
       if (!transportType) continue;
 
-      var productType = row[1] ? row[1].toString().trim() : ""; // คอลัมน์ B
-      var duration = row[2] ? row[2].toString().trim() : "";    // คอลัมน์ C
-      var priceKg = row[3] ? row[3].toString().trim() : "-";    // คอลัมน์ D
-      var priceCbm = row[4] ? row[4].toString().trim() : "-";   // คอลัมน์ E
+      var productType = row[1] ? row[1].toString().trim() : ""; 
+      var duration = row[2] ? row[2].toString().trim() : "";    
+      var priceKg = row[3] ? row[3].toString().trim() : "-";    
+      var priceCbm = row[4] ? row[4].toString().trim() : "-";   
 
-      // ถ้ายังไม่มีหมวดหมู่ขนส่งนี้ ให้สร้างใหม่
       if (!pricingMap[transportType]) {
         pricingMap[transportType] = {
           type: transportType,
@@ -36,12 +34,9 @@ function getPricingData() {
         result.push(pricingMap[transportType]);
       }
 
-      // นำประเภทสินค้าไปใส่ในหมวดหมู่นั้นๆ
       if (productType) {
-        // อัปเดตระยะเวลาให้เป็นข้อมูลล่าสุดของหมวดหมู่นั้นเสมอ
         if(duration) pricingMap[transportType].time = duration; 
         
-        // จัดรูปแบบราคาให้มีลูกน้ำ (คอมมา)
         var formatPrice = function(val) {
            if (isNaN(val) || val === "-") return val;
            return Number(val).toLocaleString();

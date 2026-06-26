@@ -7,7 +7,6 @@ function getContactData() {
 
     var data = sheet.getDataRange().getValues();
     
-    // เช็คว่ามีข้อมูลแถวที่ 2 หรือไม่ (index 1)
     if (data.length < 2) throw new Error("ไม่มีข้อมูลการติดต่อ");
 
     var row = data[1];

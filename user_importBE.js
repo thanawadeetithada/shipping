@@ -1,12 +1,6 @@
-/**
- * ชื่อชีตที่ใช้เก็บข้อมูล
- */
 const IMPORT_SHEET_NAME = "ข้อมูลขนส่ง";
 const RATE_SHEET_NAME = "อัตราค่าขนส่ง";
 
-/**
- * โหลดข้อมูลอัตราค่าขนส่งทั้งหมด (ใช้ทำ Dropdown และคำนวณ)
- */
 function getShippingRatesList() {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(RATE_SHEET_NAME);
@@ -15,19 +9,18 @@ function getShippingRatesList() {
     var data = sheet.getDataRange().getValues();
     var rates = [];
     
-    // เริ่มอ่านจากแถวที่ 2 (index 1) เพื่อข้าม Header
     for (var i = 1; i < data.length; i++) {
-      if (!data[i][0]) continue; // ข้ามแถวที่คอลัมน์ A (การขนส่ง) เป็นค่าว่าง
+      if (!data[i][0]) continue;
       
 
       var rawKg = data[i][3] ? data[i][3].toString().replace(/,/g, '').trim() : "0";
       var rawCbm = data[i][4] ? data[i][4].toString().replace(/,/g, '').trim() : "0";
 
       rates.push({
-        transport: data[i][0].toString().trim(),      // คอลัมน์ A
-        productType: data[i][1].toString().trim(),    // คอลัมน์ B
-        rateKg: parseFloat(rawKg) || 0,               // คอลัมน์ C (ราคา/kg) ที่ลบลูกน้ำแล้ว
-        rateCbm: parseFloat(rawCbm) || 0              // คอลัมน์ D (ราคา/Q) ที่ลบลูกน้ำแล้ว
+        transport: data[i][0].toString().trim(),     
+        productType: data[i][1].toString().trim(),    
+        rateKg: parseFloat(rawKg) || 0,              
+        rateCbm: parseFloat(rawCbm) || 0             
       });
     }
     return { success: true, data: rates };
@@ -36,9 +29,6 @@ function getShippingRatesList() {
   }
 }
 
-/**
- * โหลดรายการแจ้งนำเข้าของสมาชิก (ใช้แสดงในตาราง)
- */
 function loadImportItems(memberId) {
   try {
     if (!memberId) return [];
@@ -51,7 +41,7 @@ function loadImportItems(memberId) {
     var targetMemberId = memberId.toString().trim().toLowerCase();
 
     for (var i = 1; i < data.length; i++) {
-      if (!data[i][0] && !data[i][1]) continue; // ข้ามแถวว่าง
+      if (!data[i][0] && !data[i][1]) continue;
 
       var rowOrderNum = data[i][0] ? data[i][0].toString().trim() : "";
       var rowMemberId = data[i][1] ? data[i][1].toString().trim().toLowerCase() : "";
@@ -77,9 +67,6 @@ function loadImportItems(memberId) {
   }
 }
 
-/**
- * เพิ่มรายการแจ้งนำเข้าใหม่ (คืนค่า data กลับไปด้วย)
- */
 function addItemToSheet(memberId, tracking, detail, weight, cbm) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(IMPORT_SHEET_NAME);
@@ -100,7 +87,6 @@ function addItemToSheet(memberId, tracking, detail, weight, cbm) {
 
     sheet.appendRow(newRow);
     
-    // ส่งข้อมูลที่เพิ่มสำเร็จกลับไปให้หน้าเว็บ เพื่อเอาไปต่อตารางทันที
     return { 
       success: true, 
       message: "เพิ่มรายการเข้าสู่ระบบเรียบร้อยแล้ว",
@@ -117,9 +103,6 @@ function addItemToSheet(memberId, tracking, detail, weight, cbm) {
   }
 }
 
-/**
- * อัปเดตรายการสินค้า
- */
 function updateItemInSheet(orderNum, tracking, detail, weight, cbm) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(IMPORT_SHEET_NAME);
@@ -150,9 +133,6 @@ function updateItemInSheet(orderNum, tracking, detail, weight, cbm) {
   }
 }
 
-/**
- * ลบรายการสินค้า
- */
 function deleteItemFromSheet(orderNum) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(IMPORT_SHEET_NAME);
@@ -180,9 +160,6 @@ function deleteItemFromSheet(orderNum) {
   }
 }
 
-/**
- * Helper Function: ใช้รันเลข OrderNumber
- */
 function generateOrderNumber(sheet) {
   var data = sheet.getDataRange().getValues();
   

@@ -119,9 +119,7 @@
         <? var scriptUrl = getScriptUrl(); ?>
         const GLOBAL_SCRIPT_URL = "<?= scriptUrl ?>";
 
-        // ทำงานเมื่อโหลดหน้าเว็บเสร็จ
         document.addEventListener('DOMContentLoaded', function () {
-            // เช็คว่าเคย Login ไว้หรือไม่ ถ้ามีให้เปลี่ยนปุ่มเป็น "ไปที่แดชบอร์ด"
             const sessionData = localStorage.getItem('userSession');
             if (sessionData) {
                 const loginBtn = document.getElementById('loginNavBtn');
@@ -151,7 +149,7 @@
                     document.getElementById('loadingOverlay').classList.add('hidden');
                     alert("เกิดข้อผิดพลาดในการเชื่อมต่อ: " + err.message);
                 })
-                .getPricingData(); // เรียกใช้ BE ตัวเดียวกับของฝั่ง User
+                .getPricingData();
         }
 
         function fetchContactFooter() {
@@ -183,13 +181,11 @@
             }
 
             pricingArray.forEach(method => {
-                // จัดการเรื่องสไตล์ (สี) ให้สอดคล้องกับประเภทการส่ง (เรือ หรือ รถ)
                 let headerBgClass = "bg-gray-800";
                 let iconClass = "fa-truck text-red-400";
                 let subTextClass = "text-gray-300";
                 let priceKgColor = "text-brand";
 
-                // ถ้าชื่อมีคำว่า 'เรือ' หรือ 'SEA' ให้เปลี่ยนการ์ดเป็นสีฟ้า
                 if (method.type.includes("เรือ") || method.type.includes("SEA")) {
                     headerBgClass = "bg-blue-800";
                     iconClass = "fa-ship text-blue-300";
@@ -197,7 +193,6 @@
                     priceKgColor = "text-blue-600";
                 }
 
-                // สร้างเนื้อหาของตาราง (ข้อมูลประเภทสินค้าและราคา)
                 let tableRowsHtml = method.items.map(item => `
                     <tr>
                         <td class="py-4 px-4 font-medium">${item.name}</td>
@@ -206,7 +201,6 @@
                     </tr>
                 `).join('');
 
-                // สร้างโครงสร้างการ์ด HTML ของหมวดหมู่นั้นๆ
                 let cardHtml = `
                 <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow">
                     <div class="${headerBgClass} text-white p-6 text-center">
@@ -230,7 +224,6 @@
                     </div>
                 </div>`;
 
-                // แทรกลงใน Container หลัก
                 container.innerHTML += cardHtml;
             });
         }

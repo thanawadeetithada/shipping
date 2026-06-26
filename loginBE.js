@@ -18,19 +18,17 @@ function verifyLogin(username, password) {
       if (storedPhone === username || storedFullname === username) {
         
         if (storedHash === inputPasswordHash) {
-          // ดึงค่าสิทธิ์การใช้งาน (role) จากคอลัมน์ E และแปลงเป็นตัวพิมพ์เล็กเพื่อตรวจสอบง่ายขึ้น
           var userRole = dataRange[i][4].toString().trim().toLowerCase();
           
           var userData = {
-            memberId: dataRange[i][0].toString().trim(), // คอลัมน์ A (index 0) : รหัสสมาชิก
-            fullname: storedFullname,                    // คอลัมน์ B (index 1) : ชื่อ
-            phone: storedPhone,                          // คอลัมน์ C (index 2) : เบอร์โทร
-            address: dataRange[i][3].toString().trim(),  // คอลัมน์ D (index 3) : ที่อยู่
-            role: userRole                               // คอลัมน์ E (index 4) : role
+            memberId: dataRange[i][0].toString().trim(),
+            fullname: storedFullname,                    
+            phone: storedPhone,                          
+            address: dataRange[i][3].toString().trim(),  
+            role: userRole                               
           };
           
-          // ตรวจสอบสถานะและกำหนดหน้าที่จะให้ไป
-          var targetPage = "user_dashboard"; // ค่าเริ่มต้น
+          var targetPage = "user_dashboard";
           
           if (userRole === "admin") {
             targetPage = "admin_dashboard";

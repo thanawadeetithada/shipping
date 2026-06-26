@@ -40,7 +40,6 @@ function registerNewUser(data) {
       Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, data.password)
     );
     
-    // ตอนบันทึกข้อมูล ให้ใช้ตัวแปร newName ที่ทำการ trim เรียบร้อยแล้วลงไปด้วยครับ
     var rowData = [
       newMemberId,
       newName, 

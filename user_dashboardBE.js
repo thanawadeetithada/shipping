@@ -8,12 +8,11 @@ function getDashboardData(memberId) {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var transportSheet = ss.getSheetByName("ข้อมูลขนส่ง");
     var billSheet = ss.getSheetByName("บิลชำระเงิน");
-    var contactSheet = ss.getSheetByName("ติดต่อเรา"); // ดึงข้อมูลติดต่อเรา
+    var contactSheet = ss.getSheetByName("ติดต่อเรา");
 
     var transportData = transportSheet.getDataRange().getValues();
     var billData = billSheet ? billSheet.getDataRange().getValues() : [];
 
-    // ดึงที่อยู่โกดังจีน จากคอลัมน์ E (Index 4) แถวที่ 2 (Index 1)
     var chinaAddress = "ไม่พบข้อมูลที่อยู่";
     if (contactSheet) {
       var contactData = contactSheet.getDataRange().getValues();
@@ -31,30 +30,26 @@ function getDashboardData(memberId) {
 
     var billDict = {};
     
-    // --- 1. ดึงข้อมูลและนับจำนวน "บิลชำระเงิน" โดยตรง ---
     for (var i = 1; i < billData.length; i++) {
       var bId = billData[i][0] ? billData[i][0].toString().trim() : "";
-      var bMember = billData[i][1] ? billData[i][1].toString().trim() : ""; // คอลัมน์ B รหัสสมาชิก
-      var bStatus = billData[i][8] ? billData[i][8].toString().trim() : ""; // คอลัมน์ I สถานะบิล
+      var bMember = billData[i][1] ? billData[i][1].toString().trim() : ""; 
+      var bStatus = billData[i][8] ? billData[i][8].toString().trim() : ""; 
 
       if (bId) {
         billDict[bId] = {
-          total: parseFloat(billData[i][6] || 0), // ยอดสุทธิ
+          total: parseFloat(billData[i][6] || 0), 
           status: bStatus
         };
       }
 
-      // นับจำนวนบิลที่สถานะเป็น "รอตรวจสอบยอด" และรหัสสมาชิกตรงกัน
       if (bMember === memberId.toString().trim() && bStatus === "รอตรวจสอบยอด") {
         summary.waitPay++;
       }
     }
 
-    // --- 2. วนลูปเช็ค "ข้อมูลขนส่ง" ของ User คนนี้ ---
     for (var j = 1; j < transportData.length; j++) {
       var row = transportData[j];
       
-      // เช็ค Member_ID คอลัมน์ B (Index 1)
       if (row[1] && row[1].toString().trim() === memberId.toString().trim()) {
         var orderId = row[0] ? row[0].toString() : "";
         var chinaTrack = row[2] ? row[2].toString() : "-";
@@ -63,13 +58,12 @@ function getDashboardData(memberId) {
         var cbm = parseFloat(row[6]) || 0;
         var totalCost = parseFloat(row[10]) || 0;
         var status = row[11] ? row[11].toString().trim() : "แจ้งนำเข้าแล้ว";
-        var deliveryDate = row[16]; // คอลัมน์วันที่จัดส่งสำเร็จ (Q)
-        var billId = row[17] ? row[17].toString().trim() : ""; // คอลัมน์ R (Index 17): Bill_ID
+        var deliveryDate = row[16]; 
+        var billId = row[17] ? row[17].toString().trim() : "";
 
         var displayStatus = status;
         var finalTotal = totalCost;
 
-        // ถ้าออเดอร์นี้ถูกผูกบิลแล้ว ให้ใช้สถานะการชำระเงินจากบิลมาแสดงนำ
         if (billId && billDict[billId]) {
           var bStat = billDict[billId].status;
           if (bStat === "รอชำระเงิน" || bStat === "รอตรวจสอบยอด" || bStat === "ชำระแล้ว") {
@@ -77,25 +71,21 @@ function getDashboardData(memberId) {
           }
         }
 
-        // คำนวณ 3 กล่องที่เหลือ
         if (status === "แจ้งนำเข้าแล้ว" || status === "รอเข้าโกดังจีน") {
           summary.waitChina++;
         } else if (status === "กำลังขนส่งมาไทย") {
           summary.comingThai++;
         } else if (status === "จัดส่งสำเร็จ") {
-          // เช็คว่าเป็นของเดือนนี้หรือไม่
           if (deliveryDate) {
             var dDate = new Date(deliveryDate);
             if (dDate.getMonth() === currentMonth && dDate.getFullYear() === currentYear) {
                summary.successMonth++;
             }
           } else {
-             summary.successMonth++; // ถ้าไม่มีวันที่ ถือว่านับรวมไปก่อน
+             summary.successMonth++; 
           }
         }
 
-        // --- แยกหมวดหมู่ลงรายการด้านล่าง ---
-        // 1. ดึงพัสดุทุกชิ้นของลูกค้ารายนี้ที่ "ยังไม่มีบิล" ไปแสดงที่กล่องรอรวมบิล
         if (billId === "") { 
            chinaItems.push({
              id: orderId,
@@ -103,18 +93,17 @@ function getDashboardData(memberId) {
              track: chinaTrack,
              weight: weight.toFixed(2),
              cbm: cbm.toFixed(2),
-             status: status // แนบสถานะพัสดุไปแสดงด้วย
+             status: status 
            });
         } 
         else if (status !== "แจ้งนำเข้าแล้ว" && status !== "รอเข้าโกดังจีน" && status !== "จัดส่งสำเร็จ") {
-           // 2. สินค้าที่กำลังเดินทาง, ถึงไทยแล้ว, หรือรอชำระเงิน (Active Shipments)
            var totalStr = finalTotal > 0 ? finalTotal.toFixed(2) + " ฿" : "รอกำหนดราคา";
            if (billId && billDict[billId]) {
               totalStr = "รวมในบิล " + billId + " (" + billDict[billId].total.toFixed(2) + " ฿)";
            }
 
            shipments.push({
-             id: orderId, // ใช้ Order_ID แสดงเป็นรหัสติดตาม
+             id: orderId, 
              status: displayStatus,
              weight: weight.toFixed(2),
              totalDisplay: totalStr
@@ -123,7 +112,6 @@ function getDashboardData(memberId) {
       }
     }
 
-    // Sort active shipments ให้รายการที่ต้องดำเนินการ (รอชำระ, ถึงไทย) ขึ้นมาก่อน
     var statusPriority = {
       "รอชำระเงิน": 1,
       "ถึงโกดังไทย": 2,
@@ -143,7 +131,7 @@ function getDashboardData(memberId) {
       summary: summary,
       chinaItems: chinaItems,
       shipments: shipments,
-      chinaAddress: chinaAddress // ส่งข้อมูลที่อยู่เพิ่มกลับไปที่หน้าเว็บ
+      chinaAddress: chinaAddress 
     };
 
   } catch (error) {

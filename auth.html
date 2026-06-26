@@ -15,7 +15,6 @@
             if (baseUrl) {
                 renderProfileNav(baseUrl, user, navActionContainer);
             } else {
-                // เผื่อเข้าจากหน้าอื่นที่ไม่มีตัวแปร
                 google.script.run.withSuccessHandler(function(url) {
                     renderProfileNav(url, user, navActionContainer);
                 }).getScriptUrl();

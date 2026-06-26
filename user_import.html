@@ -311,7 +311,7 @@
         let currentMemberId = "";
         let currentItems = []; 
         let deleteTargetId = "";
-        let shippingRatesData = []; // เก็บข้อมูลเรทราคาที่ดึงจากชีต
+        let shippingRatesData = [];
 
         document.addEventListener('DOMContentLoaded', function () {
             const sessionData = localStorage.getItem('userSession');
@@ -330,16 +330,15 @@
                 }
             }
             loadTableData();
-            loadShippingRates(); // สั่งดึงเรทราคาจาก Backend ทันทีที่โหลดหน้าเว็บ
+            loadShippingRates(); 
         });
 
-        // ================= ดึงข้อมูลเรทขนส่งจาก Sheet (Dynamic 100%) =================
         function loadShippingRates() {
             google.script.run
                 .withSuccessHandler(function (res) {
                     if (res.success) {
                         shippingRatesData = res.data;
-                        populateTransportOptions(); // สร้าง Dropdown แรก
+                        populateTransportOptions(); 
                     } else {
                         console.error("โหลดเรทราคาไม่สำเร็จ:", res.message);
                     }
@@ -349,9 +348,8 @@
 
         function populateTransportOptions() {
             const transportSelect = document.getElementById('calcTransport');
-            transportSelect.innerHTML = ''; // ล้างตัวเลือกเก่า
+            transportSelect.innerHTML = ''; 
             
-            // กรองเอาเฉพาะชื่อขนส่งที่ไม่ซ้ำกัน
             const uniqueTransports = [...new Set(shippingRatesData.map(item => item.transport))];
             
             if (uniqueTransports.length === 0) {
@@ -366,7 +364,6 @@
                 transportSelect.appendChild(option);
             });
             
-            // เมื่อสร้างตัวเลือกขนส่งเสร็จ ให้สั่งสร้างตัวเลือกประเภทสินค้าให้สัมพันธ์กันทันที
             updateProductTypeOptions();
         }
 
@@ -375,7 +372,6 @@
             const typeSelect = document.getElementById('calcType');
             typeSelect.innerHTML = '';
             
-            // หาข้อมูลประเภทสินค้า ที่ตรงกับขนส่งที่เลือก
             const availableTypes = shippingRatesData.filter(item => item.transport === selectedTransport);
             
             if (availableTypes.length === 0) {
@@ -389,11 +385,9 @@
                 });
             }
 
-            // คำนวณราคาทันทีเผื่อมีตัวเลขกรอกค้างไว้
             doCalculate(); 
         }
 
-        // ================= ดึงข้อมูลเริ่มต้น =================
         function loadTableData() {
             if (!currentMemberId) {
                 showAlert('ข้อผิดพลาด', 'ไม่พบรหัสสมาชิก กรุณาเข้าสู่ระบบใหม่', 'red');
@@ -569,7 +563,6 @@
                 .updateItemInSheet(orderNum, tracking, detail, weight, cbm);
         }
 
-        // ================= ฟังก์ชันคำนวณค่าขนส่ง =================
         function openCalcModal() {
             document.getElementById('calcW').value = '';
             document.getElementById('calcL').value = '';
@@ -580,7 +573,7 @@
             document.getElementById('calcTotalResult').innerText = '';
             
             if (shippingRatesData.length === 0) {
-                loadShippingRates(); // โหลดข้อมูลสำรองหากยังไม่มีข้อมูล
+                loadShippingRates(); 
             }
             
             document.getElementById('calcModalOverlay').classList.remove('hidden');
@@ -591,15 +584,11 @@
             const l = parseFloat(document.getElementById('calcL').value) || 0;
             const h = parseFloat(document.getElementById('calcH').value) || 0;
             const weight = parseFloat(document.getElementById('calcWeight').value) || 0;
-            
             const selectedTransport = document.getElementById('calcTransport').value;
-            const selectedType = document.getElementById('calcType').value;
-            
-            // คำนวณ CBM
+            const selectedType = document.getElementById('calcType').value; 
             const cbm = (w * l * h) / 1000000;
             document.getElementById('calcCbm').value = cbm > 0 ? cbm.toFixed(4) : '';
 
-            // ค้นหาเรทราคาจาก Object Array ที่โหลดมาจากชีต
             let pricePerKg = 0;
             let pricePerCbm = 0;
             
@@ -635,7 +624,6 @@
             }
         }
 
-        // ================= UI Helpers =================
         function showLoading(msg = "กำลังประมวลผล...") {
             document.getElementById('loadingText').innerText = msg;
             document.getElementById('loadingOverlay').classList.remove('hidden');

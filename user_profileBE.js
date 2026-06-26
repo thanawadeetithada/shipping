@@ -1,8 +1,3 @@
-/**
- * ฟังก์ชันสำหรับอัปเดตข้อมูลส่วนตัวของสมาชิก
- * @param {Object} userData ข้อมูลสมาชิกที่ส่งมาจากหน้าเว็บหน้าฟอร์ม
- * @return {Object} ผลลัพธ์การบันทึกสำเร็จหรือล้มเหลว
- */
 function updateUserProfile(userData) {
   try {
     var sheet;
@@ -18,17 +13,15 @@ function updateUserProfile(userData) {
 
     var dataRange = sheet.getDataRange().getValues();
     
-    // กำหนดค่าตัวแปรพร้อมทำ Trim() ตัดช่องว่างหัวท้าย
     var memberId = userData.memberId.toString().trim();
     var inputFullname = userData.fullname.toString().trim();
     var inputPhone = userData.phone.toString().trim();
     
     var foundRow = -1;
 
-    // ลูปที่ 1: ค้นหาแถวของสมาชิกปัจจุบัน
     for (var i = 1; i < dataRange.length; i++) {
       if (dataRange[i][0].toString().trim() === memberId) {
-        foundRow = i + 1; // แปลงเป็นเลขแถวจริง (Sheet Index เริ่มที่ 1)
+        foundRow = i + 1; 
         break;
       }
     }
@@ -37,33 +30,27 @@ function updateUserProfile(userData) {
       return { success: false, message: "ไม่พบรหัสสมาชิกนี้ในฐานข้อมูลระบบ" };
     }
 
-    // ลูปที่ 2: เช็คข้อมูลซ้ำ (ข้ามแถวของตัวเอง)
     for (var j = 1; j < dataRange.length; j++) {
       var currentRow = j + 1;
       
-      // ข้ามการตรวจข้อมูลของตัวเอง
       if (currentRow === foundRow) continue;
 
-      var existingFullname = dataRange[j][1].toString().trim(); // คอลัมน์ B: ชื่อ
-      var existingPhone = dataRange[j][2].toString().trim();    // คอลัมน์ C: เบอร์โทร
+      var existingFullname = dataRange[j][1].toString().trim(); 
+      var existingPhone = dataRange[j][2].toString().trim();    
 
-      // กฏ 1: ตรวจสอบชื่อ-นามสกุลซ้ำ
       if (existingFullname.toLowerCase() === inputFullname.toLowerCase()) {
         return { success: false, message: "ไม่สามารถบันทึกได้ เนื่องจากชื่อ-นามสกุลนี้ถูกใช้งานแล้วในระบบ" };
       }
       
-      // กฏ 2: ตรวจสอบเบอร์โทรซ้ำ
       if (existingPhone === inputPhone) {
         return { success: false, message: "ไม่สามารถบันทึกได้ เนื่องจากเบอร์โทรศัพท์นี้ถูกใช้งานแล้วในระบบ" };
       }
     }
 
-    // หากไม่ซ้ำ ให้บันทึกข้อมูลได้ตามปกติ
     sheet.getRange(foundRow, 2).setValue(inputFullname); 
     sheet.getRange(foundRow, 3).setValue(inputPhone);    
     sheet.getRange(foundRow, 4).setValue(userData.address.trim());  
 
-    // ตรวจสอบเปลี่ยนรหัสผ่าน
     if (userData.password && userData.password.trim() !== "") {
       var inputPasswordHash = Utilities.base64Encode(
         Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, userData.password.trim())
